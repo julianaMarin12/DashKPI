@@ -14,7 +14,7 @@ def generarMenu(usuario):
         dfusuarios = dfusuarios[(dfusuarios['usuario']==usuario)]
         nombre = dfusuarios['nombre'].values[0]
         st.write(f"Hola **:blue-background[{nombre}]") 
-        st.page_link("inicio.py", label= "Dash de KPI por área", icon=":materia/icon")
+        st.page_link("inicio.py", label= "Dash de KPI por área")
         st.subheader("Tableros")
         st.page_link("pages/pagina1.py", label="Financiera")
         btnSalir = st.button("Salir")
