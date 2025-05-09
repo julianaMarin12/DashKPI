@@ -3,7 +3,7 @@ import pandas as pd
 
 def validarUsuario(usuario,clave):
     dfusuarios = pd.read_csv('usuarios.csv')
-    if len(dfusuarios[(dfusuarios[usuario]==usuario) & (dfusuarios['clave']==clave)]) > 0:
+    if len(dfusuarios[(dfusuarios['usuario']==usuario) & (dfusuarios['clave']==clave)])> 0:
         return True
     else:
         return False
