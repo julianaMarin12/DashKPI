@@ -15,7 +15,7 @@ def generarMenu(usuario):
         dfusuarios = dfusuarios[(dfusuarios['usuario']==usuario)]
         nombre = dfusuarios['nombre'].values[0]
         st.write(f"Hola :red-background[{nombre}]") 
-        st.page_link("inicio.py", label= " ⌂ Dash de KPI por área")
+        st.page_link("inicio.py", label= " 📊Dash de KPI por área")
         st.subheader("Tableros")
         st.page_link("pages/pagina1.py", label="💰Financiera")
         st.page_link("pages/pagina2.py", label="🛒Comercial")
