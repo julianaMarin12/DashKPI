@@ -19,6 +19,7 @@ def generarMenu(usuario):
         st.subheader("Tableros")
         st.page_link("pages/pagina1.py", label="💰Financiera")
         st.page_link("pages/pagina2.py", label="🛒Comercial")
+        st.page_link("pages/pagina3.py", label="⛴Exportaciones")
         btnSalir = st.button("Salir")
         if btnSalir:
             st.session_state.clear()
