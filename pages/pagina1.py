@@ -3,6 +3,6 @@ import login
 
 login.generarLogin()
 if 'usuario' in st.session_state:
-    st.header('💰 KPIS Área Financiera ')
+    st.markdown("<h1 style='color: white;'>💰 KPIs Área Financiera</h1>", unsafe_allow_html=True)
 
     
