@@ -3,5 +3,6 @@ import login
 
 login.generarLogin()
 if 'usuario' in st.session_state:
-    st.header('⛴KPIS Área de Exportaciones')
+    st.markdown("<h1 style='color: white;'>⛴ KPIs Área de Exportaciones</h1>", unsafe_allow_html=True)
+
     

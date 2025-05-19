@@ -7,10 +7,31 @@ from load_excel import load_excel
 
 login.generarLogin()
 if 'usuario' in st.session_state:
-    st.subheader("Bienvenido")
-    st.title("📊 Dashboard KPIs")
+    st.markdown("""
+        <style>
+            
+            h1 {
+                color: white !important;
+            }
+    
+            div.stButton > button {
+                background-color: white;
+                color: black;
+               
+            }
 
-    if st.button("🔄 Sincronizar archivo desde OneDrive"):
+            .stAlert {
+                border-radius: 12px !important;
+                padding: 1rem;
+                font-size: 16px;
+            }
+        </style>
+    """, unsafe_allow_html=True)
+
+    st.title("📊 Dashboard KPIs")
+    st.subheader("Bienvenido")
+    st.write("Dar click al botón de sincronizar datos")
+    if st.button("🔄 Sincronizar datos"):
         with st.spinner("Sincronizando..."):
             out, err = sync_excel_from_onedrive()
             if err:
