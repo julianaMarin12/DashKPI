@@ -12,7 +12,6 @@ if 'usuario' in st.session_state:
     st.markdown("<h1 style='color: white;'>🛒 KPIs Área Comercial</h1>", unsafe_allow_html=True)
     st.markdown("<h4 style='color: black;'>📊 Métricas de los KPIs</h4>", unsafe_allow_html=True)
 
-    # Estilos CSS
     st.markdown("""
         <style>
             div[role="button"] {
@@ -57,13 +56,20 @@ if 'usuario' in st.session_state:
     indicador_f = df_general["INDICADOR"].values[0]
     indicador = indicador_f * 100
 
+    if 0 < indicador <= 60 :
+        color = "red"
+    elif 61 < indicador <= 80:
+        color = "yellow"
+    else:
+        color ="green"
+
     st.markdown("<h3 style='color: white;'>Indicador de Cartera </h3>", unsafe_allow_html=True)
     fig = go.Figure(data=[
         go.Pie(
             values=[indicador, 100 - indicador],
             labels=["Avance", "Restante"],
             hole=0.65,
-            marker=dict(colors=["#25ABB9", "#F0F0F0"]),
+            marker=dict(colors=[color, "#F0F0F0"]),
             textinfo="none",
             hoverinfo="label+percent",
             sort=False
@@ -76,7 +82,7 @@ if 'usuario' in st.session_state:
             text=f"<b>{indicador:.1f}%</b>",
             x=0.5,
             y=0.5,
-            font=dict(size=28, color="#4CAF50"),
+            font=dict(size=28, color="black"),
             showarrow=False
         )],
         margin=dict(t=20, b=20, l=20, r=20),
@@ -162,12 +168,17 @@ if 'usuario' in st.session_state:
                 lat=[row['lat']],
                 mode="markers+text",
                 marker=dict(size=10 + row['INDICADOR']*40, color=row['color']),
-                text=[f"{row['Supervisor']}<br>{row['INDICADOR']*100:.1f}%"],
-                textposition="top right",
-                showlegend=False,
-                hoverinfo="text",
-                hovertemplate=hover_text
+                text=[(
+                    f"{row['Supervisor']}<br>"
+                    f"{row['INDICADOR']*100:.1f}%<br>"
+                    f"${row['TOTAL VENCIDO']:,.0f} vencido<br>"
+                    f"${row['TOTAL CORRIENTE']:,.0f} corriente<br>"
+                    f"${row['TOTAL CARTERA']:,.0f} cartera"
+                )],
+                textposition="bottom right",
+                showlegend=False
             ))
+
 
         fig.update_layout(
             mapbox_style="open-street-map",
