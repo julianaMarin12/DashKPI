@@ -76,7 +76,6 @@ El sistema incluye un **módulo de login** que restringe el acceso solo a usuari
 
 - Filtros por fechas o rango de tiempo
 - Exportación automática de reportes en PDF
-- Integración directa con sistemas ERP o bases de datos en la nube
 
 ---
 
