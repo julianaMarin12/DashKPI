@@ -44,7 +44,7 @@ if 'usuario' in st.session_state:
         </style>
     """, unsafe_allow_html=True)
 
-    df = pd.read_excel("kpi generales.xlsx", sheet_name="COMERCIAL1")
+    df = pd.read_excel("kpi generales.xlsx", sheet_name="mercadeo2")
     df.columns = df.columns.str.strip()
     df_general = df[df["Unidad de Negocio"] == "Total general"]
 
