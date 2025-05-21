@@ -29,7 +29,6 @@ El sistema integra un análisis automatizado de Excel con visualizaciones modern
   - Porcentaje de cumplimiento del KPI
   - Valores asociados a cartera
 - Puntos del mapa **codificados por color y tamaño**:
-  - Verde (#4CAF50): representa cumplimiento
   - Tamaño proporcional al desempeño
 
 ---
