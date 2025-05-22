@@ -83,11 +83,8 @@ if 'usuario' in st.session_state:
                 </div>
             """, unsafe_allow_html=True)
 
-       
-
         valor = variacion_pct * 100
         presupuesto = presupuestado * 100
-
 
         fig = go.Figure(go.Indicator(
             mode="gauge+number+delta",
@@ -104,14 +101,14 @@ if 'usuario' in st.session_state:
                 'suffix': '%'
             },
             gauge={
-                'axis': {'range': [0, 100]}, 
+                'axis': {'range': [0, 36.5]}, 
                 'bar': {'color': "green" if valor >= presupuesto else "red"},
                 'steps': [
                     {'range': [0, presupuesto], 'color': '#ffe6e6'},
-                    {'range': [presupuesto, 100], 'color': '#e6ffe6'}
+                    {'range': [presupuesto, 36.5], 'color': '#e6ffe6'}
                 ],
                 'threshold': {
-                    'line': {'color': "blue", 'width': 4},
+                    'line': {'color': "black", 'width': 4},
                     'thickness': 0.75,
                     'value': presupuesto
                 }
