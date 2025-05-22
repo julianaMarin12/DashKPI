@@ -56,12 +56,17 @@ if 'usuario' in st.session_state:
     indicador_f = df_general["INDICADOR"].values[0]
     indicador = indicador_f * 100
 
-    if 0 < indicador <= 60 :
+    indicador = indicador_f * 100
+
+    if 0 < indicador <= 60:
         color = "red"
-    elif 61 < indicador <= 80:
-        color = "yellow"
+    elif 60 < indicador <= 80:
+        color = "#E7E200"
+    elif 80 < indicador <= 100:
+        color = "green"
     else:
-        color ="green"
+        color = "gray"  
+
 
     st.markdown("<h3 style='color: white;'>Indicador de Cartera </h3>", unsafe_allow_html=True)
     fig = go.Figure(data=[
@@ -189,3 +194,53 @@ if 'usuario' in st.session_state:
         )
 
         st.plotly_chart(fig, use_container_width=True)
+
+        st.markdown("<h3 style='color: white;'>Indicadores por Supervisor</h3>", unsafe_allow_html=True)
+        
+        df_supervisores = df_mapa[df_mapa["Supervisor"] != "Total general"]
+        cols_per_row = 3
+
+        for i in range(0, len(df_supervisores), cols_per_row):
+            cols = st.columns(cols_per_row)
+            for j, (_, row) in enumerate(df_supervisores.iloc[i:i+cols_per_row].iterrows()):
+                indicador_sup = row["INDICADOR"] * 100
+
+                if 0 < indicador_sup <= 60:
+                    color_sup = "red"
+                elif 60 < indicador_sup <= 80:
+                    color_sup = "#E7E200"
+                elif 80 < indicador_sup <= 100:
+                    color_sup = "green"
+                else:
+                    color_sup = "gray"
+
+                fig_donut = go.Figure(data=[go.Pie(
+                    values=[indicador_sup, 100 - indicador_sup],
+                    labels=["Avance", "Restante"],
+                    hole=0.65,
+                    marker=dict(colors=[color_sup, "#F0F0F0"]),
+                    textinfo="none",
+                    hoverinfo="label+percent",
+                    sort=False
+                )])
+
+                fig_donut.update_layout(
+                    showlegend=False,
+                    annotations=[dict(
+                        text=f"<b>{indicador_sup:.1f}%</b>",
+                        x=0.5,
+                        y=0.5,
+                        font=dict(size=14, color="black"),
+                        showarrow=False
+                    )],
+                    margin=dict(t=10, b=10, l=10, r=10),
+                    height=200,
+                    width=200
+                )
+
+                with cols[j]:
+                    st.markdown(
+                        f"<div style='text-align:center; font-size:14px; font-weight:600; color:black; margin-bottom:5px'>{row['Supervisor']}</div>",
+                        unsafe_allow_html=True
+                    )
+                    st.plotly_chart(fig_donut, use_container_width=True)
