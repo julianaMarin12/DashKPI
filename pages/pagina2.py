@@ -3,14 +3,17 @@ import pandas as pd
 from plotly.colors import sample_colorscale
 import plotly.graph_objects as go
 import plotly.express as px
+from PIL import Image
 import numpy as np
 import login
 
 login.generarLogin()
 
 if 'usuario' in st.session_state:
-    st.markdown("<h1 style='color: white;'>🛒 KPIs Área Comercial</h1>", unsafe_allow_html=True)
-    st.markdown("<h4 style='color: black;'>📊 Métricas de los KPIs</h4>", unsafe_allow_html=True)
+    st.markdown("<h1 style='color: white;'>🛒 KPIs Área Comercial</h1>",
+                unsafe_allow_html=True)
+    st.markdown("<h4 style='color: black;'>📊 Métricas de los KPIs</h4>",
+                unsafe_allow_html=True)
 
     st.markdown("""
         <style>
@@ -65,10 +68,10 @@ if 'usuario' in st.session_state:
     elif 80 < indicador <= 100:
         color = "green"
     else:
-        color = "gray"  
+        color = "gray"
 
-
-    st.markdown("<h3 style='color: white;'>Indicador de Cartera </h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color: white;'>Indicador de Cartera </h3>",
+                unsafe_allow_html=True)
     fig = go.Figure(data=[
         go.Pie(
             values=[indicador, 100 - indicador],
@@ -151,13 +154,12 @@ if 'usuario' in st.session_state:
 
         df_mapa = aplicar_jitter(df_mapa)
 
-                
         fig = go.Figure()
 
-        
-        color_scale = ['#25ABB9', '#28BBCA', '#2BC5D5', '#3CC9D8', '#52CFDC', '#70D7E2']
-        df_mapa['color'] = df_mapa['INDICADOR'].apply(lambda x: sample_colorscale(color_scale, x)[0])
-
+        color_scale = ['#25ABB9', '#28BBCA',
+                       '#2BC5D5', '#3CC9D8', '#52CFDC', '#70D7E2']
+        df_mapa['color'] = df_mapa['INDICADOR'].apply(
+            lambda x: sample_colorscale(color_scale, x)[0])
 
         for i, row in df_mapa.iterrows():
             hover_text = (
@@ -184,19 +186,20 @@ if 'usuario' in st.session_state:
                 showlegend=False
             ))
 
-
         fig.update_layout(
             mapbox_style="open-street-map",
             mapbox_zoom=5,
-            mapbox_center={"lat": df_mapa['lat'].mean(), "lon": df_mapa['lon'].mean()},
+            mapbox_center={
+                "lat": df_mapa['lat'].mean(), "lon": df_mapa['lon'].mean()},
             margin=dict(l=0, r=0, t=30, b=0),
             height=600
         )
 
         st.plotly_chart(fig, use_container_width=True)
 
-        st.markdown("<h3 style='color: white;'>Indicadores por Supervisor</h3>", unsafe_allow_html=True)
-        
+        st.markdown(
+            "<h3 style='color: white;'>Indicadores por Supervisor</h3>", unsafe_allow_html=True)
+
         df_supervisores = df_mapa[df_mapa["Supervisor"] != "Total general"]
         cols_per_row = 3
 
@@ -244,3 +247,154 @@ if 'usuario' in st.session_state:
                         unsafe_allow_html=True
                     )
                     st.plotly_chart(fig_donut, use_container_width=True)
+
+    # -KPI 2------------------------------------------------------------------------------------------------------------------------------------------------
+    df = pd.read_excel("kpi generales.xlsx", sheet_name="Comercial1")
+    df.columns = df.columns.str.strip()
+
+    df_general = df[df["Productos"] == "Total general"]
+
+    ventas_2025 = df_general["Ventas 2025 rea"].values[0]
+    presupesto = df_general["PRESUPUESTO CON LINEA"].values[0]
+    ejecutado = df_general["P% COMERCIAL 2024"].values[0]
+    proyectado = df_general["prueba"].values[0]
+    proyectado_porcent = df_general["prueba 2"].values[0]
+    diferencia = df_general["prueba DIFERENCIA DINERO"].values[0]
+    diferencia_porcent = df_general["prueba DIFERENCIA"].values[0]
+    imagenes = df_general["Ruta Imagen"].values[0]
+    ejecutado_comer = ejecutado * 100
+    proyectado_comer = proyectado_porcent*100
+    diferencia_comer = diferencia_porcent*100
+
+    st.markdown("<h3 style='color: white;'>Ventas Comerciales Generales</h3>",
+                unsafe_allow_html=True)
+
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.markdown(f"""
+            <div class="metric-card">
+                <div class="metric-title">Ventas 2025</div>
+                <div class="metric-value">${ventas_2025:,.0f}</div>
+            </div>
+        """, unsafe_allow_html=True)
+
+    with col2:
+        st.markdown(f"""
+            <div class="metric-card">
+                <div class="metric-title">Presupuesto 2025</div>
+                <div class="metric-value">${presupesto:,.0f}</div>
+            </div>
+        """, unsafe_allow_html=True)
+
+    with col3:
+        st.markdown(f"""
+            <div class="metric-card">
+                <div class="metric-title">Ejecutado</div>
+                <div class="metric-value">{diferencia_comer:.1f}%</div>
+            </div>
+        """, unsafe_allow_html=True)
+
+    col4, col5, col6 = st.columns(3)
+    with col4:
+        st.markdown(f"""
+            <div class="metric-card">
+                <div class="metric-title">Proyectado</div>
+                <div class="metric-value">{proyectado_comer:.1f}%</div>
+            </div>
+        """, unsafe_allow_html=True)
+
+    with col5:
+        st.markdown(f"""
+            <div class="metric-card">
+                <div class="metric-title">Diferencia ($)</div>
+                <div class="metric-value">${diferencia:,.0f}</div>
+            </div>
+        """, unsafe_allow_html=True)
+
+    with col6:
+        st.markdown(f"""
+            <div class="metric-card">
+                <div class="metric-title">Diferencia (%)</div>
+                <div class="metric-value">{diferencia_comer:.1f}%</div>
+            </div>
+        """, unsafe_allow_html=True)
+
+
+st.markdown("<h3 style='color: white;'>📦 Indicadores por Producto</h3>", unsafe_allow_html=True)
+df_productos = df[df["Productos"] != "Total general"]
+
+for _, row in df_productos.iterrows():
+    ejecutado = row["P% COMERCIAL 2024"] * 100
+    presup = row["PRESUPUESTO CON LINEA"]
+    ventas = row["Ventas 2025 rea"]
+    diferencia = row["prueba DIFERENCIA"]*100
+    ruta_imagen = row["Ruta Imagen"]
+
+    if diferencia < 0:
+        color = "red"
+    elif diferencia < 5:
+        color = "#E7E200"
+    else:
+        color = "green"
+
+    fig_gauge = go.Figure(go.Indicator(
+        mode="gauge+number+delta",
+        value=diferencia,
+        number={
+                'suffix': '%'
+            },
+        delta={'reference': 0, 'increasing': {'color': "green"}, 'decreasing': {'color': "red"}},
+        gauge={
+            'axis': {'range': [-10, 67], 'tickwidth': 1, 'tickcolor': "gray"},
+            'bar': {'color': color},
+            'steps': [
+                {'range': [-10, 0], 'color': 'rgba(255, 0, 0, 0.2)'},
+                {'range': [0, 20], 'color': 'rgba(231, 226, 0, 0.2)'},
+                {'range': [20, 67], 'color': 'rgba(0, 255, 0, 0.2)'}
+            ],
+            'threshold': {
+                'line': {'color': "black", 'width': 2},
+                'thickness': 0.75,
+                'value': diferencia
+            }
+        }
+    ))
+
+    fig_gauge.update_layout(
+        margin=dict(t=20, b=20, l=20, r=20),
+        height=200,
+        width=250
+    )
+
+    with st.expander(f"🔹 {row['Productos']}", expanded=False):
+        col1, col2, col3 = st.columns([1, 2, 1])
+
+        try:
+            img = Image.open(ruta_imagen).convert("RGBA")
+            fondo_blanco = Image.new("RGBA", img.size, (255, 255, 255, 255))
+            img_con_fondo_blanco = Image.alpha_composite(fondo_blanco, img).convert("RGB")
+        except Exception as e:
+            st.warning(f"No se pudo cargar la imagen de {row['Productos']}: {e}")
+            img_con_fondo_blanco = None
+
+        with col1:
+            if img_con_fondo_blanco:
+                st.image(img_con_fondo_blanco, width=300)
+            else:
+                st.text("Imagen no disponible")
+
+        with col2:
+            st.markdown(
+                f"""
+                <div style="background-color:white; padding:15px; border-radius:15px; box-shadow:0 2px 5px rgba(0,0,0,0.1); color:#333">
+                    <p><b>Ventas 2025:</b> ${ventas:,.0f}</p>
+                    <p><b>Presupuesto:</b> ${presup:,.0f}</p>
+                    <p><b>Ejecutado:</b> {ejecutado:.1f}%</p>
+                    <p><b>Diferencia Meta 67%:</b> {diferencia:+.1f} pts</p>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+        with col3:
+            st.plotly_chart(fig_gauge, use_container_width=True)
