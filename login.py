@@ -9,7 +9,23 @@ def validarUsuario(usuario,clave):
     else:
         return False
     
-def generarMenu(usuario):     
+def generarMenu(usuario):
+    st.markdown(
+        """
+        <style>
+        [data-testid="stSidebar"] {
+            background-color: white;
+            color: black;
+        }
+
+        [data-testid="stSidebar"] .css-1d391kg {
+            color: #333333;
+        }
+
+        </style>
+        """, unsafe_allow_html=True
+    )
+
     with st.sidebar:
         dfusuarios = pd.read_csv('usuarios.csv')
         dfusuarios = dfusuarios[(dfusuarios['usuario']==usuario)]
