@@ -11,7 +11,6 @@ st.set_page_config(layout="wide")
 
 login.generarLogin()
 
-
 if 'usuario' in st.session_state:
     st.markdown("<h1 style='color: white;'>🛒 KPIs Área Comercial</h1>", unsafe_allow_html=True)
     st.markdown("<h4 style='color: black;'>📊 Métricas de los KPIs</h4>", unsafe_allow_html=True)
@@ -255,7 +254,7 @@ if 'usuario' in st.session_state:
     proyectado_comer = proyectado_porcent*100
     diferencia_comer = diferencia_porcent*100
 
-    st.markdown("<h3 style='color: white;'>Ventas Comerciales Generales</h3>",
+    st.markdown("<h3 style='color: white;'>Presupuesto de Ventas vs Ejecutado</h3>",
                     unsafe_allow_html=True)
 
     col1, col2, col3 = st.columns(3)
@@ -309,50 +308,56 @@ if 'usuario' in st.session_state:
             """, unsafe_allow_html=True)
 
 
-    st.markdown("<h3 style='color: white;'>📦 Indicadores por Producto</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color: white;'> Indicadores por Producto</h3>", unsafe_allow_html=True)
     df_productos = df1[df1["Productos"] != "Total general"]
 
     for _, row in df_productos.iterrows():
         ejecutado = row["P% COMERCIAL 2024"] * 100
+        meta = row["prueba 2"] * 100
+        diferencia = row["prueba DIFERENCIA"] * 100
         presup = row["PRESUPUESTO CON LINEA"]
         ventas = row["Ventas 2025 rea"]
-        diferencia = row["prueba DIFERENCIA"]*100
         ruta_imagen = row["Ruta Imagen"]
 
-        if diferencia < 0:
-            color = "red"
-        elif diferencia < 5:
-            color = "#E7E200"
-        else:
-            color = "green"
+        color_bar = "green" if ejecutado >= meta else "red"
 
         fig_gauge = go.Figure(go.Indicator(
             mode="gauge+number+delta",
-            value=diferencia,
-            number={
-                    'suffix': '%'
-                },
-            delta={'reference': 0, 'increasing': {'color': "green"}, 'decreasing': {'color': "red"}},
+            value=ejecutado,
+            number={'suffix': '%'},
+            delta={
+                'reference': meta,
+                'increasing': {'color': "green"},
+                'decreasing': {'color': "red"},
+                'relative': False,
+                'valueformat': '.1f',
+                'suffix': '%'
+            },
             gauge={
-                'axis': {'range': [-10, 67], 'tickwidth': 1, 'tickcolor': "gray"},
-                'bar': {'color': color},
+                'axis': {'range': [0, max(67, meta * 1.1)]},
+                'bar': {'color': color_bar},
                 'steps': [
-                    {'range': [-10, 0], 'color': 'rgba(255, 0, 0, 0.2)'},
-                    {'range': [0, 20], 'color': 'rgba(231, 226, 0, 0.2)'},
-                    {'range': [20, 67], 'color': 'rgba(0, 255, 0, 0.2)'}
+                    {'range': [0, meta], 'color': '#ffe6e6'},
+                    {'range': [meta, max(67, meta * 1.1)], 'color': '#e6ffe6'}
                 ],
                 'threshold': {
-                    'line': {'color': "black", 'width': 2},
+                    'line': {'color': "black", 'width': 4},
                     'thickness': 0.75,
-                    'value': diferencia
+                    'value': meta
                 }
+            },
+            title={
+                'text': (
+                    f"<b style='font-size:25px; color:black;'>🎯 Meta: {meta:.1f}%</b><br>"
+                    f"<b style='font-size:20px; color:black;'>Diferencia vs Meta</b>"
+                )
             }
         ))
 
         fig_gauge.update_layout(
-            margin=dict(t=20, b=20, l=20, r=20),
-            height=200,
-            width=250
+            margin=dict(t=50, b=20, l=20, r=20),
+            height=250,
+            width=280
         )
 
         with st.expander(f"🔹 {row['Productos']}", expanded=False):
@@ -379,7 +384,7 @@ if 'usuario' in st.session_state:
                         <p><b>Ventas 2025:</b> ${ventas:,.0f}</p>
                         <p><b>Presupuesto:</b> ${presup:,.0f}</p>
                         <p><b>Ejecutado:</b> {ejecutado:.1f}%</p>
-                        <p><b>Diferencia Meta 67%:</b> {diferencia:+.1f} pts</p>
+                        <p><b>Diferencia Meta:</b> {diferencia:+.1f} pts</p>
                     </div>
                     """,
                     unsafe_allow_html=True
@@ -387,3 +392,5 @@ if 'usuario' in st.session_state:
 
             with col3:
                 st.plotly_chart(fig_gauge, use_container_width=True)
+
+
