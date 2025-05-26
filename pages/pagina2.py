@@ -136,7 +136,7 @@ if 'usuario' in st.session_state:
             df_mapa = df.dropna(subset=["lat", "lon", "INDICADOR"])
             df_mapa = df_mapa[df_mapa['ZONA'] != "GENERAL"]
 
-            def aplicar_jitter(df, factor=0.02):
+            def aplicar_jitter(df, factor=0.03):
                 zona_counts = df['ZONA'].value_counts()
                 df_jitter = df.copy()
                 for zona, count in zona_counts.items():
@@ -191,6 +191,9 @@ if 'usuario' in st.session_state:
             for i in range(0, len(df_supervisores), cols_per_row):
                 cols = st.columns(cols_per_row)
                 for j, (_, row) in enumerate(df_supervisores.iloc[i:i + cols_per_row].iterrows()):
+    
+                  
+            
                     indicador_sup = row["INDICADOR"] * 100
 
                     if 0 < indicador_sup <= 60:
@@ -223,13 +226,17 @@ if 'usuario' in st.session_state:
                         margin=dict(t=10, b=10, l=10, r=10),
                         height=200,
                         width=200
+                        
                     )
 
+                
                     with cols[j]:
                         st.markdown(
                             f"<div style='text-align:center; font-size:14px; font-weight:600; color:black; margin-bottom:5px'>{row['Supervisor']}</div>",
                             unsafe_allow_html=True
                         )
+
+                    
                         st.plotly_chart(fig_donut, use_container_width=True)
     
     df1 = pd.read_excel("kpi generales.xlsx", sheet_name="Comercial1")
@@ -340,7 +347,7 @@ if 'usuario' in st.session_state:
             """, unsafe_allow_html=True)
 
 
-    st.markdown("<h3 style='color: white;'> Indicadores por Producto</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color: white;'> Indicadores de Ventas por Producto</h3>", unsafe_allow_html=True)
     df_productos = df1[df1["Productos"] != "Total general"]
 
     for _, row in df_productos.iterrows():
@@ -441,7 +448,7 @@ if 'usuario' in st.session_state:
     proyectado_tipo = proyectado_tipo*100
     diferencia_tipo = diferencia_tipo*100
 
-    st.markdown("<h3 style='color: white;'> Indicadores por Tipología de Cliente</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color: white;'> Indicadores de Ventas por Tipología de Cliente</h3>", unsafe_allow_html=True)
     df_tipo = df2[df2["sub categoria"] != "Total general"]
 
     for _, row in df_tipo.iterrows():
