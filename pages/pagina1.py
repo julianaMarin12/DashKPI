@@ -11,27 +11,36 @@ login.generarLogin()
 if 'usuario' in st.session_state:
     st.markdown("<h1 style='color: white;'>💰 KPIs Área Financiera</h1>", unsafe_allow_html=True)
     st.markdown("""
-    <style>
-    .metric-card {
-        background-color: #f9f9f9;
-        padding: 1.2rem;
-        border-radius: 1rem;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-        text-align: center;
-    }
-    .metric-title {
-        font-size: 1rem;
-        color: #555;
-        margin-bottom: 0.3rem;
-    }
-    .metric-value {
-        font-size: 1.5rem;
-        font-weight: bold;
-        color: #222;
-    }
-    </style>
-    """, unsafe_allow_html=True)
+        <style>
+            div[role="button"] {
+                background-color: #ffffff !important;
+                color: #333333 !important;
+                font-weight: 600;
+                font-size: 18px;
+                border: 1px solid #dddddd !important;
+                border-radius: 12px;
+                padding: 12px;
+                margin-bottom: 15px;
+                box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
+            }
 
+            .metric-card {
+                background-color: white;
+                padding: 20px 10px;
+                border-radius: 15px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                text-align: center;
+                margin-bottom: 15px;
+            }
+
+            .metric-title {
+                font-size: 18px;
+                font-weight: 600;
+                margin-bottom: 8px;
+                color: #333333;
+            }
+        </style>
+    """, unsafe_allow_html=True)
 
     df_ind = pd.read_excel("kpi generales.xlsx", sheet_name="financiera mes", header=None)
     df_ind[0] = df_ind[0].astype(str).str.strip().str.upper()
@@ -41,11 +50,15 @@ if 'usuario' in st.session_state:
     margen = df_ind.loc[df_ind[0] == "MARGEN NETO FINAL", 1].values[0]*100
 
 
-    st.markdown("<h3 style='color: white;'>Rentabilidad por mes </h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color: white;'>Rentabilidad del mes anterior</h3>", unsafe_allow_html=True)
     col1, col2 = st.columns([1, 1])
 
     with col1:
-        st.markdown("<h3 style='color: white;'> <center>Margen Bruto </center> </h3>", unsafe_allow_html=True)
+        st.markdown(f"""
+            <div class="metric-card">
+                <div class="metric-title">Margen Bruto</div>
+            </div>
+        """, unsafe_allow_html=True)
         fig = go.Figure(go.Indicator(
                 mode="gauge+number+delta",
                 value=margen_bruto,
@@ -75,12 +88,12 @@ if 'usuario' in st.session_state:
                 },
                 title={
                     'text': (
-                        "<b style='font-size:25px; color:black;'>Presupuestado: 51.4%</b><br>"
-                        "<b style='font-size:20px; color:black;'>% Ejecutado vs Presupuesto</b>"
+                        "<b style='font-size:20px; color:black;'>Presupuestado: 51.4%</b><br>"
+                        "<b style='font-size:15px; color:black;'>% Ejecutado vs Presupuesto</b>"
                     )
                 }
             ))
-        fig.update_layout(height=400)  
+        fig.update_layout(height=300)  
         st.plotly_chart(fig, use_container_width=True)
 
         st.markdown(f"""
@@ -91,7 +104,11 @@ if 'usuario' in st.session_state:
         """, unsafe_allow_html=True)
 
     with col2:
-        st.markdown("<h3 style='color: white;'><center>Margen Neto </center></h3>", unsafe_allow_html=True)
+        st.markdown(f"""
+            <div class="metric-card">
+                <div class="metric-title">Margen Neto</div>
+            </div>
+        """, unsafe_allow_html=True)
         fig = go.Figure(go.Indicator(
                 mode="gauge+number+delta",
                 value=margen,
@@ -121,12 +138,12 @@ if 'usuario' in st.session_state:
                 },
                 title={
                     'text': (
-                        "<b style='font-size:25px; color:black;'>Presupuestado: 18%</b><br>"
-                        "<b style='font-size:20px; color:black;'>% Ejecutado vs Presupuesto</b>"
+                        "<b style='font-size:20px; color:black;'>Presupuestado: 18%</b><br>"
+                        "<b style='font-size:15px; color:black;'>% Ejecutado vs Presupuesto</b>"
                     )
                 }
             ))
-        fig.update_layout(height=400)  
+        fig.update_layout(height=300)  
         st.plotly_chart(fig, use_container_width=True)
         st.markdown(f"""
             <div class="metric-card">
@@ -147,7 +164,11 @@ if 'usuario' in st.session_state:
     col1, col2 = st.columns([1, 1])
 
     with col1:
-        st.markdown("<h3 style='color: white;'> <center>Margen Bruto </center> </h3>", unsafe_allow_html=True)
+        st.markdown(f"""
+            <div class="metric-card">
+                <div class="metric-title">Margen Bruto</div>
+            </div>
+        """, unsafe_allow_html=True)
         fig = go.Figure(go.Indicator(
                 mode="gauge+number+delta",
                 value=margen_bruto,
@@ -177,12 +198,12 @@ if 'usuario' in st.session_state:
                 },
                 title={
                     'text': (
-                        "<b style='font-size:25px; color:black;'> Presupuestado: 51.4%</b><br>"
-                        "<b style='font-size:20px; color:black;'>% Ejecutado vs Presupuesto</b>"
+                        "<b style='font-size:20px; color:black;'> Presupuestado: 51.4%</b><br>"
+                        "<b style='font-size:15px; color:black;'>% Ejecutado vs Presupuesto</b>"
                     )
                 }
             ))
-        fig.update_layout(height=400)  
+        fig.update_layout(height=300)  
         st.plotly_chart(fig, use_container_width=True)
 
         st.markdown(f"""
@@ -193,7 +214,14 @@ if 'usuario' in st.session_state:
         """, unsafe_allow_html=True)
 
     with col2:
-        st.markdown("<h3 style='color: white;'><center>Margen Neto </center></h3>", unsafe_allow_html=True)
+
+        st.markdown(f"""
+            <div class="metric-card">
+                <div class="metric-title">Margen Neto</div>
+            </div>
+        """, unsafe_allow_html=True) 
+
+
         fig = go.Figure(go.Indicator(
                 mode="gauge+number+delta",
                 value=margen,
@@ -223,12 +251,12 @@ if 'usuario' in st.session_state:
                 },
                 title={
                     'text': (
-                        "<b style='font-size:25px; color:black;'>Presupuestado: 18%</b><br>"
-                        "<b style='font-size:20px; color:black;'>% Ejecutado vs Presupuesto</b>"
+                        "<b style='font-size:20px; color:black;'>Presupuestado: 18%</b><br>"
+                        "<b style='font-size:15px; color:black;'>% Ejecutado vs Presupuesto</b>"
                     )
                 }
             ))
-        fig.update_layout(height=400)  
+        fig.update_layout(height=300)  
         st.plotly_chart(fig, use_container_width=True)
         st.markdown(f"""
             <div class="metric-card">
