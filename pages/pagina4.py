@@ -8,8 +8,6 @@ login.generarLogin()
 
 if 'usuario' in st.session_state:
     st.markdown("<h1 style='color: white;'>🛍️ KPIs Área Mercadeo </h1>", unsafe_allow_html=True)
-    st.markdown("<h4 style='color: black;'>📊 Métricas de los KPIs</h4>", unsafe_allow_html=True)
-
     st.markdown("""
         <style>
             /* Personaliza botones */
@@ -55,38 +53,11 @@ if 'usuario' in st.session_state:
     presupuestado = df_general["PRESUPUESTADO"].values[0]
     acumulado_anterior = df_general["ACUMULADO MES ANTERIOR"].values[0]
 
-    
-    with st.expander("CANALES TOTAL/B2B/B2C + Digital/EXP"):
-        col1, col2, col3 = st.columns([1.8, 1.8, 1.5])
+    st.markdown("<h3 style='color: white;'> CANALES TOTAL/B2B/B2C + Digital/EXP </h3>", unsafe_allow_html=True)    
+    valor = variacion_pct * 100
+    presupuesto = presupuestado * 100
 
-        with col1:
-            st.markdown(f"""
-                <div class="metric-card">
-                    <div class="metric-title">Ventas 2024</div>
-                    <div class="metric-value">${ventas_2024:,.0f}</div>
-                </div>
-            """, unsafe_allow_html=True)
-
-        with col2:
-            st.markdown(f"""
-                <div class="metric-card">
-                    <div class="metric-title">Ventas 2025</div>
-                    <div class="metric-value">${ventas_2025:,.0f}</div>
-                </div>
-            """, unsafe_allow_html=True)
-
-        with col3:
-            st.markdown(f"""
-                <div class="metric-card">
-                    <div class="metric-title">Variación Absoluta</div>
-                    <div class="metric-value" style="color: black;">${variacion_abs:,.0f}</div>
-                </div>
-            """, unsafe_allow_html=True)
-
-        valor = variacion_pct * 100
-        presupuesto = presupuestado * 100
-
-        fig = go.Figure(go.Indicator(
+    fig = go.Figure(go.Indicator(
             mode="gauge+number+delta",
             value=valor,
             number={
@@ -120,9 +91,36 @@ if 'usuario' in st.session_state:
                 ).format(presupuesto=presupuesto)
             }
         ))
+    fig.update_layout(height=400)  
+    st.plotly_chart(fig, use_container_width=True)
 
-        st.plotly_chart(fig, use_container_width=True)
+    col1, col2, col3 = st.columns([1.8, 1.8, 1.5])
 
+    with col1:
+            st.markdown(f"""
+                <div class="metric-card">
+                    <div class="metric-title">Ventas 2024</div>
+                    <div class="metric-value">${ventas_2024:,.0f}</div>
+                </div>
+            """, unsafe_allow_html=True)
+
+    with col2:
+            st.markdown(f"""
+                <div class="metric-card">
+                    <div class="metric-title">Ventas 2025</div>
+                    <div class="metric-value">${ventas_2025:,.0f}</div>
+                </div>
+            """, unsafe_allow_html=True)
+
+    with col3:
+            st.markdown(f"""
+                <div class="metric-card">
+                    <div class="metric-title">Variación Absoluta</div>
+                    <div class="metric-value" style="color: black;">${variacion_abs:,.0f}</div>
+                </div>
+            """, unsafe_allow_html=True)
+
+        
 
         
 
