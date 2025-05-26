@@ -45,6 +45,270 @@ if 'usuario' in st.session_state:
         </style>
     """, unsafe_allow_html=True)
 
+    df_rentabilidad_mes = pd.read_excel("kpi generales.xlsx", sheet_name="rentabilidad comercial mes")
+    df_rentabilidad_mes.columns = df_rentabilidad_mes.columns.str.strip()
+
+    df_general = df_rentabilidad_mes[df_rentabilidad_mes["Etiquetas de fila"] == "Total general"]
+
+    utilidad = df_general["UTILIDAD NETA FINAL"].values[0]
+    margen = df_general["MARGEN NETO FINAL"].values[0]*100
+
+    st.markdown("<h3 style='color: white;'>Rentabilidad Mensual</h3>",
+                    unsafe_allow_html=True)
+    
+    col_grafico01, col_utilidad = st.columns([1, 2])  
+    with col_grafico01:        
+        fig = go.Figure(go.Indicator(
+            mode="gauge+number+delta",
+            value=margen,
+            number={'suffix': '%'},
+            delta={
+                'reference': 20,
+                'increasing': {'color': "green"},
+                'decreasing': {'color': "red"},
+                'relative': False,
+                'valueformat': '.2f',
+                'suffix': '%'
+            },
+            gauge={
+                'axis': {'range': [0, 20]},
+                'bar': {'color': "green" if margen >= 20 else "red"},
+                'steps': [
+                    {'range': [0, 20], 'color': '#ffe6e6'},
+                    {'range': [20, 100], 'color': '#e6ffe6'}
+                ],
+                'threshold': {
+                    'line': {'color': "black", 'width': 4},
+                    'thickness': 0.75,
+                    'value': 20
+                }
+            },
+            title={
+                'text': (
+                    "<b style='font-size:20px; color:black;'> Proyección: 20%</b><br>"
+                    "<b style='font-size:15px; color:black;'>% Ejecutado vs Proyectado</b>"
+                )
+            }
+        ))
+        fig.update_layout(height=300)  
+        st.plotly_chart(fig, use_container_width=True)
+        
+
+    with col_utilidad:
+    
+        st.markdown(f"""
+                <div class="metric-card">
+                    <div class="metric-title">Utilidad Neta</div>
+                    <div class="metric-value">${utilidad:,.0f}</div>
+                </div>
+            """, unsafe_allow_html=True)
+
+        st.markdown(f"""
+                <div class="metric-card">
+                    <div class="metric-title">Margen Neto</div>
+                    <div class="metric-value">{margen:,.2f}%</div>
+                </div>
+            """, unsafe_allow_html=True)
+        
+    tipologias_deseadas = [
+            "GRANDES SUPERFICIES",
+            "TIENDA ESPECIALIZADA",
+            "CADENAS REGIONALES",
+            "FOOD SERVICE PREMIUM",
+            "AUTOSERVICIOS",
+            "DISTRIBUIDOR",
+            "OTROS CLIENTES NACIONALES"
+        ]
+
+    df_tipologia = df_rentabilidad_mes[df_rentabilidad_mes["Etiquetas de fila"].isin(tipologias_deseadas)]
+
+    for _, row in df_tipologia.iterrows():
+        ejecutado = row["MARGEN NETO FINAL"] * 100
+        utilidad_rentabilidad = row["UTILIDAD NETA FINAL"] 
+
+        color_bar = "green" if ejecutado >= 20 else "red"
+
+        fig_gauge = go.Figure(go.Indicator(
+                mode="gauge+number+delta",
+                value=ejecutado,
+                number={'suffix': '%'},
+                delta={
+                    'reference': 20,
+                    'increasing': {'color': "green"},
+                    'decreasing': {'color': "red"},
+                    'relative': False,
+                    'valueformat': '.2f',
+                    'suffix': '%'
+                },
+                gauge={
+                    'axis': {'range': [0, max(67, 20 * 1.1)]},
+                    'bar': {'color': color_bar},
+                    'steps': [
+                        {'range': [0, 20], 'color': '#ffe6e6'},
+                        {'range': [20, max(67, 20 * 1.1)], 'color': '#e6ffe6'}
+                    ],
+                    'threshold': {
+                        'line': {'color': "black", 'width': 4},
+                        'thickness': 0.75,
+                        'value': 20
+                    }
+                },
+                title={
+                    'text': (
+                        f"<b style='font-size:20px; color:black;'>Proyección:20%</b><br>"
+                    )
+                }
+            ))
+
+        fig_gauge.update_layout(
+                margin=dict(t=50, b=20, l=20, r=20),
+                height=250,
+                width=280
+            )
+        
+        with st.expander(f" {row['Etiquetas de fila']}", expanded=False):
+            col1, col2= st.columns(2)
+            with col1:
+                fig.update_layout(height=200)  
+                st.plotly_chart(fig_gauge, use_container_width=True, key=f"gauge_{row['Etiquetas de fila']}")
+            with col2:
+                st.markdown(
+                        f"""
+                        <div style="background-color:white; padding:15px; border-radius:15px; box-shadow:0 2px 5px rgba(0,0,0,0.1); color:#333">
+                            <p><b>Utilidad:</b> ${utilidad:,.0f}</p>
+                            <p><b>Margen:</b> {margen:+.2f} %</p>
+                        </div>
+                        """,
+                        unsafe_allow_html=True
+                    )
+    
+    df_rentabilidad_acum = pd.read_excel("kpi generales.xlsx", sheet_name="rentabilidad comercial acum")
+    df_rentabilidad_acum.columns = df_rentabilidad_acum.columns.str.strip()
+
+    df_general = df_rentabilidad_acum[df_rentabilidad_acum["TIPOLOGIA"] == "Total general"]
+
+    utilidad_acum = df_general["UTILIDAD NETA FINAL"].values[0]
+    margen_acum = df_general["MARGEN NETO FINAL"].values[0]*100
+
+    st.markdown("<h3 style='color: white;'>Rentabilidad Acumulado</h3>",
+                    unsafe_allow_html=True)
+    
+    col_grafico02, col_utilidad_acum = st.columns([1, 2])  
+    with col_grafico02:        
+        fig = go.Figure(go.Indicator(
+            mode="gauge+number+delta",
+            value=margen_acum,
+            number={'suffix': '%'},
+            delta={
+                'reference': 20,
+                'increasing': {'color': "green"},
+                'decreasing': {'color': "red"},
+                'relative': False,
+                'valueformat': '.2f',
+                'suffix': '%'
+            },
+            gauge={
+                'axis': {'range': [0, 20]},
+                'bar': {'color': "green" if margen_acum >= 20 else "red"},
+                'steps': [
+                    {'range': [0, 20], 'color': '#ffe6e6'},
+                    {'range': [20, 100], 'color': '#e6ffe6'}
+                ],
+                'threshold': {
+                    'line': {'color': "black", 'width': 4},
+                    'thickness': 0.75,
+                    'value': 20
+                }
+            },
+            title={
+                'text': (
+                    "<b style='font-size:20px; color:black;'> Proyección: 20%</b><br>"
+                    "<b style='font-size:15px; color:black;'>% Ejecutado vs Proyectado</b>"
+                )
+            }
+        ))
+        fig.update_layout(height=300)  
+        st.plotly_chart(fig, use_container_width=True)
+        
+
+    with col_utilidad_acum:
+    
+        st.markdown(f"""
+                <div class="metric-card">
+                    <div class="metric-title">Utilidad Neta</div>
+                    <div class="metric-value">${utilidad_acum:,.0f}</div>
+                </div>
+            """, unsafe_allow_html=True)
+
+        st.markdown(f"""
+                <div class="metric-card">
+                    <div class="metric-title">Margen Neto</div>
+                    <div class="metric-value">{margen_acum:,.2f}%</div>
+                </div>
+            """, unsafe_allow_html=True)
+
+    df_tipologia_acum = df_rentabilidad_acum[df_rentabilidad_acum["TIPOLOGIA"].isin(tipologias_deseadas)]
+
+    for _, row in df_tipologia_acum.iterrows():
+        ejecutado_acum = row["MARGEN NETO FINAL"] * 100
+        utilidad_rentabilidad_acum = row["UTILIDAD NETA FINAL"] 
+
+        color_bar = "green" if ejecutado_acum >= 20 else "red"
+
+        fig_gauge = go.Figure(go.Indicator(
+                mode="gauge+number+delta",
+                value=ejecutado,
+                number={'suffix': '%'},
+                delta={
+                    'reference': 20,
+                    'increasing': {'color': "green"},
+                    'decreasing': {'color': "red"},
+                    'relative': False,
+                    'valueformat': '.2f',
+                    'suffix': '%'
+                },
+                gauge={
+                    'axis': {'range': [0, max(67, 20 * 1.1)]},
+                    'bar': {'color': color_bar},
+                    'steps': [
+                        {'range': [0, 20], 'color': '#ffe6e6'},
+                        {'range': [20, max(67, 20 * 1.1)], 'color': '#e6ffe6'}
+                    ],
+                    'threshold': {
+                        'line': {'color': "black", 'width': 4},
+                        'thickness': 0.75,
+                        'value': 20
+                    }
+                },
+                title={
+                    'text': (
+                        f"<b style='font-size:20px; color:black;'>Proyección:20%</b><br>"
+                    )
+                }
+            ))
+
+        fig_gauge.update_layout(
+                margin=dict(t=50, b=20, l=20, r=20),
+                height=250,
+                width=280
+            )
+        
+        with st.expander(f" {row['TIPOLOGIA']}", expanded=False):
+            col1, col2= st.columns(2)
+            with col1:
+                fig.update_layout(height=200)  
+                st.plotly_chart(fig_gauge, use_container_width=True, key=f"gauge_{row['UTILIDAD NETA FINAL']}")
+            with col2:
+                st.markdown(
+                        f"""
+                        <div style="background-color:white; padding:15px; border-radius:15px; box-shadow:0 2px 5px rgba(0,0,0,0.1); color:#333">
+                            <p><b>Utilidad:</b> ${utilidad:,.0f}</p>
+                            <p><b>Margen:</b> {margen:+.2f} %</p>
+                        </div>
+                        """,
+                        unsafe_allow_html=True
+                    )
+
     df = pd.read_excel("kpi generales.xlsx", sheet_name="Cartera1")
     df.columns = df.columns.str.strip()
     df['ZONA'] = df['ZONA'].str.upper()
@@ -84,7 +348,7 @@ if 'usuario' in st.session_state:
         fig.update_layout(
             showlegend=False,
             annotations=[dict(
-                text=f"<b>{indicador:.1f}%</b>",
+                text=f"<b>{indicador:.2f}%</b>",
                 x=0.5, y=0.5,
                 font=dict(size=28, color="black"),
                 showarrow=False
@@ -163,7 +427,7 @@ if 'usuario' in st.session_state:
                     marker=dict(size=10 + row['INDICADOR'] * 40, color=row['color']),
                     text=[(
                         f"{row['Supervisor']}<br>"
-                        f"{row['INDICADOR'] * 100:.1f}%<br>"
+                        f"{row['INDICADOR'] * 100:.2f}%<br>"
                         f"${row['TOTAL VENCIDO']:,.0f} vencido<br>"
                         f"${row['TOTAL CORRIENTE']:,.0f} corriente<br>"
                         f"${row['TOTAL CARTERA']:,.0f} cartera"
@@ -218,7 +482,7 @@ if 'usuario' in st.session_state:
                     fig_donut.update_layout(
                         showlegend=False,
                         annotations=[dict(
-                            text=f"<b>{indicador_sup:.1f}%</b>",
+                            text=f"<b>{indicador_sup:.2f}%</b>",
                             x=0.5, y=0.5,
                             font=dict(size=14, color="black"),
                             showarrow=False
@@ -269,7 +533,7 @@ if 'usuario' in st.session_state:
                 'increasing': {'color': "green"},
                 'decreasing': {'color': "red"},
                 'relative': False,
-                'valueformat': '.1f',
+                'valueformat': '.2f',
                 'suffix': '%'
             },
             gauge={
@@ -287,7 +551,7 @@ if 'usuario' in st.session_state:
             },
             title={
                 'text': (
-                    "<b style='font-size:20px; color:black;'> Proyección: {proyectado_comer:.1f}%</b><br>"
+                    "<b style='font-size:20px; color:black;'> Proyección: {proyectado_comer:.2f}%</b><br>"
                     "<b style='font-size:15px; color:black;'>% Variación vs Proyectado</b>"
                 ).format(proyectado_comer=proyectado_comer)
             }
@@ -317,7 +581,7 @@ if 'usuario' in st.session_state:
             st.markdown(f"""
                 <div class="metric-card">
                     <div class="metric-title">Ejecutado</div>
-                    <div class="metric-value">{ejecutado_comer:.1f}%</div>
+                    <div class="metric-value">{ejecutado_comer:.2f}%</div>
                 </div>
             """, unsafe_allow_html=True)
 
@@ -326,7 +590,7 @@ if 'usuario' in st.session_state:
             st.markdown(f"""
                 <div class="metric-card">
                     <div class="metric-title">Proyectado</div>
-                    <div class="metric-value">{proyectado_comer:.1f}%</div>
+                    <div class="metric-value">{proyectado_comer:.2f}%</div>
                 </div>
             """, unsafe_allow_html=True)
 
@@ -342,7 +606,7 @@ if 'usuario' in st.session_state:
             st.markdown(f"""
                 <div class="metric-card">
                     <div class="metric-title">Diferencia (%)</div>
-                    <div class="metric-value">{diferencia_comer:.1f}%</div>
+                    <div class="metric-value">{diferencia_comer:.2f}%</div>
                 </div>
             """, unsafe_allow_html=True)
 
@@ -369,7 +633,7 @@ if 'usuario' in st.session_state:
                 'increasing': {'color': "green"},
                 'decreasing': {'color': "red"},
                 'relative': False,
-                'valueformat': '.1f',
+                'valueformat': '.2f',
                 'suffix': '%'
             },
             gauge={
@@ -387,7 +651,7 @@ if 'usuario' in st.session_state:
             },
             title={
                 'text': (
-                    f"<b style='font-size:20px; color:black;'>Proyección: {meta:.1f}%</b><br>"
+                    f"<b style='font-size:20px; color:black;'>Proyección: {meta:.2f}%</b><br>"
                 )
             }
         ))
@@ -421,8 +685,8 @@ if 'usuario' in st.session_state:
                     <div style="background-color:white; padding:15px; border-radius:15px; box-shadow:0 2px 5px rgba(0,0,0,0.1); color:#333">
                         <p><b>Ventas 2025:</b> ${ventas:,.0f}</p>
                         <p><b>Presupuesto:</b> ${presup:,.0f}</p>
-                        <p><b>Ejecutado:</b> {ejecutado:.1f}%</p>
-                        <p><b>Diferencia Meta:</b> {diferencia:+.1f} %</p>
+                        <p><b>Ejecutado:</b> {ejecutado:.2f}%</p>
+                        <p><b>Diferencia Meta:</b> {diferencia:+.2f} %</p>
                     </div>
                     """,
                     unsafe_allow_html=True
@@ -469,7 +733,7 @@ if 'usuario' in st.session_state:
                 'increasing': {'color': "green"},
                 'decreasing': {'color': "red"},
                 'relative': False,
-                'valueformat': '.1f',
+                'valueformat': '.2f',
                 'suffix': '%'
             },
             gauge={
@@ -487,7 +751,7 @@ if 'usuario' in st.session_state:
             },
             title={
                 'text': (
-                    f"<b style='font-size:20px; color:black;'>Proyección: {meta_tipo:.1f}%</b><br>"
+                    f"<b style='font-size:20px; color:black;'>Proyección: {meta_tipo:.2f}%</b><br>"
                 )
             }
         ))
@@ -506,8 +770,8 @@ if 'usuario' in st.session_state:
                     <div style="background-color:white; padding:15px; border-radius:15px; box-shadow:0 2px 5px rgba(0,0,0,0.1); color:#333">
                         <p><b>Ventas 2025:</b> ${ventas_tipo:,.0f}</p>
                         <p><b>Presupuesto:</b> ${presuto_tipo:,.0f}</p>
-                        <p><b>Ejecutado:</b> {ejecutado_tipo:.1f}%</p>
-                        <p><b>Diferencia Meta:</b> {diferencia_tipo:+.1f} %</p>
+                        <p><b>Ejecutado:</b> {ejecutado_tipo:.2f}%</p>
+                        <p><b>Diferencia Meta:</b> {diferencia_tipo:+.2f} %</p>
                     </div>
                     """,
                     unsafe_allow_html=True
