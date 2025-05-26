@@ -175,8 +175,8 @@ if 'usuario' in st.session_state:
                 st.markdown(
                         f"""
                         <div style="background-color:white; padding:15px; border-radius:15px; box-shadow:0 2px 5px rgba(0,0,0,0.1); color:#333">
-                            <p><b>Utilidad:</b> ${utilidad:,.0f}</p>
-                            <p><b>Margen:</b> {margen:+.2f} %</p>
+                            <p><b>Utilidad:</b> ${utilidad_rentabilidad:,.0f}</p>
+                            <p><b>Margen:</b> {ejecutado:+.2f} %</p>
                         </div>
                         """,
                         unsafe_allow_html=True
@@ -302,8 +302,8 @@ if 'usuario' in st.session_state:
                 st.markdown(
                         f"""
                         <div style="background-color:white; padding:15px; border-radius:15px; box-shadow:0 2px 5px rgba(0,0,0,0.1); color:#333">
-                            <p><b>Utilidad:</b> ${utilidad:,.0f}</p>
-                            <p><b>Margen:</b> {margen:+.2f} %</p>
+                            <p><b>Utilidad:</b> ${utilidad_rentabilidad_acum:,.0f}</p>
+                            <p><b>Margen:</b> {ejecutado_acum:+.2f} %</p>
                         </div>
                         """,
                         unsafe_allow_html=True
