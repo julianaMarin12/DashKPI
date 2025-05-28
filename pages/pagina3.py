@@ -1,37 +1,24 @@
+from funciones import mostrar_metrica_dinero
+from funciones import mostrar_metrica_porcentual
+from funciones import mostrar_tipologia
+from funciones import cargar_excel
+from funciones import crear_gauge
+from funciones import crear_donut
+from funciones import crear_mapa
+from plotly.colors import sample_colorscale
+from estilos import aplicar_estilos
+from PIL import Image
 import streamlit as st
 import pandas as pd
-from plotly.colors import sample_colorscale
 import plotly.graph_objects as go
 import plotly.express as px
-from PIL import Image
 import numpy as np
 import login
 
+aplicar_estilos()
 login.generarLogin()
 if 'usuario' in st.session_state:
     st.markdown("<h1 style='color: white;'>⛴ KPIs Área de Exportaciones</h1>", unsafe_allow_html=True)
-    st.markdown("""
-    <style>
-    .metric-card {
-        background-color: #f9f9f9;
-        padding: 1.2rem;
-        border-radius: 1rem;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-        text-align: center;
-    }
-    .metric-title {
-        font-size: 1rem;
-        color: #555;
-        margin-bottom: 0.3rem;
-    }
-    .metric-value {
-        font-size: 1.5rem;
-        font-weight: bold;
-        color: #222;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
 
     df_ind = pd.read_excel("kpi generales.xlsx", sheet_name="rentabilidad exportaciones mes", header=None)
     df_ind[0] = df_ind[0].astype(str).str.strip().str.upper()

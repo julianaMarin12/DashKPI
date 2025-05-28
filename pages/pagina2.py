@@ -1,9 +1,11 @@
-from funciones import mostrar_metrica
+from funciones import mostrar_metrica_porcentual
+from funciones import mostrar_metrica_dinero
 from funciones import mostrar_tipologia
 from funciones import cargar_excel
 from funciones import crear_gauge
 from funciones import crear_donut
 from funciones import crear_mapa
+from estilos import aplicar_estilos
 from plotly.colors import sample_colorscale
 from PIL import Image
 import streamlit as st
@@ -18,76 +20,47 @@ st.set_page_config(layout="wide")
 login.generarLogin()
 if 'usuario' in st.session_state:
     st.markdown("<h1 style='color: white;'>🛒 KPIs Área Comercial</h1>", unsafe_allow_html=True)
-    st.markdown("""
-        <style>
-            div[role="button"] {
-                background-color: #ffffff !important;
-                color: #333333 !important;
-                font-weight: 600;
-                font-size: 18px;
-                border: 1px solid #dddddd !important;
-                border-radius: 12px;
-                padding: 12px;
-                margin-bottom: 15px;
-                box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
-            }
-
-            .metric-card {
-                background-color: white;
-                padding: 20px 10px;
-                border-radius: 15px;
-                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-                text-align: center;
-                margin-bottom: 15px;
-            }
-
-            .metric-title {
-                font-size: 18px;
-                font-weight: 600;
-                margin-bottom: 8px;
-                color: #333333;
-            }
-        </style>
-    """, unsafe_allow_html=True)
-    
-    #RENTABILIDAD MENSUAL
+    aplicar_estilos()
     df_rent_mes = cargar_excel("kpi generales.xlsx", "rentabilidad comercial mes")
     df_general = df_rent_mes[df_rent_mes["Etiquetas de fila"] == "Total general"]
     utilidad = df_general["UTILIDAD NETA FINAL"].values[0]
     margen = df_general["MARGEN NETO FINAL"].values[0] * 100
+    proyectado_rentabilidad_mes = 13
+    st.markdown("<h3 style='color: white;'>Rentabilidad Mensual</h3>", unsafe_allow_html=True)
 
     col1, col2 = st.columns([1, 2])
     with col1:
-        st.plotly_chart(crear_gauge(margen, "Rentabilidad Mensual"), use_container_width=True)
+        st.plotly_chart(crear_gauge(margen, "Rentabilidad Mensual",referencia=proyectado_rentabilidad_mes), use_container_width=True)
     with col2:
-        mostrar_metrica("Utilidad Neta", utilidad, "")
-        mostrar_metrica("Margen Neto", margen, "%")
+        mostrar_metrica_dinero("Utilidad Neta", utilidad, "$")
+        mostrar_metrica_porcentual("Margen Neto", margen, "%")
 
     tipos = [
         "GRANDES SUPERFICIES", "TIENDA ESPECIALIZADA", "CADENAS REGIONALES",
         "FOOD SERVICE PREMIUM", "AUTOSERVICIOS", "DISTRIBUIDOR", "OTROS CLIENTES NACIONALES"
     ]
     df_tip = df_rent_mes[df_rent_mes["Etiquetas de fila"].isin(tipos)]
-    mostrar_tipologia(df_tip, "Etiquetas de fila")
+    mostrar_tipologia(df_tip, "Etiquetas de fila",referencia=proyectado_rentabilidad_mes)
 
     #RENTABILIDAD ACUMULADA
     df_rentabilidad_acum = cargar_excel("kpi generales.xlsx", sheet="rentabilidad comercial acum")
     df_general = df_rentabilidad_acum[df_rentabilidad_acum["TIPOLOGIA"] == "Total general"]
     utilidad_acum = df_general["UTILIDAD NETA FINAL"].values[0]
     margen_acum = df_general["MARGEN NETO FINAL"].values[0] * 100
+    proyectado_rentabilidad_acum = 16
     st.markdown("<h3 style='color: white;'>Rentabilidad Acumulado</h3>", unsafe_allow_html=True)
 
     col_grafico02, col_utilidad_acum = st.columns([1, 2])
     with col_grafico02:
-        fig = crear_gauge(margen_acum, "Proyección:20%")
+        fig = crear_gauge(margen_acum, "Proyección:16%",referencia=proyectado_rentabilidad_acum)
         st.plotly_chart(fig, use_container_width=True)
 
     with col_utilidad_acum:
-        mostrar_metrica("Utilidad Neta", utilidad_acum, sufijo="$")
-        mostrar_metrica("Margen Neto", margen_acum, sufijo="%")
+        mostrar_metrica_dinero("Utilidad Neta", utilidad_acum, "$")
+        mostrar_metrica_porcentual("Margen Neto", margen_acum, "%")
     
     df_tipologia_acum = df_rentabilidad_acum[df_rentabilidad_acum["TIPOLOGIA"].isin(tipos)]
-    mostrar_tipologia(df_tipologia_acum, etiqueta_col="TIPOLOGIA")
+    mostrar_tipologia(df_tipologia_acum, etiqueta_col="TIPOLOGIA",referencia=proyectado_rentabilidad_acum)
 
     #INDICADOR DE CARTERA
     df = cargar_excel("kpi generales.xlsx", "Cartera1")
@@ -117,7 +90,6 @@ if 'usuario' in st.session_state:
 
     st.markdown("<h3 style='color: white;'>Indicador de Cartera</h3>", unsafe_allow_html=True)
 
-    # Layout gráfico + métricas
     col_grafico, col_expander = st.columns([1, 2])
     with col_grafico:
         fig = crear_donut(indicador, color=color, height=320, font_size=28)
@@ -126,11 +98,11 @@ if 'usuario' in st.session_state:
     with col_expander:
         col1, col2, col3 = st.columns(3)
         with col1:
-            mostrar_metrica("Total Vencido", total_vencido)
+            mostrar_metrica_dinero("Total Vencido", total_vencido,"$")
         with col2:
-            mostrar_metrica("Total Corriente", total_corriente)
+            mostrar_metrica_dinero("Total Corriente", total_corriente,"$")
         with col3:
-            mostrar_metrica("Total Cartera", total_cartera)
+            mostrar_metrica_dinero("Total Cartera", total_cartera,"$")
 
         with st.expander("MAPA"):
             fig_mapa, df_mapa = crear_mapa(df)
@@ -158,7 +130,6 @@ if 'usuario' in st.session_state:
                         )
                         st.plotly_chart(fig_donut, use_container_width=True)
     
-    #INDICADOR DE PRODUCTOS  
     df1 = cargar_excel("kpi generales.xlsx", sheet="Comercial1")
     df_general = df1[df1["Productos"] == "Total general"].iloc[0]
 
@@ -180,25 +151,25 @@ if 'usuario' in st.session_state:
     col_grafico1, col_presupuesto = st.columns([1, 2])
 
     with col_grafico1:
-        fig = crear_gauge(ejecutado_comer, titulo="Presupuesto vs Ejecutado", referencia=proyectado_comer, height=300)
+        fig = crear_gauge(ejecutado_comer, titulo="Presupuesto vs Ejecutado",referencia=proyectado_comer)
         st.plotly_chart(fig, use_container_width=True)
 
     with col_presupuesto:
         col1, col2, col3 = st.columns(3)
         with col1:
-            mostrar_metrica("Ventas 2025", ventas_2025, sufijo="$")
+            mostrar_metrica_dinero("Ventas 2025", ventas_2025, "$")
         with col2:
-            mostrar_metrica("Presupuesto 2025", presupesto, sufijo="$")
+            mostrar_metrica_dinero("Presupuesto 2025", presupesto, "$")
         with col3:
-            mostrar_metrica("Ejecutado", ejecutado_comer, sufijo="%")
+            mostrar_metrica_porcentual("Ejecutado", ejecutado_comer, "%")
 
         col4, col5, col6 = st.columns(3)
         with col4:
-            mostrar_metrica("Proyectado", proyectado_comer, sufijo="%")
+            mostrar_metrica_porcentual("Proyectado", proyectado_comer, "%")
         with col5:
-            mostrar_metrica("Diferencia", diferencia, sufijo="$")
+            mostrar_metrica_dinero("Diferencia", diferencia,"$")
         with col6:
-            mostrar_metrica("Diferencia (%)", diferencia_comer, sufijo="%")
+            mostrar_metrica_porcentual("Diferencia (%)", diferencia_comer, "%")
 
     st.markdown("<h3 style='color: white;'>Indicadores de Ventas por Producto</h3>", unsafe_allow_html=True)
     df_productos = df1[df1["Productos"] != "Total general"]
@@ -211,7 +182,7 @@ if 'usuario' in st.session_state:
         ventas = row["Ventas 2025 rea"]
         ruta_imagen = row["Ruta Imagen"]
 
-        fig_gauge = crear_gauge(ejecutado, titulo=f"Proyección {row['Productos']}", referencia=meta, height=250)
+        fig_gauge = crear_gauge(ejecutado, titulo=f"Proyección {row['Productos']}", referencia=meta, )
 
         with st.expander(f"{row['Productos']}", expanded=False):
             col1, col2, col3 = st.columns([1, 2, 1])
@@ -262,7 +233,7 @@ if 'usuario' in st.session_state:
         ventas_tipo = row["Ventas 2025 rea"]
         color_bar = "green" if ejecutado_tipo >= meta_tipo else "red"
         
-        fig_gauge = crear_gauge(ejecutado_tipo, titulo=f"Proyección: {meta_tipo:.2f}%", referencia=meta_tipo, height=250)
+        fig_gauge = crear_gauge(ejecutado_tipo, titulo=f"Proyección: {meta_tipo:.2f}%", referencia=meta_tipo)
         
         with st.expander(f" {row['sub categoria']}", expanded=False):
             col1, col2 = st.columns([2, 2])
