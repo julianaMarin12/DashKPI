@@ -9,7 +9,7 @@ def cargar_excel(path, sheet):
     df.columns = df.columns.str.strip()
     return df
 
-def crear_gauge(valor, titulo, referencia=20, height=300):
+def crear_gauge(valor, titulo, referencia, height=300):
     color_bar = "green" if valor >= referencia else "red"
     fig = go.Figure(go.Indicator(
         mode="gauge+number+delta",
@@ -24,11 +24,11 @@ def crear_gauge(valor, titulo, referencia=20, height=300):
             'suffix': '%'
         },
         gauge={
-            'axis': {'range': [0, max(67, referencia * 1.1)]},
+            'axis': {'range': [0,  referencia]},
             'bar': {'color': color_bar},
             'steps': [
                 {'range': [0, referencia], 'color': '#ffe6e6'},
-                {'range': [referencia, max(67, referencia * 1.1)], 'color': '#e6ffe6'}
+                {'range': [referencia, 100], 'color': '#e6ffe6'}
             ],
             'threshold': {
                 'line': {'color': "black", 'width': 4},
@@ -44,7 +44,7 @@ def crear_gauge(valor, titulo, referencia=20, height=300):
     fig.update_layout(height=height)
     return fig
 
-def mostrar_metrica(titulo, valor, sufijo=""):
+def mostrar_metrica_porcentual(titulo, valor, sufijo=""):
     st.markdown(f"""
         <div class="metric-card">
             <div class="metric-title">{titulo}</div>
@@ -52,11 +52,19 @@ def mostrar_metrica(titulo, valor, sufijo=""):
         </div>
     """, unsafe_allow_html=True)
 
-def mostrar_tipologia(dataframe, etiqueta_col):
+def mostrar_metrica_dinero(titulo, valor, prefijo=""):
+    st.markdown(f"""
+        <div class="metric-card">
+            <div class="metric-title">{titulo}</div>
+            <div class="metric-value">{prefijo}{valor:,.1f}</div>
+        </div>
+    """, unsafe_allow_html=True)
+
+def mostrar_tipologia(dataframe, etiqueta_col,referencia):
     for _, row in dataframe.iterrows():
         ejecutado = row["MARGEN NETO FINAL"] * 100
         utilidad = row["UTILIDAD NETA FINAL"]
-        fig = crear_gauge(ejecutado, "Proyección:20%", height=250)
+        fig = crear_gauge(ejecutado, "Proyección:16%",referencia)
         with st.expander(f"{row[etiqueta_col]}", expanded=False):
             col1, col2 = st.columns(2)
             with col1:
@@ -140,3 +148,59 @@ def crear_mapa(df):
         height=600
     )
     return fig, df_mapa
+
+
+def mostrar_gauge_financiero(titulo_margen, valor, referencia, color_fondo, titulo_seccion):
+    st.markdown(f"<h3 style='color: white;'>{titulo_seccion}</h3>", unsafe_allow_html=True)
+    col1, col2 = st.columns(2)
+
+    for col, nombre, val, ref in zip([col1, col2], ["Margen Bruto", "Margen Neto"], valor, referencia):
+        with col:
+            st.markdown(f"""
+                <div class="metric-card">
+                    <div class="metric-title">{nombre}</div>
+                </div>
+            """, unsafe_allow_html=True)
+
+            color_bar = "green" if val >= ref else "red"
+            fig = go.Figure(go.Indicator(
+                mode="gauge+number+delta",
+                value=val,
+                number={'suffix': '%'},
+                delta={
+                    'reference': ref,
+                    'increasing': {'color': "green"},
+                    'decreasing': {'color': "red"},
+                    'relative': False,
+                    'valueformat': '.1f',
+                    'suffix': '%'
+                },
+                gauge={
+                    'axis': {'range': [0, ref]},
+                    'bar': {'color': color_bar},
+                    'steps': [
+                        {'range': [0, ref], 'color': '#ffe6e6'},
+                        {'range': [ref, 100], 'color': '#e6ffe6'}
+                    ],
+                    'threshold': {
+                        'line': {'color': "black", 'width': 4},
+                        'thickness': 0.75,
+                        'value': ref
+                    }
+                },
+                title={
+                    'text': (
+                        f"<b style='font-size:20px; color:black;'>Presupuestado: {ref:.1f}%</b><br>"
+                        "<b style='font-size:15px; color:black;'>% Ejecutado vs Presupuesto</b>"
+                    )
+                }
+            ))
+            fig.update_layout(height=300)
+            st.plotly_chart(fig, use_container_width=True)
+
+            st.markdown(f"""
+                <div class="metric-card">
+                    <div class="metric-title">{nombre}</div>
+                    <div class="metric-value">{val:,.2f}%</div>
+                </div>
+            """, unsafe_allow_html=True)
