@@ -36,5 +36,9 @@ def aplicar_estilos():
                 font-weight: bold;
                 color: #222;
             }
+            header, footer, .stDeployButton {
+                visibility: hidden;
+            }
         </style>
     """, unsafe_allow_html=True)
+

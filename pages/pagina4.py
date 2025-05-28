@@ -35,41 +35,7 @@ if 'usuario' in st.session_state:
     valor = variacion_pct * 100
     presupuesto = presupuestado * 100
 
-    fig = go.Figure(go.Indicator(
-            mode="gauge+number+delta",
-            value=valor,
-            number={
-                'suffix': '%'
-            },
-            delta={
-                'reference': presupuesto,
-                'increasing': {'color': "green"},
-                'decreasing': {'color': "red"},
-                'relative': False, 
-                'valueformat': '.1f', 
-                'suffix': '%'
-            },
-            gauge={
-                'axis': {'range': [0, 36.5]}, 
-                'bar': {'color': "green" if valor >= presupuesto else "red"},
-                'steps': [
-                    {'range': [0, presupuesto], 'color': '#ffe6e6'},
-                    {'range': [presupuesto, 36.5], 'color': '#e6ffe6'}
-                ],
-                'threshold': {
-                    'line': {'color': "black", 'width': 4},
-                    'thickness': 0.75,
-                    'value': presupuesto
-                }
-            },
-            title={
-                'text': (
-                    "<b style='font-size:25px; color:black;'>🎯 Meta: {presupuesto:.1f}%</b><br>"
-                    "<b style='font-size:20px; color:black;'>% Variación vs Presupuesto</b>"
-                ).format(presupuesto=presupuesto)
-            }
-        ))
-    fig.update_layout(height=400)  
+    fig = crear_gauge(valor, "Proyección:36.5%",referencia=36.5)
     st.plotly_chart(fig, use_container_width=True)
 
     col1, col2, col3 = st.columns([1.8, 1.8, 1.5])
@@ -82,8 +48,22 @@ if 'usuario' in st.session_state:
 
     with col3:
             mostrar_metrica_dinero("Variación Absoluta", variacion_abs,"$")
+    
+    df1 = cargar_excel("kpi generales.xlsx", "lanzamiento")
+    df1.columns = df1.columns.str.strip()
 
-        
+    porcentaje = df1["Porcentaje de Lanzamientos Activos"].values[0]*100
+    lanzamientos =df1["Lanzamientos Activos"].values[0]
+    ventas = df1["Ventas"].values[0]
 
-        
+    st.markdown("<h3 style='color: white;'> INNOVACIÓN/ PORTAFOLIO </h3>", unsafe_allow_html=True)
+    fig = crear_gauge(porcentaje, "Proyección:7%",referencia=7)
+    st.plotly_chart(fig, use_container_width=True)
 
+    col1, col2, col3 = st.columns([1.8, 1.8, 1.5])
+    with col1:
+            mostrar_metrica_porcentual("Porcentaje", porcentaje, "%")
+    with col2:
+            mostrar_metrica_dinero("Lanzamientos Activos", lanzamientos, "$")
+    with col3:
+            mostrar_metrica_dinero("Ventas", ventas, "$")
