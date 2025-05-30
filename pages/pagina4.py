@@ -20,7 +20,8 @@ login.generarLogin()
 
 if 'usuario' in st.session_state:
     crear_header_corporativo(
-        "🛍️ KPIs ÁREA MERCADEO"
+        "🛍️ KPIs ÁREA MERCADEO",
+        "Indicadores para el área de mercadeo"
     )
 
     df = cargar_excel("kpi generales.xlsx", "mercadeo2")
@@ -40,7 +41,7 @@ if 'usuario' in st.session_state:
         "Análisis integral de rendimiento por canales de distribución y venta"
     )
     
-    col_gauge, col_estado = st.columns([2.2, 1])
+    col_gauge, col_estado = st.columns([2, 2])
     
     with col_gauge:
         valor = variacion_pct * 100
@@ -80,7 +81,7 @@ if 'usuario' in st.session_state:
         "Seguimiento estratégico de nuevos productos y lanzamientos comerciales"
     )
 
-    col_gauge2, col_estado2 = st.columns([2.2, 1])
+    col_gauge2, col_estado2 = st.columns([2, 2])
     
     with col_gauge2:
         fig2 = crear_gauge_corporativo(porcentaje, "% LANZAMIENTOS ACTIVOS", referencia=7)
