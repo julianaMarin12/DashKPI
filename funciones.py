@@ -316,9 +316,6 @@ def crear_indicador_estado(valor, referencia, titulo):
 
 
 def mostrar_metrica_corporativa(titulo, valor, prefijo="", sufijo="", tipo="default"):
-    """Muestra una métrica con diseño corporativo"""
-    
-    # Formatear el valor según el tipo
     if isinstance(valor, (int, float)):
         if abs(valor) >= 1000000000:
             valor_formateado = f"{valor/1000000000:.1f}B"
