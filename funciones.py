@@ -213,6 +213,7 @@ def crear_gauge_base64(valor, referencia):
     fig = go.Figure(go.Indicator(
         mode="gauge+number+delta",
         value=valor,
+        color_bar = "green" if valor >= referencia else "red",
         number={
             'suffix': '%',
             'font': {'size': 28}
