@@ -318,13 +318,13 @@ def crear_indicador_estado(valor, referencia, titulo):
 def mostrar_metrica_corporativa(titulo, valor, prefijo="", sufijo="", tipo="default"):
     if isinstance(valor, (int, float)):
         if abs(valor) >= 1000000000:
-            valor_formateado = f"{valor/1000000000:.1f}B"
+            valor_formateado = f"{valor/1000000000:.2f}B"
         elif abs(valor) >= 1000000:
-            valor_formateado = f"{valor/1000000:.1f}M"
+            valor_formateado = f"{valor/1000000:.2f}M"
         elif abs(valor) >= 1000:
-            valor_formateado = f"{valor/1000:.1f}K"
+            valor_formateado = f"{valor/1000:.2f}K"
         else:
-            valor_formateado = f"{valor:,.0f}"
+            valor_formateado = f"{valor:,.2f}"
     else:
         valor_formateado = str(valor)
     
