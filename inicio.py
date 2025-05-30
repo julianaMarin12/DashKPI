@@ -4,6 +4,7 @@ import login as login
 import os
 from sync_excel_from_onedrive import sync_excel_from_onedrive
 from load_excel import load_excel
+from login import set_background
 
 login.generarLogin()
 if 'usuario' in st.session_state:
@@ -27,7 +28,7 @@ if 'usuario' in st.session_state:
             }
         </style>
     """, unsafe_allow_html=True)
-
+    set_background("images/fondo3.py")
     st.title("📊 Dashboard KPIs")
     st.subheader("Bienvenido")
     st.write("Dar click al botón de sincronizar datos")
