@@ -4,4 +4,3 @@ pandas>=1.4
 openpyxl>=3.0
 numpy>=1.21
 kaleido>=0.2,<0.3
-st-aggrid==1.0.5
