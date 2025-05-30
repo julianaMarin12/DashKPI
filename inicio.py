@@ -28,7 +28,7 @@ if 'usuario' in st.session_state:
             }
         </style>
     """, unsafe_allow_html=True)
-    set_background("images/fondo3.py")
+    set_background("images/fondo3.jpg")
     st.title("📊 Dashboard KPIs")
     st.subheader("Bienvenido")
     st.write("Dar click al botón de sincronizar datos")
