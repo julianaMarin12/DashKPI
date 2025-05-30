@@ -8,7 +8,7 @@ from funciones import crear_mapa
 from estilos import aplicar_estilos
 from funciones import crear_gauge_base64
 from funciones import render_df_html
-from PIL import Image
+from funciones import imagen_base64
 from login import set_background
 import streamlit as st
 import pandas as pd
@@ -178,36 +178,22 @@ if 'usuario' in st.session_state:
         with col6:
             mostrar_metrica_porcentual("Diferencia (%)", diferencia_comer, "%")
 
-    def imagen_base64(ruta):
-        try:
-            img = Image.open(ruta).convert("RGBA")
-            fondo_blanco = Image.new("RGBA", img.size, (255, 255, 255, 255))
-            img_con_fondo_blanco = Image.alpha_composite(fondo_blanco, img).convert("RGB")
-                
-            buffered = BytesIO()
-            img_con_fondo_blanco.save(buffered, format="PNG")
-            img_str = base64.b64encode(buffered.getvalue()).decode()
-            return f"<img src='data:image/png;base64,{img_str}' width='100'/>"
-        except Exception as e:
-            return f"<div style='color:red;'>X</div>"
-
-    df_productosCategoria = df1[df1["Productos"] != "Total general"].copy()
-    df_productosCategoria["Ejecutado (%)"] = df_productosCategoria["P% COMERCIAL 2024"] * 100
-    df_productosCategoria["Meta (%)"] = df_productosCategoria["prueba 2"] * 100
-    df_productosCategoria["Diferencia (%)"] = df_productosCategoria["prueba DIFERENCIA"] * 100
-    df_productosCategoria["Presupuesto"] = df_productosCategoria["PRESUPUESTO CON LINEA"]
-    df_productosCategoria["Ventas 2025"] = df_productosCategoria["Ventas 2025 rea"]
-
-    df_productosCategoria["Gauge"] = df_productosCategoria.apply(lambda row: crear_gauge_base64(row["Ejecutado (%)"], row["Meta (%)"]), axis=1)
-    df_productosCategoria["Imagen"] = df_productosCategoria["Ruta Imagen"].apply(imagen_base64)
-
-
-    df_mostrar = df_productosCategoria[[
-        "Productos", "Imagen", "Ventas 2025", "Presupuesto", 
-        "Ejecutado (%)", "Meta (%)", "Diferencia (%)", "Gauge"
-    ]]
-
-    st.markdown(render_df_html(df_mostrar), unsafe_allow_html=True)
+    def mostrar_tabla_productos():
+            df_productosCategoria = df1[df1["Productos"] != "Total general"].copy()
+            df_productosCategoria["Ejecutado (%)"] = df_productosCategoria["P% COMERCIAL 2024"] * 100
+            df_productosCategoria["Meta (%)"] = df_productosCategoria["prueba 2"] * 100
+            df_productosCategoria["Diferencia (%)"] = df_productosCategoria["prueba DIFERENCIA"] * 100
+            df_productosCategoria["Presupuesto"] = df_productosCategoria["PRESUPUESTO CON LINEA"]
+            df_productosCategoria["Ventas 2025"] = df_productosCategoria["Ventas 2025 rea"]
+            df_productosCategoria["Gauge"] = df_productosCategoria.apply(lambda row: crear_gauge_base64(row["Ejecutado (%)"], row["Meta (%)"]), axis=1)
+            df_productosCategoria["Imagen"] = df_productosCategoria["Ruta Imagen"].apply(imagen_base64)
+            df_mostrar = df_productosCategoria[[
+                "Productos", "Imagen", "Ventas 2025", "Presupuesto", 
+                "Ejecutado (%)", "Meta (%)", "Diferencia (%)", "Gauge"
+            ]]
+            st.markdown(render_df_html(df_mostrar), unsafe_allow_html=True)
+            
+    mostrar_tabla_productos()
 
     df2 = cargar_excel("kpi generales.xlsx", sheet="Comercial2")
     df_general = df2[df2["sub categoria"] == "Total general"]
