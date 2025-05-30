@@ -227,12 +227,13 @@ if 'usuario' in st.session_state:
 
     st.markdown("<h3 style='color: black;'> Indicadores de Ventas por Tipología de Cliente</h3>", unsafe_allow_html=True)
 
-    df_tipo = df2[df2["sub categoria"] != "Total general"]
-    df_tipo['Ejecutado (%)'] = df_tipo['P% COMERCIAL 2024'] * 100
-    df_tipo['Meta (%)'] = df_tipo['prueba 2'] * 100
-    df_tipo['Diferencia (%)'] = df_tipo['prueba DIFERENCIA'] * 100
-    df_tipo['Presupuesto'] = df_tipo['PRESUPUESTO CON LINEA']
-    df_tipo['Ventas 2025'] = df_tipo['Ventas 2025 rea']
+    df_tipo = df2[df2["sub categoria"] != "Total general"].copy()
+    df_tipo.loc[:, 'Ejecutado (%)'] = df_tipo['P% COMERCIAL 2024'] * 100
+    df_tipo.loc[:, 'Meta (%)'] = df_tipo['prueba 2'] * 100
+    df_tipo.loc[:, 'Diferencia (%)'] = df_tipo['prueba DIFERENCIA'] * 100
+    df_tipo.loc[:, 'Presupuesto'] = df_tipo['PRESUPUESTO CON LINEA']
+    df_tipo.loc[:, 'Ventas 2025'] = df_tipo['Ventas 2025 rea']
+
 
     def crear_gauge_base64(ejecutado, meta):
         fig = go.Figure(go.Indicator(
