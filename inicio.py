@@ -30,6 +30,11 @@ if 'usuario' in st.session_state:
     """, unsafe_allow_html=True)
     set_background("images/fondo3.png")
     st.title("📊 Dashboard KPIs")
+
+    st.title("Video desde archivo local")
+    with open("video/bodegon_1.mov", "rb") as f:
+        st.video(f.read())
+
     st.subheader("Bienvenido")
     st.write("Dar click al botón de sincronizar datos")
     if st.button("🔄 Sincronizar datos"):
