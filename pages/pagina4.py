@@ -20,7 +20,7 @@ aplicar_estilos()
 login.generarLogin()
 
 if 'usuario' in st.session_state:
-    set_background("images/fondo3")
+    set_background("images/fondo3.png")
     crear_header_corporativo(
         "🛍️ KPIs ÁREA MERCADEO",
         "Indicadores para el área de mercadeo"
