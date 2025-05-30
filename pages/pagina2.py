@@ -195,16 +195,14 @@ if 'usuario' in st.session_state:
         "prueba DIFERENCIA": "Diferencia %",
     }, inplace=True)
 
-    # Construir opciones para aggrid
     gb = GridOptionsBuilder.from_dataframe(df_display)
-    gb.configure_column("Imagen", cellRenderer='html')  # Permite renderizar html para la columna Imagen
+    gb.configure_column("Imagen", cellRenderer='html')  
     gb.configure_pagination()
     gridOptions = gb.build()
 
     st.markdown("### Indicadores de Ventas por Producto")
     AgGrid(df_display, gridOptions=gridOptions, enable_enterprise_modules=False, fit_columns_on_grid_load=True, height=300)
 
-    # Luego muestras gauges separados:
     st.markdown("### Gauges por Producto")
     for _, row in df_productos.iterrows():
         ejecutado = row["P% COMERCIAL 2024"] * 100
