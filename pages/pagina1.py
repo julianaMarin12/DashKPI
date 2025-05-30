@@ -12,7 +12,7 @@ import numpy as np
 import login
 
 login.generarLogin()
-set_background("../images/fondo1.jpg")
+set_background("images/fondo1.jpg")
 if 'usuario' in st.session_state:
     
     st.markdown("<h1 style='color: white;'>💰 KPIs Área Financiera</h1>", unsafe_allow_html=True)
