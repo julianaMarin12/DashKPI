@@ -210,10 +210,10 @@ def mostrar_gauge_financiero(titulo_margen, valor, referencia, color_fondo, titu
             """, unsafe_allow_html=True)
 
 def crear_gauge_base64(valor, referencia):
+    color_bar = "green" if valor >= referencia else "red",
     fig = go.Figure(go.Indicator(
         mode="gauge+number+delta",
         value=valor,
-        color_bar = "green" if valor >= referencia else "red",
         number={
             'suffix': '%',
             'font': {'size': 28}
@@ -229,7 +229,7 @@ def crear_gauge_base64(valor, referencia):
         },
         gauge={
             'axis': {'range': [0, 100]},
-            'bar': {'color': "green"},
+            'bar': {'color': color_bar},
             'steps': [
                 {'range': [0, referencia], 'color': "#ffe6e6"},
                 {'range': [referencia, 100], 'color': "#e6ffe6"}
