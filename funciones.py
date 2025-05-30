@@ -328,7 +328,6 @@ def mostrar_metrica_corporativa(titulo, valor, prefijo="", sufijo="", tipo="defa
     else:
         valor_formateado = str(valor)
     
-    # Esquemas de color corporativos
     if tipo == "primario":
         background = f"linear-gradient(135deg, {COLOR_PRIMARIO} 0%, {COLOR_ACENTO} 100%)"
         text_color = COLOR_TEXTO_CLARO
