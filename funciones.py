@@ -224,7 +224,7 @@ def crear_gauge_base64(valor, referencia):
             'relative': False,
             'valueformat': '.1f',
             'suffix': '%',
-            'position': "bottom"  # ← clave para que aparezca debajo del número
+            'position': "bottom" 
         },
         gauge={
             'axis': {'range': [0, 100]},
