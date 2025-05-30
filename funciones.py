@@ -3,6 +3,8 @@ import plotly.graph_objects as go
 import numpy as np
 import streamlit as st
 import pandas as pd
+import io 
+import base64
 
 def cargar_excel(path, sheet):
     df = pd.read_excel(path, sheet_name=sheet)
@@ -204,3 +206,42 @@ def mostrar_gauge_financiero(titulo_margen, valor, referencia, color_fondo, titu
                     <div class="metric-value">{val:,.2f}%</div>
                 </div>
             """, unsafe_allow_html=True)
+
+def crear_gauge_base64(valor, referencia):
+        fig = go.Figure(go.Indicator(
+            mode="gauge+number",
+            value=valor,
+            number={'suffix': '%'},
+            delta={
+                    'reference': referencia,
+                    'increasing': {'color': "green"},
+                    'decreasing': {'color': "red"},
+                    'relative': False,
+                    'valueformat': '.1f',
+                    'suffix': '%'
+                },
+            gauge={
+                'axis': {'range': [None, 100]},
+                'bar': {'color': "green"},
+                'steps': [
+                    {'range': [0, referencia], 'color': "#ffe6e6"},
+                    {'range': [referencia, 100], 'color': "#e6ffe6"}
+                ]
+            }
+        ))
+        fig.update_layout(width=200, height=150, margin=dict(l=10, r=10, t=10, b=10))
+        
+        buf = io.BytesIO()
+        fig.write_image(buf, format='png')
+        buf.seek(0)
+        img_base64 = base64.b64encode(buf.read()).decode('utf-8')
+        return f'<img src="data:image/png;base64,{img_base64}" width="150"/>'
+
+def render_df_html(df):
+        return df.to_html(escape=False, index=False, formatters={
+            'Ventas 2025': lambda x: f"${x:,.0f}",
+            'Presupuesto': lambda x: f"${x:,.0f}",
+            'Ejecutado (%)': lambda x: f"{x:.2f}%",
+            'Meta (%)': lambda x: f"{x:.2f}%",
+            'Diferencia (%)': lambda x: f"{x:+.2f}%"
+        })
