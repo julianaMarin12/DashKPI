@@ -227,29 +227,54 @@ if 'usuario' in st.session_state:
 
     df_tipo = df2[df2["sub categoria"] != "Total general"]
 
+    datos_resumen = []
+
+    st.subheader("Resumen por Sub Categoría")
+
     for _, row in df_tipo.iterrows():
         ejecutado_tipo = row["P% COMERCIAL 2024"] * 100
         meta_tipo = row["prueba 2"] * 100
         diferencia_tipo = row["prueba DIFERENCIA"] * 100
         presupuesto_tipo = row["PRESUPUESTO CON LINEA"]
         ventas_tipo = row["Ventas 2025 rea"]
-        color_bar = "green" if ejecutado_tipo >= meta_tipo else "red"
-        
-        fig_gauge = crear_gauge(ejecutado_tipo, titulo=f"Proyección: {meta_tipo:.2f}%", referencia=meta_tipo)
-        
-        with st.expander(f" {row['sub categoria']}", expanded=False):
-            col1, col2 = st.columns([2, 2])
-            with col1:
-                st.markdown(
-                    f"""
-                    <div style="background-color:black; padding:15px; border-radius:15px; box-shadow:0 2px 5px rgba(0,0,0,0.1); color:#333">
-                        <p><b>Ventas 2025:</b> ${ventas_tipo:,.0f}</p>
-                        <p><b>Presupuesto:</b> ${presupuesto_tipo:,.0f}</p>
-                        <p><b>Ejecutado:</b> {ejecutado_tipo:.2f}%</p>
-                        <p><b>Diferencia Meta:</b> {diferencia_tipo:+.2f} %</p>
-                    </div>
-                    """,
-                    unsafe_allow_html=True
-                )
-            with col2:
-                st.plotly_chart(fig_gauge, use_container_width=True)
+
+        datos_resumen.append({
+            "Sub Categoría": row["sub categoria"],
+            "Ventas 2025": ventas_tipo,
+            "Presupuesto": presupuesto_tipo,
+            "Ejecutado (%)": ejecutado_tipo,
+            "Meta (%)": meta_tipo,
+            "Diferencia (%)": diferencia_tipo
+        })
+
+    df_resumen = pd.DataFrame(datos_resumen)
+
+    st.dataframe(
+        df_resumen.style.format({
+            "Ventas 2025": "${:,.0f}",
+            "Presupuesto": "${:,.0f}",
+            "Ejecutado (%)": "{:.2f}%",
+            "Meta (%)": "{:.2f}%",
+            "Diferencia (%)": "{:+.2f}%"
+        })
+    )
+
+    # Mostrar gauges debajo
+    st.subheader("Indicadores Visuales")
+
+    cols = st.columns(3)  # 3 gráficos por fila (ajustable)
+    for idx, row in enumerate(df_tipo.itertuples()):
+        ejecutado = row._3 * 100  # P% COMERCIAL 2024
+        meta = row._4 * 100       # prueba 2
+        color = "green" if ejecutado >= meta else "red"
+
+        gauge = go.Figure(go.Indicator(
+            mode="gauge+number+delta",
+            value=ejecutado,
+            delta={'reference': meta, 'increasing': {'color': "green"}, 'decreasing': {'color': "red"}},
+            gauge={'axis': {'range': [0, 150]}},
+            title={'text': f"{row._1}"}  # sub categoria
+        ))
+
+        with cols[idx % 3]:
+            st.plotly_chart(gauge, use_container_width=True)
