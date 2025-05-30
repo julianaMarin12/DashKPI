@@ -6,7 +6,8 @@ from funciones import crear_gauge
 from funciones import crear_donut
 from funciones import crear_mapa
 from estilos import aplicar_estilos
-from plotly.colors import sample_colorscale
+from funciones import crear_gauge_base64
+from funciones import render_df_html
 from PIL import Image
 from login import set_background
 import streamlit as st
@@ -215,18 +216,17 @@ if 'usuario' in st.session_state:
             with col3:
                 st.plotly_chart(fig_gauge, use_container_width=True)
 
-    #INDICADOR DE TIPOLOGIA
     df2 = cargar_excel("kpi generales.xlsx", sheet="Comercial2")
     df_general = df2[df2["sub categoria"] == "Total general"]
     ventas_2025_tipo = df_general["Ventas 2025 rea"].values[0]
-    presupesto_tipo = df_general["PRESUPUESTO CON LINEA"].values[0]
+    presupuesto_tipo = df_general["PRESUPUESTO CON LINEA"].values[0]
     ejecutado_tipo = df_general["P% COMERCIAL 2024"].values[0] * 100
     proyectado_tipo = df_general["prueba"].values[0] * 100
     proyectado_porcent_tipo = df_general["prueba 2"].values[0] * 100
     diferencia_tipo = df_general["prueba DIFERENCIA DINERO"].values[0] * 100
     diferencia_porcent_tipo = df_general["prueba DIFERENCIA"].values[0] * 100
 
-    st.markdown("<h3 style='color: black;'> Indicadores de Ventas por Tipología de Cliente</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color: black;'>Indicadores de Ventas por Tipología de Cliente</h3>", unsafe_allow_html=True)
 
     df_tipo = df2[df2["sub categoria"] != "Total general"].copy()
     df_tipo.loc[:, 'Ejecutado (%)'] = df_tipo['P% COMERCIAL 2024'] * 100
@@ -235,42 +235,8 @@ if 'usuario' in st.session_state:
     df_tipo.loc[:, 'Presupuesto'] = df_tipo['PRESUPUESTO CON LINEA']
     df_tipo.loc[:, 'Ventas 2025'] = df_tipo['Ventas 2025 rea']
 
-
-    def crear_gauge_base64(ejecutado, meta):
-        fig = go.Figure(go.Indicator(
-            mode="gauge+number",
-            value=ejecutado,
-            gauge={
-                'axis': {'range': [None, 100]},
-                'bar': {'color': "blue"},
-                'steps': [
-                    {'range': [0, meta], 'color': "red"},
-                    {'range': [meta, 100], 'color': "green"}
-                ]
-            }
-        ))
-        fig.update_layout(width=200, height=150, margin=dict(l=10, r=10, t=10, b=10))
-        
-        buf = io.BytesIO()
-        fig.write_image(buf, format='png')
-        buf.seek(0)
-        img_base64 = base64.b64encode(buf.read()).decode('utf-8')
-        return f'<img src="data:image/png;base64,{img_base64}" width="150"/>'
-
     df_tipo['Gauge'] = df_tipo.apply(lambda row: crear_gauge_base64(row['Ejecutado (%)'], row['Meta (%)']), axis=1)
-
     df_mostrar = df_tipo[['sub categoria', 'Ventas 2025', 'Presupuesto', 'Ejecutado (%)', 'Meta (%)', 'Diferencia (%)', 'Gauge']]
 
-    st.markdown("### Tabla con gauges por fila")
-    st.write("Se muestra la tabla completa con gauges para cada subcategoria:")
-
-    def render_df_html(df):
-        return df.to_html(escape=False, index=False, formatters={
-            'Ventas 2025': lambda x: f"${x:,.0f}",
-            'Presupuesto': lambda x: f"${x:,.0f}",
-            'Ejecutado (%)': lambda x: f"{x:.2f}%",
-            'Meta (%)': lambda x: f"{x:.2f}%",
-            'Diferencia (%)': lambda x: f"{x:+.2f}%"
-        })
-
+    
     st.markdown(render_df_html(df_mostrar), unsafe_allow_html=True)
