@@ -8,6 +8,7 @@ from funciones import crear_mapa
 from estilos import aplicar_estilos
 from plotly.colors import sample_colorscale
 from PIL import Image
+from login import set_background
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
@@ -19,6 +20,7 @@ import login
 st.set_page_config(layout="wide")
 login.generarLogin()
 if 'usuario' in st.session_state:
+    set_background("images/fondo2.jpg")
     st.markdown("<h1 style='color: white;'>🛒 KPIs Área Comercial</h1>", unsafe_allow_html=True)
     aplicar_estilos()
     df_rent_mes = cargar_excel("kpi generales.xlsx", "rentabilidad comercial mes")
