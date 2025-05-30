@@ -7,6 +7,7 @@ from funciones import mostrar_metrica_corporativa
 from funciones import mostrar_resumen_corporativo
 from funciones import crear_indicador_estado
 from estilos import aplicar_estilos
+from login import set_background
 from PIL import Image
 import streamlit as st
 import pandas as pd
@@ -19,6 +20,7 @@ aplicar_estilos()
 login.generarLogin()
 
 if 'usuario' in st.session_state:
+    set_background("images/fondo3")
     crear_header_corporativo(
         "🛍️ KPIs ÁREA MERCADEO",
         "Indicadores para el área de mercadeo"
