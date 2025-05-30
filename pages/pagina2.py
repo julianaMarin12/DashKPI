@@ -16,6 +16,7 @@ import plotly.express as px
 import numpy as np
 import io
 import base64
+import	kaleido
 import login
 
 
@@ -256,17 +257,13 @@ if 'usuario' in st.session_state:
         img_base64 = base64.b64encode(buf.read()).decode('utf-8')
         return f'<img src="data:image/png;base64,{img_base64}" width="150"/>'
 
-    # Crear columna con gauge en base64
     df_tipo['Gauge'] = df_tipo.apply(lambda row: crear_gauge_base64(row['Ejecutado (%)'], row['Meta (%)']), axis=1)
 
-    # Seleccionar columnas a mostrar
     df_mostrar = df_tipo[['sub categoria', 'Ventas 2025', 'Presupuesto', 'Ejecutado (%)', 'Meta (%)', 'Diferencia (%)', 'Gauge']]
 
-    # Mostrar la tabla con los gauges incrustados
     st.markdown("### Tabla con gauges por fila")
     st.write("Se muestra la tabla completa con gauges para cada subcategoria:")
 
-    # Renderiza la tabla como HTML
     def render_df_html(df):
         return df.to_html(escape=False, index=False, formatters={
             'Ventas 2025': lambda x: f"${x:,.0f}",
