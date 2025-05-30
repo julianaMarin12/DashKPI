@@ -178,76 +178,36 @@ if 'usuario' in st.session_state:
         with col6:
             mostrar_metrica_porcentual("Diferencia (%)", diferencia_comer, "%")
 
-    st.markdown("<h3 style='color: black;'>Indicadores de Ventas por Producto</h3>", unsafe_allow_html=True)
-    df_productos = df1[df1["Productos"] != "Total general"]
-
-    for _, row in df_productos.iterrows():
-        ejecutado = row["P% COMERCIAL 2024"] * 100
-        meta = row["prueba 2"] * 100
-        diferencia = row["prueba DIFERENCIA"] * 100
-        presup = row["PRESUPUESTO CON LINEA"]
-        ventas = row["Ventas 2025 rea"]
-        ruta_imagen = row["Ruta Imagen"]
-
-        fig_gauge = crear_gauge(ejecutado, titulo=f"Proyección {row['Productos']}", referencia=meta, )
-
-        with st.expander(f"{row['Productos']}", expanded=False):
-            col1, col2, col3 = st.columns([1, 2, 1])
-
-            with col1:
-                try:
-                    img = Image.open(ruta_imagen).convert("RGBA")
-                    fondo_blanco = Image.new("RGBA", img.size, (255, 255, 255, 255))
-                    img_con_fondo_blanco = Image.alpha_composite(fondo_blanco, img).convert("RGB")
-                    st.image(img_con_fondo_blanco, width=300)
-                except Exception as e:
-                    st.warning(f"No se pudo cargar la imagen de {row['Productos']}: {e}")
-                    st.text("Imagen no disponible")
-
-            with col2:
-                st.markdown(f"""
-                    <div style="background-color:white; padding:15px; border-radius:15px; box-shadow:0 2px 5px rgba(0,0,0,0.1); color:#333">
-                        <p><b>Ventas 2025:</b> ${ventas:,.0f}</p>
-                        <p><b>Presupuesto:</b> ${presup:,.0f}</p>
-                        <p><b>Ejecutado:</b> {ejecutado:.2f}%</p>
-                        <p><b>Diferencia Meta:</b> {diferencia:+.2f} %</p>
-                    </div>
-                """, unsafe_allow_html=True)
-
-            with col3:
-                st.plotly_chart(fig_gauge, use_container_width=True)
-
-        def imagen_base64(ruta):
-            try:
-                img = Image.open(ruta).convert("RGBA")
-                fondo_blanco = Image.new("RGBA", img.size, (255, 255, 255, 255))
-                img_con_fondo_blanco = Image.alpha_composite(fondo_blanco, img).convert("RGB")
+    def imagen_base64(ruta):
+        try:
+            img = Image.open(ruta).convert("RGBA")
+            fondo_blanco = Image.new("RGBA", img.size, (255, 255, 255, 255))
+            img_con_fondo_blanco = Image.alpha_composite(fondo_blanco, img).convert("RGB")
                 
-                buffered = BytesIO()
-                img_con_fondo_blanco.save(buffered, format="PNG")
-                img_str = base64.b64encode(buffered.getvalue()).decode()
-                return f"<img src='data:image/png;base64,{img_str}' width='100'/>"
-            except Exception as e:
-                return f"<div style='color:red;'>X</div>"
+            buffered = BytesIO()
+            img_con_fondo_blanco.save(buffered, format="PNG")
+            img_str = base64.b64encode(buffered.getvalue()).decode()
+            return f"<img src='data:image/png;base64,{img_str}' width='100'/>"
+        except Exception as e:
+            return f"<div style='color:red;'>X</div>"
 
-        # Asumiendo que df2 ya está cargado como antes
-        df_productosCategoria = df1[df1["Productos"] != "Total general"].copy()
-        df_productosCategoria["Ejecutado (%)"] = df_productosCategoria["P% COMERCIAL 2024"] * 100
-        df_productosCategoria["Meta (%)"] = df_productosCategoria["prueba 2"] * 100
-        df_productosCategoria["Diferencia (%)"] = df_productosCategoria["prueba DIFERENCIA"] * 100
-        df_productosCategoria["Presupuesto"] = df_productosCategoria["PRESUPUESTO CON LINEA"]
-        df_productosCategoria["Ventas 2025"] = df_productosCategoria["Ventas 2025 rea"]
+    df_productosCategoria = df1[df1["Productos"] != "Total general"].copy()
+    df_productosCategoria["Ejecutado (%)"] = df_productosCategoria["P% COMERCIAL 2024"] * 100
+    df_productosCategoria["Meta (%)"] = df_productosCategoria["prueba 2"] * 100
+    df_productosCategoria["Diferencia (%)"] = df_productosCategoria["prueba DIFERENCIA"] * 100
+    df_productosCategoria["Presupuesto"] = df_productosCategoria["PRESUPUESTO CON LINEA"]
+    df_productosCategoria["Ventas 2025"] = df_productosCategoria["Ventas 2025 rea"]
 
-        df_productosCategoria["Gauge"] = df_productosCategoria.apply(lambda row: crear_gauge_base64(row["Ejecutado (%)"], row["Meta (%)"]), axis=1)
-        df_productosCategoria["Imagen"] = df_productosCategoria["Ruta Imagen"].apply(imagen_base64)
+    df_productosCategoria["Gauge"] = df_productosCategoria.apply(lambda row: crear_gauge_base64(row["Ejecutado (%)"], row["Meta (%)"]), axis=1)
+    df_productosCategoria["Imagen"] = df_productosCategoria["Ruta Imagen"].apply(imagen_base64)
 
 
-        df_mostrar = df_productosCategoria[[
-            "Productos", "Imagen", "Ventas 2025", "Presupuesto", 
-            "Ejecutado (%)", "Meta (%)", "Diferencia (%)", "Gauge"
-        ]]
+    df_mostrar = df_productosCategoria[[
+        "Productos", "Imagen", "Ventas 2025", "Presupuesto", 
+        "Ejecutado (%)", "Meta (%)", "Diferencia (%)", "Gauge"
+    ]]
 
-        st.markdown(render_df_html(df_mostrar), unsafe_allow_html=True)
+    st.markdown(render_df_html(df_mostrar), unsafe_allow_html=True)
 
     df2 = cargar_excel("kpi generales.xlsx", sheet="Comercial2")
     df_general = df2[df2["sub categoria"] == "Total general"]
