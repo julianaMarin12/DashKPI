@@ -18,7 +18,7 @@ import login
 aplicar_estilos()
 login.generarLogin()
 if 'usuario' in st.session_state:
-    st.markdown("<h1 style='color: white;'>⛴ KPIs Área de Exportaciones</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='color: black;'>⛴ KPIs Área de Exportaciones</h1>", unsafe_allow_html=True)
 
     df_ind = pd.read_excel("kpi generales.xlsx", sheet_name="rentabilidad exportaciones mes", header=None)
     df_ind[0] = df_ind[0].astype(str).str.strip().str.upper()
@@ -26,7 +26,7 @@ if 'usuario' in st.session_state:
     utilidad = df_ind.loc[df_ind[0] == "UTILIDAD NETA FINAL", 1].values[0]
     margen = df_ind.loc[df_ind[0] == "MARGEN NETO FINAL", 1].values[0]*100
 
-    st.markdown("<h3 style='color: white;'>Rentabilidad Exportaciones por mes </h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color: black;'>Rentabilidad Exportaciones por mes </h3>", unsafe_allow_html=True)
     col1, col2 = st.columns([1, 1])
 
     with col1:
@@ -51,7 +51,7 @@ if 'usuario' in st.session_state:
     utilidad = df_ind.loc[df_ind[0] == "UTILIDAD NETA FINAL", 1].values[0]
     margen = df_ind.loc[df_ind[0] == "MARGEN NETO FINAL", 1].values[0]*100
 
-    st.markdown("<h3 style='color: white;'>Rentabilidad Exportaciones acumulado </h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color: black;'>Rentabilidad Exportaciones acumulado </h3>", unsafe_allow_html=True)
     col1, col2 = st.columns([1, 1])
 
     with col1:

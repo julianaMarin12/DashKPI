@@ -18,7 +18,7 @@ import login
 aplicar_estilos()
 login.generarLogin()
 if 'usuario' in st.session_state:
-    st.markdown("<h1 style='color: white;'>🛍️ KPIs Área Mercadeo </h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='color: black;'>🛍️ KPIs Área Mercadeo </h1>", unsafe_allow_html=True)
 
     df = cargar_excel("kpi generales.xlsx", "mercadeo2")
     df.columns = df.columns.str.strip()
@@ -31,7 +31,7 @@ if 'usuario' in st.session_state:
     presupuestado = df_general["PRESUPUESTADO"].values[0]
     acumulado_anterior = df_general["ACUMULADO MES ANTERIOR"].values[0]
 
-    st.markdown("<h3 style='color: white;'> CANALES TOTAL/B2B/B2C + Digital/EXP </h3>", unsafe_allow_html=True)    
+    st.markdown("<h3 style='color: black;'> CANALES TOTAL/B2B/B2C + Digital/EXP </h3>", unsafe_allow_html=True)    
     valor = variacion_pct * 100
     presupuesto = presupuestado * 100
 
@@ -56,7 +56,7 @@ if 'usuario' in st.session_state:
     lanzamientos =df1["Lanzamientos Activos"].values[0]
     ventas = df1["Ventas"].values[0]
 
-    st.markdown("<h3 style='color: white;'> INNOVACIÓN/ PORTAFOLIO </h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color: black;'> INNOVACIÓN/ PORTAFOLIO </h3>", unsafe_allow_html=True)
     fig = crear_gauge(porcentaje, "Proyección:7%",referencia=7)
     st.plotly_chart(fig, use_container_width=True)
 
