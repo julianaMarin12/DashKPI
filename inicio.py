@@ -30,8 +30,17 @@ if 'usuario' in st.session_state:
     """, unsafe_allow_html=True)
     set_background("images/fondo3.png")
     st.title("📊 Dashboard KPIs")
-    with open("video/bodegon_1.mov", "rb") as f:
-        st.video(f.read())
+    video_path = "video/bodegon_1.mov"
+
+    video_html = f"""
+        <video width="700" autoplay loop muted>
+            <source src="{video_path}" type="video/mp4">
+            Tu navegador no soporta el video.
+        </video>
+    """
+
+    st.markdown(video_html, unsafe_allow_html=True)
+
 
     st.subheader("Bienvenido")
     st.write("Dar click al botón de sincronizar datos")
