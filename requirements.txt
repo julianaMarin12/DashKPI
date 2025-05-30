@@ -3,3 +3,4 @@ plotly>=5.10
 pandas>=1.4
 openpyxl>=3.0
 numpy>=1.21
+kaleido
