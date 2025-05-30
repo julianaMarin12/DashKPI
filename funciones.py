@@ -374,7 +374,6 @@ def mostrar_metrica_corporativa(titulo, valor, prefijo="", sufijo="", tipo="defa
     """, unsafe_allow_html=True)
 
 def crear_header_corporativo(titulo, subtitulo=""):
-    """Crea un header corporativo"""
     st.markdown(f"""
     <div style="
         background: linear-gradient(135deg, {COLOR_PRIMARIO} 0%, {COLOR_ACENTO} 100%);
