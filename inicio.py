@@ -12,7 +12,7 @@ if 'usuario' in st.session_state:
         <style>
             
             h1 {
-                color: white !important;
+                color: black !important;
             }
     
             div.stButton > button {
