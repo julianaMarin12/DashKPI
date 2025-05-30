@@ -238,17 +238,15 @@ if 'usuario' in st.session_state:
         df_productosCategoria["Presupuesto"] = df_productosCategoria["PRESUPUESTO CON LINEA"]
         df_productosCategoria["Ventas 2025"] = df_productosCategoria["Ventas 2025 rea"]
 
-        # Gauges y nuevas imágenes
         df_productosCategoria["Gauge"] = df_productosCategoria.apply(lambda row: crear_gauge_base64(row["Ejecutado (%)"], row["Meta (%)"]), axis=1)
         df_productosCategoria["Imagen"] = df_productosCategoria["Ruta Imagen"].apply(imagen_base64)
 
-        # Selección de columnas
+
         df_mostrar = df_productosCategoria[[
-            "sub categoria", "Imagen", "Ventas 2025", "Presupuesto", 
+            "Productos", "Imagen", "Ventas 2025", "Presupuesto", 
             "Ejecutado (%)", "Meta (%)", "Diferencia (%)", "Gauge"
         ]]
 
-        # Render como tabla HTML
         st.markdown(render_df_html(df_mostrar), unsafe_allow_html=True)
 
     df2 = cargar_excel("kpi generales.xlsx", sheet="Comercial2")
