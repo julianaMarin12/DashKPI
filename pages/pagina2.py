@@ -21,14 +21,14 @@ st.set_page_config(layout="wide")
 login.generarLogin()
 if 'usuario' in st.session_state:
     set_background("images/fondo2.jpg")
-    st.markdown("<h1 style='color: white;'>🛒 KPIs Área Comercial</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='color: black;'>🛒 KPIs Área Comercial</h1>", unsafe_allow_html=True)
     aplicar_estilos()
     df_rent_mes = cargar_excel("kpi generales.xlsx", "rentabilidad comercial mes")
     df_general = df_rent_mes[df_rent_mes["Etiquetas de fila"] == "Total general"]
     utilidad = df_general["UTILIDAD NETA FINAL"].values[0]
     margen = df_general["MARGEN NETO FINAL"].values[0] * 100
     proyectado_rentabilidad_mes = 13
-    st.markdown("<h3 style='color: white;'>Rentabilidad Mensual</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color: black;'>Rentabilidad Mensual</h3>", unsafe_allow_html=True)
 
     col1, col2 = st.columns([1, 2])
     with col1:
@@ -50,7 +50,7 @@ if 'usuario' in st.session_state:
     utilidad_acum = df_general["UTILIDAD NETA FINAL"].values[0]
     margen_acum = df_general["MARGEN NETO FINAL"].values[0] * 100
     proyectado_rentabilidad_acum = 16
-    st.markdown("<h3 style='color: white;'>Rentabilidad Acumulado</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color: black;'>Rentabilidad Acumulado</h3>", unsafe_allow_html=True)
 
     col_grafico02, col_utilidad_acum = st.columns([1, 2])
     with col_grafico02:
@@ -90,7 +90,7 @@ if 'usuario' in st.session_state:
     df['lat'] = df['ZONA'].map(lambda x: zona_coords.get(x, {}).get('lat'))
     df['lon'] = df['ZONA'].map(lambda x: zona_coords.get(x, {}).get('lon'))
 
-    st.markdown("<h3 style='color: white;'>Indicador de Cartera</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color: black;'>Indicador de Cartera</h3>", unsafe_allow_html=True)
 
     col_grafico, col_expander = st.columns([1, 2])
     with col_grafico:
@@ -111,7 +111,7 @@ if 'usuario' in st.session_state:
             st.plotly_chart(fig_mapa, use_container_width=True)
 
         with st.expander("INDICADORES POR SUPERVISOR"):
-            st.markdown("<h3 style='color: white;'>Indicadores por Supervisor</h3>", unsafe_allow_html=True)
+            st.markdown("<h3 style='color: black;'>Indicadores por Supervisor</h3>", unsafe_allow_html=True)
             df_supervisores = df_mapa[df_mapa["Supervisor"] != "Total general"]
             cols_per_row = 3
             for i in range(0, len(df_supervisores), cols_per_row):
@@ -148,7 +148,7 @@ if 'usuario' in st.session_state:
     proyectado_comer = proyectado_porcent * 100
     diferencia_comer = diferencia_porcent * 100
 
-    st.markdown("<h3 style='color: white;'>Presupuesto de Ventas vs Ejecutado</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color: black;'>Presupuesto de Ventas vs Ejecutado</h3>", unsafe_allow_html=True)
 
     col_grafico1, col_presupuesto = st.columns([1, 2])
 
@@ -173,7 +173,7 @@ if 'usuario' in st.session_state:
         with col6:
             mostrar_metrica_porcentual("Diferencia (%)", diferencia_comer, "%")
 
-    st.markdown("<h3 style='color: white;'>Indicadores de Ventas por Producto</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color: black;'>Indicadores de Ventas por Producto</h3>", unsafe_allow_html=True)
     df_productos = df1[df1["Productos"] != "Total general"]
 
     for _, row in df_productos.iterrows():
@@ -201,7 +201,7 @@ if 'usuario' in st.session_state:
 
             with col2:
                 st.markdown(f"""
-                    <div style="background-color:white; padding:15px; border-radius:15px; box-shadow:0 2px 5px rgba(0,0,0,0.1); color:#333">
+                    <div style="background-color:black; padding:15px; border-radius:15px; box-shadow:0 2px 5px rgba(0,0,0,0.1); color:#333">
                         <p><b>Ventas 2025:</b> ${ventas:,.0f}</p>
                         <p><b>Presupuesto:</b> ${presup:,.0f}</p>
                         <p><b>Ejecutado:</b> {ejecutado:.2f}%</p>
@@ -223,7 +223,7 @@ if 'usuario' in st.session_state:
     diferencia_tipo = df_general["prueba DIFERENCIA DINERO"].values[0] * 100
     diferencia_porcent_tipo = df_general["prueba DIFERENCIA"].values[0] * 100
 
-    st.markdown("<h3 style='color: white;'> Indicadores de Ventas por Tipología de Cliente</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color: black;'> Indicadores de Ventas por Tipología de Cliente</h3>", unsafe_allow_html=True)
 
     df_tipo = df2[df2["sub categoria"] != "Total general"]
 
@@ -242,7 +242,7 @@ if 'usuario' in st.session_state:
             with col1:
                 st.markdown(
                     f"""
-                    <div style="background-color:white; padding:15px; border-radius:15px; box-shadow:0 2px 5px rgba(0,0,0,0.1); color:#333">
+                    <div style="background-color:black; padding:15px; border-radius:15px; box-shadow:0 2px 5px rgba(0,0,0,0.1); color:#333">
                         <p><b>Ventas 2025:</b> ${ventas_tipo:,.0f}</p>
                         <p><b>Presupuesto:</b> ${presupuesto_tipo:,.0f}</p>
                         <p><b>Ejecutado:</b> {ejecutado_tipo:.2f}%</p>
