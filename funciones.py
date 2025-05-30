@@ -221,7 +221,7 @@ def crear_gauge_base64(valor, referencia):
                     'suffix': '%'
                 },
             gauge={
-                'axis': {'range': [None, 100]},
+                'axis': {'range': [None, referencia]},
                 'bar': {'color': "green"},
                 'steps': [
                     {'range': [0, referencia], 'color': "#ffe6e6"},
