@@ -20,7 +20,7 @@ login.generarLogin()
 
 if 'usuario' in st.session_state:
     crear_header_corporativo(
-        "🛍️ KPIs ÁREA MERCADEO",
+        "🛍️ KPIs ÁREA MERCADEO"
     )
 
     df = cargar_excel("kpi generales.xlsx", "mercadeo2")
@@ -50,7 +50,7 @@ if 'usuario' in st.session_state:
     with col_estado:
         crear_indicador_estado(valor, 36.5, "Estado vs Objetivo")
 
-    st.markdown("#### 💰 INDICADORES FINANCIEROS CLAVE")
+    st.markdown(" 💰 INDICADORES FINANCIEROS CLAVE")
     col1, col2, col3 = st.columns(3)
 
     with col1:
@@ -62,7 +62,7 @@ if 'usuario' in st.session_state:
     with col3:
         mostrar_metrica_corporativa("VARIACIÓN ABSOLUTA", variacion_abs, "$", tipo="secundario")
 
-    st.markdown("#### 📈 RESUMEN EJECUTIVO")
+    st.markdown("📈 RESUMEN EJECUTIVO")
     mostrar_resumen_corporativo(ventas_2024, ventas_2025, variacion_pct, 36.5)
 
     st.markdown('<hr class="section-divider">', unsafe_allow_html=True)
