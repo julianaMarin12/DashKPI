@@ -3,6 +3,8 @@ import plotly.graph_objects as go
 import numpy as np
 import streamlit as st
 import pandas as pd
+from PIL import Image
+from io import BytesIO
 import io 
 import base64
 
@@ -249,3 +251,16 @@ def render_df_html(df):
             'Meta (%)': lambda x: f"{x:.2f}%",
             'Diferencia (%)': lambda x: f"{x:+.2f}%"
         })
+
+def imagen_base64(ruta):
+        try:
+            img = Image.open(ruta).convert("RGBA")
+            fondo_blanco = Image.new("RGBA", img.size, (255, 255, 255, 255))
+            img_con_fondo_blanco = Image.alpha_composite(fondo_blanco, img).convert("RGB")
+                
+            buffered = BytesIO()
+            img_con_fondo_blanco.save(buffered, format="PNG")
+            img_str = base64.b64encode(buffered.getvalue()).decode()
+            return f"<img src='data:image/png;base64,{img_str}' width='100'/>"
+        except Exception as e:
+            return f"<div style='color:red;'>X</div>"
