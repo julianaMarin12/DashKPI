@@ -61,7 +61,6 @@ def set_background(image_file):
 
 
 def generarLogin():
-    set_background("images/fondo.jpg") 
     if 'usuario' in st.session_state:
         generarMenu(st.session_state['usuario'])
     else:
@@ -78,7 +77,7 @@ def generarLogin():
             """,
             unsafe_allow_html=True
         )
-
+        set_background("images/fondo.jpg") 
         with st.form("frmLogin"):
             st.markdown("<center><h1>Iniciar Sesión</h1></center>", unsafe_allow_html=True)
             parUsuario = st.text_input("Usuario")

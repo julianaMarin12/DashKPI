@@ -2,6 +2,7 @@ from funciones import cargar_excel
 from funciones import mostrar_gauge_financiero
 from plotly.colors import sample_colorscale
 from PIL import Image
+from login import set_background
 from estilos import aplicar_estilos
 import streamlit as st
 import pandas as pd
@@ -10,9 +11,10 @@ import plotly.express as px
 import numpy as np
 import login
 
-
 login.generarLogin()
+set_background("../images/fondo1.jpg")
 if 'usuario' in st.session_state:
+    
     st.markdown("<h1 style='color: white;'>💰 KPIs Área Financiera</h1>", unsafe_allow_html=True)
     aplicar_estilos()
     
