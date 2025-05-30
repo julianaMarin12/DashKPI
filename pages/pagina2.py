@@ -14,6 +14,8 @@ import pandas as pd
 import plotly.graph_objects as go
 import plotly.express as px
 import numpy as np
+import io
+import base64
 import login
 
 
@@ -201,7 +203,7 @@ if 'usuario' in st.session_state:
 
             with col2:
                 st.markdown(f"""
-                    <div style="background-color:black; padding:15px; border-radius:15px; box-shadow:0 2px 5px rgba(0,0,0,0.1); color:#333">
+                    <div style="background-color:white; padding:15px; border-radius:15px; box-shadow:0 2px 5px rgba(0,0,0,0.1); color:#333">
                         <p><b>Ventas 2025:</b> ${ventas:,.0f}</p>
                         <p><b>Presupuesto:</b> ${presup:,.0f}</p>
                         <p><b>Ejecutado:</b> {ejecutado:.2f}%</p>
@@ -226,31 +228,51 @@ if 'usuario' in st.session_state:
     st.markdown("<h3 style='color: black;'> Indicadores de Ventas por Tipología de Cliente</h3>", unsafe_allow_html=True)
 
     df_tipo = df2[df2["sub categoria"] != "Total general"]
+    df_tipo['Ejecutado (%)'] = df_tipo['P% COMERCIAL 2024'] * 100
+    df_tipo['Meta (%)'] = df_tipo['prueba 2'] * 100
+    df_tipo['Diferencia (%)'] = df_tipo['prueba DIFERENCIA'] * 100
+    df_tipo['Presupuesto'] = df_tipo['PRESUPUESTO CON LINEA']
+    df_tipo['Ventas 2025'] = df_tipo['Ventas 2025 rea']
 
-    for _, row in df_tipo.iterrows():
-        ejecutado_tipo = row["P% COMERCIAL 2024"] * 100
-        meta_tipo = row["prueba 2"] * 100
-        diferencia_tipo = row["prueba DIFERENCIA"] * 100
-        presupuesto_tipo = row["PRESUPUESTO CON LINEA"]
-        ventas_tipo = row["Ventas 2025 rea"]
-        color_bar = "green" if ejecutado_tipo >= meta_tipo else "red"
+    def crear_gauge_base64(ejecutado, meta):
+        fig = go.Figure(go.Indicator(
+            mode="gauge+number",
+            value=ejecutado,
+            gauge={
+                'axis': {'range': [None, 100]},
+                'bar': {'color': "blue"},
+                'steps': [
+                    {'range': [0, meta], 'color': "red"},
+                    {'range': [meta, 100], 'color': "green"}
+                ]
+            }
+        ))
+        fig.update_layout(width=200, height=150, margin=dict(l=10, r=10, t=10, b=10))
+        
+        buf = io.BytesIO()
+        fig.write_image(buf, format='png')
+        buf.seek(0)
+        img_base64 = base64.b64encode(buf.read()).decode('utf-8')
+        return f'<img src="data:image/png;base64,{img_base64}" width="150"/>'
 
-        fig_gauge = crear_gauge(ejecutado_tipo, titulo=f"Proyección: {meta_tipo:.2f}%", referencia=meta_tipo)
+    # Crear columna con gauge en base64
+    df_tipo['Gauge'] = df_tipo.apply(lambda row: crear_gauge_base64(row['Ejecutado (%)'], row['Meta (%)']), axis=1)
 
-        with st.expander(f"Subcategoría: {row['sub categoria']}", expanded=False):
-            col1, col2 = st.columns([2, 2])
+    # Seleccionar columnas a mostrar
+    df_mostrar = df_tipo[['sub categoria', 'Ventas 2025', 'Presupuesto', 'Ejecutado (%)', 'Meta (%)', 'Diferencia (%)', 'Gauge']]
 
-            with col1:
-                st.markdown(
-                    f"""
-                    <div style="background-color:black; padding:15px; border-radius:15px; box-shadow:0 2px 5px rgba(0,0,0,0.1); color:white">
-                        <p><b>Ventas 2025:</b> ${ventas_tipo:,.0f}</p>
-                        <p><b>Presupuesto:</b> ${presupuesto_tipo:,.0f}</p>
-                        <p><b>Ejecutado:</b> {ejecutado_tipo:.2f}%</p>
-                        <p><b>Diferencia Meta:</b> {diferencia_tipo:+.2f}%</p>
-                    </div>
-                    """,
-                    unsafe_allow_html=True
-                )
-            with col2:
-                st.plotly_chart(fig_gauge, use_container_width=True)
+    # Mostrar la tabla con los gauges incrustados
+    st.markdown("### Tabla con gauges por fila")
+    st.write("Se muestra la tabla completa con gauges para cada subcategoria:")
+
+    # Renderiza la tabla como HTML
+    def render_df_html(df):
+        return df.to_html(escape=False, index=False, formatters={
+            'Ventas 2025': lambda x: f"${x:,.0f}",
+            'Presupuesto': lambda x: f"${x:,.0f}",
+            'Ejecutado (%)': lambda x: f"{x:.2f}%",
+            'Meta (%)': lambda x: f"{x:.2f}%",
+            'Diferencia (%)': lambda x: f"{x:+.2f}%"
+        })
+
+    st.markdown(render_df_html(df_mostrar), unsafe_allow_html=True)
