@@ -274,13 +274,14 @@ def imagen_base64(ruta):
         
 def crear_indicador_estado(valor, referencia, titulo):
     diferencia = valor - referencia
+    estado_color 
     
     if diferencia >= 0:
         estado_color = "#28A745"
         estado_icon = "✓"
         estado_text = "OBJETIVO ALCANZADO"
         bg_color = f"linear-gradient(135deg, #28A745 0%, #20C997 100%)"
-    elif diferencia <=50:
+    elif diferencia <=50 :
         estado_color = "#EFCE4B"
         estado_icon = ""
         estado_text = "ESTA EN AUMENTO"
