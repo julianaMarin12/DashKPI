@@ -321,10 +321,11 @@ def crear_indicador_estado(valor, referencia, titulo):
 
 def formatear_valor_colombiano(valor):
     valor_str = f"{valor:,.2f}"          
-    valor_str = valor_str.replace(",", "X") 
+    valor_str = valor_str.replace(",", "X")  
     valor_str = valor_str.replace(".", ",")  
-    valor_str = valor_str.replace("X", ".") 
+    valor_str = valor_str.replace("X", ".")  
     return valor_str
+
 
 def mostrar_metrica_corporativa(titulo, valor, prefijo="", sufijo="", tipo="default"):
     if isinstance(valor, (int, float)):
@@ -334,8 +335,9 @@ def mostrar_metrica_corporativa(titulo, valor, prefijo="", sufijo="", tipo="defa
                 valor_formateado = f"{valor / 1_000_000:.2f}".replace(".", ",") 
         elif abs(valor) >= 1_000:
                 valor_formateado = f"{valor / 1_000:.2f}".replace(".", ",") 
-        else:
-                valor_formateado = formatear_valor_colombiano(valor)    
+    else:
+        valor_formateado = formatear_valor_colombiano(valor)  
+
     
     if tipo == "primario":
         background = f"linear-gradient(135deg, {COLOR_PRIMARIO} 0%, {COLOR_ACENTO} 100%)"
