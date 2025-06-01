@@ -320,23 +320,27 @@ def crear_indicador_estado(valor, referencia, titulo):
     """, unsafe_allow_html=True)
 
 def formatear_valor_colombiano(valor):
-    valor_str = f"{valor:,.2f}"          
-    valor_str = valor_str.replace(",", "X")  
-    valor_str = valor_str.replace(".", ",")  
-    valor_str = valor_str.replace("X", ".")  
+    valor_str = f"{valor:,.2f}"
+    valor_str = valor_str.replace(",", "X").replace(".", ",").replace("X", ".")
     return valor_str
 
 
 def mostrar_metrica_corporativa(titulo, valor, prefijo="", sufijo="", tipo="default"):
     if isinstance(valor, (int, float)):
         if abs(valor) >= 1_000_000_000:
-            valor_formateado = f"{valor / 1_000_000_000:.2f}".replace(".", ",") 
+            valor_formateado = f"{valor / 1_000_000_000:.2f}"
+            valor_formateado = valor_formateado.replace(".", ",") + "B"
         elif abs(valor) >= 1_000_000:
-                valor_formateado = f"{valor / 1_000_000:.2f}".replace(".", ",") 
+            valor_formateado = f"{valor / 1_000_000:.2f}"
+            valor_formateado = valor_formateado.replace(".", ",") + "M"
         elif abs(valor) >= 1_000:
-                valor_formateado = f"{valor / 1_000:.2f}".replace(".", ",") 
+            valor_formateado = f"{valor / 1_000:.2f}"
+            valor_formateado = valor_formateado.replace(".", ",") + "K"
+        else:
+            valor_formateado = formatear_valor_colombiano(valor)
     else:
-        valor_formateado = formatear_valor_colombiano(valor)  
+        valor_formateado = str(valor)
+
 
     
     if tipo == "primario":
