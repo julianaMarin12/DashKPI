@@ -4,7 +4,6 @@ from funciones import crear_header_corporativo
 from funciones import crear_seccion_corporativa
 from funciones import crear_gauge_corporativo
 from funciones import mostrar_metrica_corporativa
-from funciones import mostrar_resumen_corporativo
 from funciones import crear_indicador_estado
 from estilos import aplicar_estilos
 from login import set_background
