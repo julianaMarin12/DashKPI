@@ -1,6 +1,3 @@
-from funciones import cargar_excel
-from funciones import mostrar_gauge_financiero
-from funciones import cargar_excel
 from funciones import crear_indicador_estado
 from funciones import crear_header_corporativo
 from funciones import crear_seccion_corporativa
@@ -27,38 +24,41 @@ if 'usuario' in st.session_state:
     )
 
     aplicar_estilos()
-    
+    #MES
     df_mes = pd.read_excel("kpi generales.xlsx", sheet_name="financiera mes", header=None)
     df_mes[0] = df_mes[0].astype(str).str.strip().str.upper()
     margen_bruto_mes = df_mes.loc[df_mes[0] == "MARGEN BRUTO FINAL", 1].values[0] * 100
     margen_neto_mes = df_mes.loc[df_mes[0] == "MARGEN NETO FINAL", 1].values[0] * 100
-
-    crear_seccion_corporativa(
-        "Rentabilidad del mes", 
-        "💰", 
-        "Análisis de rendimiento "
-    )
-
-    col_gauge, col_estado = st.columns([2, 2])
-    
-    with col_gauge:
-        valor =margen_neto_mes
-        fig = crear_gauge_corporativo(valor, "% EJECUTADO VS PROYECTADO", referencia=18)
-        st.plotly_chart(fig, use_container_width=True)
-    
-    with col_estado:
-        crear_indicador_estado(valor,18,"Estado VS Objetivo")
-
+    #ACUM
     df_acum = pd.read_excel("kpi generales.xlsx", sheet_name="financiera acum", header=None)
     df_acum[0] = df_acum[0].astype(str).str.strip().str.upper()
     margen_bruto_acum = df_acum.loc[df_acum[0] == "MARGEN BRUTO FINAL", 1].values[0] * 100
     margen_neto_acum = df_acum.loc[df_acum[0] == "MARGEN NETO FINAL", 1].values[0] * 100
-
-    mostrar_gauge_financiero(
-        titulo_margen=["Margen Bruto", "Margen Neto"],
-        valor=[margen_bruto_acum, margen_neto_acum],
-        referencia=[51.4, 18],
-        color_fondo="white",
-        titulo_seccion="Rentabilidad acumulada"
+    
+    tipo_rentabilidad = st.radio(
+        "Selecciona el tipo de rentabilidad:",
+        ["Mensual", "Acumulada"],
+        horizontal=True
     )
 
+    if tipo_rentabilidad == "Mensual":
+        titulo_seccion = "Rentabilidad del mes"
+        valor = margen_neto_mes
+        referencia_neto = 18
+    else:
+        titulo_seccion = "Rentabilidad acumulada"
+        valor = margen_neto_acum
+        referencia_neto=18
+
+    crear_seccion_corporativa(titulo_seccion, "💰", "Análisis de rendimiento")
+
+    col_gauge, col_estado = st.columns([2, 2])
+
+    with col_gauge:
+        fig = crear_gauge_corporativo(valor, "% EJECUTADO VS PROYECTADO", referencia=referencia_neto)
+        st.plotly_chart(fig, use_container_width=True, key=f"gauge_{tipo_rentabilidad.lower()}")
+
+    with col_estado:
+        crear_indicador_estado(valor, referencia_neto, "Estado VS Objetivo")
+
+    
