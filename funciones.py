@@ -280,7 +280,7 @@ def crear_indicador_estado(valor, referencia, titulo):
         estado_icon = "✓"
         estado_text = "OBJETIVO ALCANZADO"
         bg_color = f"linear-gradient(135deg, #28A745 0%, #20C997 100%)"
-    elif diferencia <=-50 :
+    elif -50 <= diferencia < 0 :
         estado_color = "#EFCE4B"
         estado_icon = ""
         estado_text = "ESTA EN AUMENTO"
