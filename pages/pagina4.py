@@ -66,8 +66,6 @@ if 'usuario' in st.session_state:
     with col3:
         mostrar_metrica_corporativa("VARIACIÓN ABSOLUTA", variacion_abs, "$", tipo="secundario")
 
-    st.markdown("📈 RESUMEN EJECUTIVO")
-    mostrar_resumen_corporativo(ventas_2024, ventas_2025, variacion_pct, 36.5)
 
     st.markdown('<hr class="section-divider">', unsafe_allow_html=True)
 
