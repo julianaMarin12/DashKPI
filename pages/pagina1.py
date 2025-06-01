@@ -42,11 +42,11 @@ if 'usuario' in st.session_state:
     )
 
     if tipo_rentabilidad == "Mensual":
-        titulo_seccion = "Rentabilidad del mes"
+        titulo_seccion = "Rentabilidad Neta del mes"
         valor = margen_neto_mes
         referencia_neto = 18
     else:
-        titulo_seccion = "Rentabilidad acumulada"
+        titulo_seccion = "Rentabilidad Neta acumulada"
         valor = margen_neto_acum
         referencia_neto=18
 
