@@ -329,7 +329,7 @@ def mostrar_metrica_corporativa(titulo, valor, prefijo="", sufijo="", tipo="defa
     if isinstance(valor, (int, float)):
      if isinstance(valor, (int, float)):
         if sufijo == "%":
-            valor_formateado = str(valor)
+            valor_formateado = f"{valor:,.2}"
         else:
             if abs(valor) >= 1_000_000_000:
                 valor_formateado = valor / 1_000_000_000
@@ -342,8 +342,6 @@ def mostrar_metrica_corporativa(titulo, valor, prefijo="", sufijo="", tipo="defa
                 valor_formateado = formatear_valor_colombiano(valor_formateado) 
     else:
         valor_formateado = formatear_valor_colombiano(valor)
-
-
     
     if tipo == "primario":
         background = f"linear-gradient(135deg, {COLOR_PRIMARIO} 0%, {COLOR_ACENTO} 100%)"
