@@ -17,7 +17,6 @@ import numpy as np
 import login
 
 st.set_page_config(layout="wide")
-
 aplicar_estilos()
 login.generarLogin()
 
