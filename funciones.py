@@ -327,19 +327,21 @@ def formatear_valor_colombiano(valor):
 
 def mostrar_metrica_corporativa(titulo, valor, prefijo="", sufijo="", tipo="default"):
     if isinstance(valor, (int, float)):
-        if abs(valor) >= 1_000_000_000:
-            valor_formateado = f"{valor / 1_000_000_000:.2f}"
-            valor_formateado = valor_formateado.replace(".", ",") + "B"
-        elif abs(valor) >= 1_000_000:
-            valor_formateado = f"{valor / 1_000_000:.2f}"
-            valor_formateado = valor_formateado.replace(".", ",") + "M"
-        elif abs(valor) >= 1_000:
-            valor_formateado = f"{valor / 1_000:.2f}"
-            valor_formateado = valor_formateado.replace(".", ",") + "K"
+     if isinstance(valor, (int, float)):
+        if sufijo == "%":
+            valor_formateado = str(valor)
         else:
-            valor_formateado = formatear_valor_colombiano(valor)
+            if abs(valor) >= 1_000_000_000:
+                valor_formateado = valor / 1_000_000_000
+                valor_formateado = formatear_valor_colombiano(valor_formateado) 
+            elif abs(valor) >= 1_000_000:
+                valor_formateado = valor / 1_000_000
+                valor_formateado = formatear_valor_colombiano(valor_formateado) 
+            elif abs(valor) >= 1_000:
+                valor_formateado = valor / 1_000
+                valor_formateado = formatear_valor_colombiano(valor_formateado) 
     else:
-        valor_formateado = str(valor)
+        valor_formateado = formatear_valor_colombiano(valor)
 
 
     
