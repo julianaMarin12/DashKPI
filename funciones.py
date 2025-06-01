@@ -274,7 +274,6 @@ def imagen_base64(ruta):
         
 def crear_indicador_estado(valor, referencia, titulo):
     diferencia = valor - referencia
-    estado_color 
     
     if diferencia >= 0:
         estado_color = "#28A745"
