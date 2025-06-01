@@ -320,7 +320,7 @@ def crear_indicador_estado(valor, referencia, titulo):
     """, unsafe_allow_html=True)
 
 def formatear_valor_colombiano(valor):
-    valor_str = f"{valor:,.2f}"
+    valor_str = f"{valor:,.1f}"
     valor_str = valor_str.replace(",", "X").replace(".", ",").replace("X", ".")
     return valor_str
 
