@@ -280,7 +280,7 @@ def crear_indicador_estado(valor, referencia, titulo):
         estado_icon = "✓"
         estado_text = "OBJETIVO ALCANZADO"
         bg_color = f"linear-gradient(135deg, #28A745 0%, #20C997 100%)"
-    elif diferencia >=50 :
+    elif diferencia <=-50 :
         estado_color = "#EFCE4B"
         estado_icon = ""
         estado_text = "ESTA EN AUMENTO"
@@ -451,7 +451,6 @@ def crear_seccion_corporativa(titulo, icono="", descripcion=""):
 
 def crear_gauge_corporativo(valor, titulo, referencia=None):
     """Crea un gauge con diseño corporativo"""
-    # Determinar colores basado en el rendimiento
     if referencia:
         if valor >= referencia:
             color_principal = COLOR_PRIMARIO
@@ -525,59 +524,3 @@ def crear_gauge_corporativo(valor, titulo, referencia=None):
     )
     
     return fig
-
-def mostrar_resumen_corporativo(ventas_2024, ventas_2025, variacion_pct, presupuestado):
-    crecimiento = ((ventas_2025 - ventas_2024) / ventas_2024) * 100
-    diferencia_meta = variacion_pct * 100 - presupuestado
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.markdown(f"""
-        <div style="
-            background: {COLOR_SECUNDARIO};
-            border: 2px solid {COLOR_PRIMARIO};
-            padding: 2rem;
-            border-radius: 12px;
-            margin-bottom: 1rem;
-        ">
-            <h4 style="margin: 0 0 1.5rem 0; color: {COLOR_TEXTO_OSCURO}; font-weight: 700; font-size: 1.1rem;">📊 ANÁLISIS DE RENDIMIENTO</h4>
-            <div style="color: {COLOR_TEXTO_OSCURO}; line-height: 1.6;">
-                <div style="display: flex; justify-content: space-between; margin: 1rem 0; padding: 0.5rem 0; border-bottom: 1px solid {COLOR_PRIMARIO}40;">
-                    <span style="font-weight: 600;">Crecimiento Anual:</span>
-                    <span style="color: {COLOR_PRIMARIO}; font-weight: 700;">{crecimiento:.1f}%</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; margin: 1rem 0; padding: 0.5rem 0; border-bottom: 1px solid {COLOR_PRIMARIO}40;">
-                    <span style="font-weight: 600;">Diferencia vs Meta:</span>
-                    <span style="color: {'#28A745' if diferencia_meta >= 0 else '#DC3545'}; font-weight: 700;">{diferencia_meta:+.1f}%</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; margin: 1rem 0; padding: 0.5rem 0;">
-                    <span style="font-weight: 600;">Estado General:</span>
-                    <span style="color: {'#28A745' if diferencia_meta >= 0 else '#DC3545'}; font-weight: 700;">{'POSITIVO' if diferencia_meta >= 0 else 'A MEJORAR'}</span>
-                </div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col2:
-        recomendaciones = [
-            "Mantener estrategia actual" if diferencia_meta >= 0 else "Revisar estrategia comercial",
-            "Optimizar canales de alto rendimiento",
-            "Monitorear KPIs semanalmente",
-            "Analizar tendencias del mercado"
-        ]
-        
-        st.markdown(f"""
-        <div style="
-            background: linear-gradient(135deg, {COLOR_PRIMARIO} 0%, {COLOR_ACENTO} 100%);
-            padding: 2rem;
-            border-radius: 12px;
-            margin-bottom: 1rem;
-            color: white;
-        ">
-            <h4 style="margin: 0 0 1.5rem 0; color: white; font-weight: 700; font-size: 1.1rem;">💡 RECOMENDACIONES ESTRATÉGICAS</h4>
-            <div style="color: white; line-height: 1.6;">
-                {''.join([f'<div style="margin: 0.8rem 0; display: flex; align-items: center;"><span style="margin-right: 0.8rem; color: rgba(255,255,255,0.8);">▸</span>{rec}</div>' for rec in recomendaciones])}
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
