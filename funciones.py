@@ -21,57 +21,6 @@ def cargar_excel(path, sheet):
     df.columns = df.columns.str.strip()
     return df
 
-def crear_gauge(valor, titulo, referencia, height=300):
-    color_bar = "green" if valor >= referencia else "red"
-    fig = go.Figure(go.Indicator(
-        mode="gauge+number+delta",
-        value=valor,
-        number={'suffix': '%'},
-        delta={
-            'reference': referencia,
-            'increasing': {'color': "green"},
-            'decreasing': {'color': "red"},
-            'relative': False,
-            'valueformat': '.2f',
-            'suffix': '%'
-        },
-        gauge={
-            'axis': {'range': [0,  referencia]},
-            'bar': {'color': color_bar},
-            'steps': [
-                {'range': [0, referencia], 'color': '#ffe6e6'},
-                {'range': [referencia, 100], 'color': '#e6ffe6'}
-            ],
-            'threshold': {
-                'line': {'color': "black", 'width': 4},
-                'thickness': 0.75,
-                'value': referencia
-            }
-        },
-        title={
-            'text': f"<b style='font-size:20px; color:black;'> Proyección: {referencia:,.2f}%</b><br>"
-                    "<b style='font-size:15px; color:black;'>% Ejecutado vs Proyectado</b>"
-        }
-    ))
-    fig.update_layout(height=height)
-    return fig
-
-def mostrar_metrica_porcentual(titulo, valor, sufijo=""):
-    st.markdown(f"""
-        <div class="metric-card">
-            <div class="metric-title">{titulo}</div>
-            <div class="metric-value">{valor:,.2f}{sufijo}</div>
-        </div>
-    """, unsafe_allow_html=True)
-
-def mostrar_metrica_dinero(titulo, valor, prefijo=""):
-    st.markdown(f"""
-        <div class="metric-card">
-            <div class="metric-title">{titulo}</div>
-            <div class="metric-value">{prefijo}{valor:,.1f}</div>
-        </div>
-    """, unsafe_allow_html=True)
-
 def mostrar_tipologia(dataframe, etiqueta_col,referencia):
     for _, row in dataframe.iterrows():
         ejecutado = row["MARGEN NETO FINAL"] * 100

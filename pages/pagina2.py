@@ -8,6 +8,7 @@ from funciones import crear_header_corporativo
 from funciones import crear_seccion_corporativa
 from funciones import crear_gauge_corporativo
 from funciones import mostrar_metrica_corporativa
+from funciones import mostrar_metrica_corporativa_mercadeo
 from funciones import mostrar_tipologia
 from funciones import crear_donut
 from login import set_background
@@ -26,7 +27,7 @@ import login
 st.set_page_config(layout="wide")
 login.generarLogin()
 if 'usuario' in st.session_state:
-    set_background("images/fondo2.jpg")
+    set_background("images/fondo3.jpg")
     aplicar_estilos()
     crear_header_corporativo("🛒 KPIs Área Comercial","Kpis del area comercial")
 
@@ -194,7 +195,7 @@ if 'usuario' in st.session_state:
 
         col1, col2, col3 = st.columns(3)
         with col1:
-            mostrar_metrica_corporativa("Ventas 2025", ventas_2025, "$", tipo="primario")
+            mostrar_metrica_corporativa_mercadeo("Ventas 2025", ventas_2025, "$", tipo="primario")
         with col2:
             mostrar_metrica_corporativa("Presupuesto 2025", presupesto, "$", tipo="secundario")
         with col3:
