@@ -176,7 +176,10 @@ if 'usuario' in st.session_state:
     elif tipo_kpi == "Presupuesto de Ventas Vs Ejecutado":
         df1 = cargar_excel("kpi generales.xlsx", sheet="Comercial1")
         df_general = df1[df1["Productos"] == "Total general"].iloc[0]
-
+        crear_seccion_corporativa(
+            "PRESUPUESTO VS EJECUTADO", 
+            "🪙"                
+        )
         ventas_2025 = df_general["Ventas 2025 rea"]
         presupesto = df_general["PRESUPUESTO CON LINEA"]
         ejecutado = df_general["P% COMERCIAL 2024"]
@@ -190,10 +193,7 @@ if 'usuario' in st.session_state:
         diferencia_comer = diferencia_porcent * 100
         col_grafico1, col_presupuesto = st.columns([1, 2])
 
-        crear_seccion_corporativa(
-            "PRESUPUESTO VS EJECUTADO", 
-            "🪙"                
-        )
+        
         with col_grafico1:
             fig = crear_gauge_corporativo(ejecutado_comer, titulo="Presupuesto vs Ejecutado",referencia=proyectado_comer)
             st.plotly_chart(fig, use_container_width=True)
