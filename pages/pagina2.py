@@ -73,13 +73,13 @@ if 'usuario' in st.session_state:
         
         col1, col2, col3 = st.columns(3)
         with col1:
-            mostrar_metrica_corporativa("VENTAS 2024", total_vencido, "$", tipo="secundario")
+            mostrar_metrica_corporativa("TOTAL VENCIDO", total_vencido, "$", tipo="secundario")
 
         with col2:
-            mostrar_metrica_corporativa("VENTAS 2025", total_corriente, "$", tipo="primario")
+            mostrar_metrica_corporativa("TOTAL CORRIENTE", total_corriente, "$", tipo="primario")
 
         with col3:
-            mostrar_metrica_corporativa("VARIACIÓN ABSOLUTA", total_cartera, "$", tipo="secundario")
+            mostrar_metrica_corporativa("TOTAL CARTERA", total_cartera, "$", tipo="secundario")
 
 
         col_grafico, col_expander = st.columns([1, 2])
