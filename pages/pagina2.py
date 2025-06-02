@@ -142,7 +142,7 @@ if 'usuario' in st.session_state:
             "🪙"                
         )
         df_tip = df_rent_mes[df_rent_mes["Etiquetas de fila"].isin(tipos)]
-        mostrar_tipologia(df_tip, "Etiquetas de fila",referencia=proyectado_rentabilidad_mes)
+        mostrar_tipologia(df_tip, "Etiquetas de fila", referencia=proyectado_rentabilidad_mes)
 
 
     elif tipo_kpi == "Rentabilidad Acumulada":
