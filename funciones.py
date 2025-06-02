@@ -174,30 +174,17 @@ def crear_indicador_estado(valor, referencia, titulo):
         estado_icon = "✓"
         estado_text = "OBJETIVO ALCANZADO"
         bg_color = f"linear-gradient(135deg, #28A745 0%, #20C997 100%)"
-        mostrar_imagen = False
     elif -50 <= diferencia < 0 :
         estado_color = "#EFCE4B"
         estado_icon = ""
         estado_text = "ESTA EN AUMENTO"
         bg_color = f"linear-gradient(135deg, #FFD700 0%, #EFCE4B 100%)"
-        mostrar_imagen = False
-
     else:
         estado_color = "#DC3545"
-        estado_icon = "../images/advertencia.png"
+        estado_icon = "⚠"
         estado_text = "REQUIERE ATENCIÓN"
         bg_color = f"linear-gradient(135deg, #DC3545 0%, #E74C3C 100%)"
-        mostrar_imagen = True
-
-    if mostrar_imagen:
-        # Verificar si la imagen existe antes de mostrar
-        if os.path.exists(estado_icon):
-            st.image(estado_icon, width=30)
-        else:
-            st.error("Icono de advertencia no encontrado.")
-    else:
-        st.markdown(f"<span style='font-size:30px; color:{estado_color}'>{estado_icon}</span>", unsafe_allow_html=True)
-    st.image(estado_icon, width=30)
+    
     st.markdown(f"""
     <div style="
         background: {bg_color};

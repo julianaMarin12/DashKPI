@@ -1,6 +1,7 @@
 import streamlit as st 
 import pandas as pd 
 from PIL import Image
+import base64
 
 def validarUsuario(usuario,clave):
     dfusuarios = pd.read_csv('usuarios.csv')
@@ -44,7 +45,6 @@ def generarMenu(usuario):
         
 def set_background(image_file):
     with open(image_file, "rb") as image:
-        import base64
         encoded = base64.b64encode(image.read()).decode()
     st.markdown(
         f"""
