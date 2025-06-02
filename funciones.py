@@ -184,7 +184,16 @@ def crear_indicador_estado(valor, referencia, titulo):
         estado_icon = "images/advertencia.png"
         estado_text = "REQUIERE ATENCIÓN"
         bg_color = f"linear-gradient(135deg, #DC3545 0%, #E74C3C 100%)"
+        mostrar_imagen = True
 
+    if mostrar_imagen:
+        # Verificar si la imagen existe antes de mostrar
+        if os.path.exists(estado_icon):
+            st.image(estado_icon, width=30)
+        else:
+            st.error("Icono de advertencia no encontrado.")
+    else:
+        st.markdown(f"<span style='font-size:30px; color:{estado_color}'>{estado_icon}</span>", unsafe_allow_html=True)
     st.image(estado_icon, width=30)
     st.markdown(f"""
     <div style="
