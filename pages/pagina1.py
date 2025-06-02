@@ -34,21 +34,28 @@ if 'usuario' in st.session_state:
     df_acum[0] = df_acum[0].astype(str).str.strip().str.upper()
     margen_bruto_acum = df_acum.loc[df_acum[0] == "MARGEN BRUTO FINAL", 1].values[0] * 100
     margen_neto_acum = df_acum.loc[df_acum[0] == "MARGEN NETO FINAL", 1].values[0] * 100
-    
-    tipo_rentabilidad = st.radio(
-        "Selecciona el tipo de rentabilidad:",
-        ["Mensual", "Acumulada"],
-        horizontal=True
+        
+    tipo_rentabilidad = st.selectbox(
+        "Selecciona KPI que desea:",
+        ["Rentabilidad Neta Mensual", "Rentabilidad Neta Acumulada", "Rentabilidad Bruta Mensual", "Rentabilidad Bruta Acumulada"],
     )
 
-    if tipo_rentabilidad == "Mensual":
+    if tipo_rentabilidad == "Rentabilidad Neta Mensual":
         titulo_seccion = "Rentabilidad Neta del mes"
         valor = margen_neto_mes
         referencia_neto = 18
-    else:
+    elif tipo_rentabilidad == "Rentabilidad Neta Acumulada":
         titulo_seccion = "Rentabilidad Neta acumulada"
         valor = margen_neto_acum
         referencia_neto=18
+    elif tipo_rentabilidad == "Rentabilidad Bruta Mensual":
+        titulo_seccion = "Rentabilidad Bruta mensual"
+        valor = margen_bruto_mes
+        referencia_neto=51.4
+    elif tipo_rentabilidad == "Rentabilidad Bruta Acumulada": 
+        titulo_seccion = "Rentabilidad Bruta Acumulada"
+        valor = margen_bruto_acum
+        referencia_neto=51.4
 
     crear_seccion_corporativa(titulo_seccion, "💰", "Análisis de rendimiento")
 
