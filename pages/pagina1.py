@@ -15,6 +15,7 @@ import plotly.express as px
 import numpy as np
 import login
 
+st.set_page_config(layout="wide")
 login.generarLogin()
 set_background("images/fondo1.jpg")
 if 'usuario' in st.session_state:
