@@ -27,7 +27,7 @@ import login
 st.set_page_config(layout="wide")
 login.generarLogin()
 if 'usuario' in st.session_state:
-    set_background("images/fondo3.jpg")
+    set_background("images/fondo2.jpg")
     aplicar_estilos()
     crear_header_corporativo("🛒 KPIs Área Comercial","Kpis del area comercial")
 
