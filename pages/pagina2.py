@@ -131,7 +131,7 @@ if 'usuario' in st.session_state:
         )
         col1, col2 = st.columns([2, 1])
         with col1:
-            st.plotly_chart(crear_gauge_corporativo(margen, "Proyectado = 13% ",referencia=proyectado_rentabilidad_mes), use_container_width=True)
+            st.plotly_chart(crear_gauge_corporativo(margen, "Proyección: 13% ",referencia=proyectado_rentabilidad_mes), use_container_width=True)
         with col2:
             mostrar_metrica_corporativa("Utilidad Neta", utilidad, "$",tipo="primario")
             mostrar_metrica_corporativa("Margen Neto", margen, sufijo="%",tipo="secundario")
@@ -164,8 +164,8 @@ if 'usuario' in st.session_state:
             st.plotly_chart(fig, use_container_width=True)
 
         with col_utilidad_acum:
-            mostrar_metrica_corporativa("Utilidad Neta", utilidad_acum, "$")
-            mostrar_metrica_corporativa("Margen Neto", margen_acum, "%")
+            mostrar_metrica_corporativa("Utilidad Neta", utilidad_acum, "$",tipo="secundario")
+            mostrar_metrica_corporativa("Margen Neto", margen_acum, sufijo= "%", tipo="primario")
         
         crear_seccion_corporativa(
             "POR TIPOLOGIA", 
