@@ -181,10 +181,10 @@ def crear_indicador_estado(valor, referencia, titulo):
         bg_color = f"linear-gradient(135deg, #FFD700 0%, #EFCE4B 100%)"
     else:
         estado_color = "#DC3545"
-        estado_icon = f"/images/advertencia.png"
+        estado_icon = "images/advertencia.png"
         estado_text = "REQUIERE ATENCIÓN"
         bg_color = f"linear-gradient(135deg, #DC3545 0%, #E74C3C 100%)"
-        
+
     st.image(estado_icon, width=30)
     st.markdown(f"""
     <div style="
