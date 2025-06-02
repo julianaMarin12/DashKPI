@@ -60,7 +60,7 @@ if 'usuario' in st.session_state:
 
     crear_seccion_corporativa(titulo_seccion, "💰", "Análisis de rendimiento")
 
-    col_gauge, col_estado = st.columns([2, 2])
+    col_gauge, col_estado = st.columns([2, 1])
 
     with col_gauge:
         fig = crear_gauge_corporativo(valor, "% EJECUTADO VS PROYECTADO", referencia=referencia_neto)
