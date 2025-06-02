@@ -3,7 +3,7 @@ from funciones import crear_indicador_estado
 from funciones import crear_header_corporativo
 from funciones import crear_seccion_corporativa
 from funciones import crear_gauge_corporativo
-from funciones import mostrar_metrica_corporativa
+from funciones import mostrar_metrica_corporativa_mercadeo
 from funciones import crear_indicador_estado
 from estilos import aplicar_estilos
 from login import set_background
@@ -57,13 +57,13 @@ if 'usuario' in st.session_state:
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        mostrar_metrica_corporativa("VENTAS 2024", ventas_2024, "$", tipo="secundario")
+        mostrar_metrica_corporativa_mercadeo("VENTAS 2024", ventas_2024, "$", tipo="secundario")
 
     with col2:
-        mostrar_metrica_corporativa("VENTAS 2025", ventas_2025, "$", tipo="primario")
+        mostrar_metrica_corporativa_mercadeo("VENTAS 2025", ventas_2025, "$", tipo="primario")
 
     with col3:
-        mostrar_metrica_corporativa("VARIACIÓN ABSOLUTA", variacion_abs, "$", tipo="secundario")
+        mostrar_metrica_corporativa_mercadeo("VARIACIÓN ABSOLUTA", variacion_abs, "$", tipo="secundario")
 
 
     st.markdown('<hr class="section-divider">', unsafe_allow_html=True)
@@ -94,10 +94,10 @@ if 'usuario' in st.session_state:
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        mostrar_metrica_corporativa("PORCENTAJE ACTIVO", porcentaje, sufijo="%", tipo="primario")
+        mostrar_metrica_corporativa_mercadeo("PORCENTAJE ACTIVO", porcentaje, sufijo="%", tipo="primario")
     
     with col2:
-        mostrar_metrica_corporativa("LANZAMIENTOS ACTIVOS", lanzamientos, "$", tipo="secundario")
+        mostrar_metrica_corporativa_mercadeo("LANZAMIENTOS ACTIVOS", lanzamientos, "$", tipo="secundario")
     
     with col3:
-        mostrar_metrica_corporativa("VENTAS INNOVACIÓN", ventas_innov, "$", tipo="primario")
+        mostrar_metrica_corporativa_mercadeo("VENTAS INNOVACIÓN", ventas_innov, "$", tipo="primario")

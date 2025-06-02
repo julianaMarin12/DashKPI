@@ -69,4 +69,6 @@ if 'usuario' in st.session_state:
     with col_estado:
         crear_indicador_estado(valor, referencia_neto, "Estado VS Objetivo")
 
+
+
     
