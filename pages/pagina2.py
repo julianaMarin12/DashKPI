@@ -190,6 +190,30 @@ if 'usuario' in st.session_state:
         proyectado_comer = proyectado_porcent * 100
         diferencia_comer = diferencia_porcent * 100
 
+        col_grafico1, col_presupuesto = st.columns([1, 2])
+
+        with col_grafico1:
+            fig = crear_gauge_corporativo(ejecutado_comer, titulo="Presupuesto vs Ejecutado",referencia=proyectado_comer)
+            st.plotly_chart(fig, use_container_width=True)
+
+        with col_presupuesto:
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                mostrar_metrica_corporativa("Ventas 2025", ventas_2025, "$", tipo="primario")
+            with col2:
+                mostrar_metrica_corporativa("Presupuesto 2025", presupesto, "$", tipo="secundario")
+            with col3:
+                mostrar_metrica_corporativa("Ejecutado", ejecutado_comer, sufijo="%", tipo="primario")
+
+            col4, col5, col6 = st.columns(3)
+            with col4:
+                mostrar_metrica_corporativa("Proyectado", proyectado_comer, sufijo= "%", tipo="secundario")
+            with col5:
+                mostrar_metrica_corporativa("Diferencia", diferencia,"$", tipo="primario")
+            with col6:
+                mostrar_metrica_corporativa("Diferencia (%)", diferencia_comer, sufijo="%", tipo="secundario")
+
+
         def mostrar_tabla_productos():
                 df_productosCategoria = df1[df1["Productos"] != "Total general"].copy()
                 df_productosCategoria["Ejecutado (%)"] = df_productosCategoria["P% COMERCIAL 2024"] * 100
