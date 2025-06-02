@@ -100,4 +100,4 @@ if 'usuario' in st.session_state:
         mostrar_metrica_corporativa_mercadeo("LANZAMIENTOS ACTIVOS", lanzamientos, "$", tipo="secundario")
     
     with col3:
-        mostrar_metrica_corporativa_mercadeo("VENTAS INNOVACIÓN", ventas_innov, "$", tipo="primario")
+        mostrar_metrica_corporativa_mercadeo("VENTAS DE LA COMPAÑIA", ventas_innov, "$", tipo="primario")
