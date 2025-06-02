@@ -5,6 +5,7 @@ import streamlit as st
 import pandas as pd
 from PIL import Image
 from io import BytesIO
+import plotly.express as px
 import io 
 import base64
 
@@ -75,7 +76,7 @@ def mostrar_tipologia(dataframe, etiqueta_col,referencia):
     for _, row in dataframe.iterrows():
         ejecutado = row["MARGEN NETO FINAL"] * 100
         utilidad = row["UTILIDAD NETA FINAL"]
-        fig = crear_gauge(ejecutado, "Proyección:16%",referencia)
+        fig = crear_gauge_corporativo(ejecutado, "Proyección:16%",referencia)
         with st.expander(f"{row[etiqueta_col]}", expanded=False):
             col1, col2 = st.columns(2)
             with col1:
@@ -269,11 +270,10 @@ def formatear_valor_colombiano(valor):
     return valor_str
 
 
-def mostrar_metrica_corporativa(titulo, valor, prefijo="", sufijo="", tipo="default"):
+def mostrar_metrica_corporativa_mercadeo(titulo, valor, prefijo="", sufijo="", tipo="default"):
     if isinstance(valor, (int, float)):
-     if isinstance(valor, (int, float)):
         if sufijo == "%":
-            valor_formateado = f"{valor:,.2}"
+            valor_formateado = f"{valor:,.2f}"
         else:
             if abs(valor) >= 1_000_000_000:
                 valor_formateado = valor / 1_000_000_000
@@ -286,6 +286,166 @@ def mostrar_metrica_corporativa(titulo, valor, prefijo="", sufijo="", tipo="defa
                 valor_formateado = formatear_valor_colombiano(valor_formateado) 
     else:
         valor_formateado = formatear_valor_colombiano(valor)
+    
+    if tipo == "primario":
+        background = f"linear-gradient(135deg, {COLOR_PRIMARIO} 0%, {COLOR_ACENTO} 100%)"
+        text_color = COLOR_TEXTO_CLARO
+    elif tipo == "secundario":
+        background = f"linear-gradient(135deg, {COLOR_SECUNDARIO} 0%, #E0DDD8 100%)"
+        text_color = COLOR_TEXTO_OSCURO
+        border = f"2px solid {COLOR_PRIMARIO}"
+    else:
+        background = f"linear-gradient(135deg, {COLOR_SECUNDARIO} 0%, #F5F3F1 100%)"
+        text_color = COLOR_TEXTO_OSCURO
+        border = f"1px solid {COLOR_PRIMARIO}40"
+    
+    border_style = f"border: {border};" if tipo == "secundario" else f"border: 1px solid {COLOR_PRIMARIO}20;"
+    
+    st.markdown(f"""
+    <div style="
+        background: {background};
+        padding: 1.8rem;
+        border-radius: 12px;
+        {border_style}
+        box-shadow: 0 4px 20px rgba(0, 176, 178, 0.15);
+        text-align: center;
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+    ">
+        <h4 style="
+            color: {text_color};
+            margin: 0 0 0.8rem 0;
+            font-size: 0.95rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            opacity: 0.9;
+        ">{titulo}</h4>
+        <h2 style="
+            color: {text_color};
+            margin: 0;
+            font-size: 2.2rem;
+            font-weight: 700;
+            line-height: 1.1;
+            font-family: 'Segoe UI', sans-serif;
+        ">{prefijo}{valor_formateado}{sufijo}</h2>
+    </div>
+    """, unsafe_allow_html=True)
+
+def crear_header_corporativo(titulo, subtitulo=""):
+    st.markdown(f"""
+    <div style="
+        background: linear-gradient(135deg, {COLOR_PRIMARIO} 0%, {COLOR_ACENTO} 100%);
+        padding: 2.5rem 2rem;
+        border-radius: 16px;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 32px rgba(0, 176, 178, 0.25);
+        position: relative;
+        overflow: hidden;
+    ">
+        <div style="
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        "></div>
+        <div style="
+            position: absolute;
+            bottom: -30%;
+            left: -5%;
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+        "></div>
+        <div style="position: relative; z-index: 2;">
+            <h1 style="
+                color: {COLOR_TEXTO_CLARO};
+                margin: 0;
+                font-size: 2.8rem;
+                font-weight: 700;
+                text-align: center;
+                letter-spacing: -0.5px;
+            ">{titulo}</h1>
+            {f'<p style="color: rgba(255, 255, 255, 0.9); margin: 0.8rem 0 0 0; font-size: 1.2rem; text-align: center; font-weight: 300;">{subtitulo}</p>' if subtitulo else ''}
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+def mostrar_metrica_corporativa_mercadeo(titulo, valor, prefijo="", sufijo="", tipo="default"):
+    if isinstance(valor, (int, float)):
+        if sufijo == "%":
+            valor_formateado = f"{valor:,.2f}"
+        else:
+            if abs(valor) >= 1_000_000_000:
+                valor_formateado = valor / 1_000_000_000
+                valor_formateado = formatear_valor_colombiano(valor_formateado) 
+            elif abs(valor) >= 1_000_000:
+                valor_formateado = valor / 1_000_000
+                valor_formateado = formatear_valor_colombiano(valor_formateado) 
+            elif abs(valor) >= 1_000:
+                valor_formateado = valor / 1_000
+                valor_formateado = formatear_valor_colombiano(valor_formateado) 
+    else:
+        valor_formateado = formatear_valor_colombiano(valor)
+    
+    if tipo == "primario":
+        background = f"linear-gradient(135deg, {COLOR_PRIMARIO} 0%, {COLOR_ACENTO} 100%)"
+        text_color = COLOR_TEXTO_CLARO
+    elif tipo == "secundario":
+        background = f"linear-gradient(135deg, {COLOR_SECUNDARIO} 0%, #E0DDD8 100%)"
+        text_color = COLOR_TEXTO_OSCURO
+        border = f"2px solid {COLOR_PRIMARIO}"
+    else:
+        background = f"linear-gradient(135deg, {COLOR_SECUNDARIO} 0%, #F5F3F1 100%)"
+        text_color = COLOR_TEXTO_OSCURO
+        border = f"1px solid {COLOR_PRIMARIO}40"
+    
+    border_style = f"border: {border};" if tipo == "secundario" else f"border: 1px solid {COLOR_PRIMARIO}20;"
+    
+    st.markdown(f"""
+    <div style="
+        background: {background};
+        padding: 1.8rem;
+        border-radius: 12px;
+        {border_style}
+        box-shadow: 0 4px 20px rgba(0, 176, 178, 0.15);
+        text-align: center;
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+    ">
+        <h4 style="
+            color: {text_color};
+            margin: 0 0 0.8rem 0;
+            font-size: 0.95rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            opacity: 0.9;
+        ">{titulo}</h4>
+        <h2 style="
+            color: {text_color};
+            margin: 0;
+            font-size: 2.2rem;
+            font-weight: 700;
+            line-height: 1.1;
+            font-family: 'Segoe UI', sans-serif;
+        ">{prefijo}{valor_formateado}{sufijo}</h2>
+    </div>
+    """, unsafe_allow_html=True)
+
+def mostrar_metrica_corporativa(titulo, valor, prefijo="", sufijo="", tipo="default"):
+    if isinstance(valor, (int, float)):
+        if sufijo == "%":
+            valor_formateado = f"{valor:,.2f}"
+        else:
+            valor_formateado = formatear_valor_colombiano(valor)
+    else:
+        valor_formateado = str(valor)
+            
     
     if tipo == "primario":
         background = f"linear-gradient(135deg, {COLOR_PRIMARIO} 0%, {COLOR_ACENTO} 100%)"
@@ -478,3 +638,96 @@ def crear_gauge_corporativo(valor, titulo, referencia=None):
     )
     
     return fig
+
+
+def aplicar_estilos_expander():
+    """Aplica estilos corporativos a los expanders"""
+    st.markdown(f"""
+    <style>
+        /* Estilo para los expanders */
+        .streamlit-expanderHeader {{
+            background: linear-gradient(90deg, {COLOR_SECUNDARIO} 0%, white 100%) !important;
+            border-radius: 10px !important;
+            border-left: 5px solid {COLOR_PRIMARIO} !important;
+            padding: 0.75rem 1rem !important;
+            color: {COLOR_TEXTO_OSCURO} !important;
+            font-weight: 600 !important;
+            font-size: 1rem !important;
+            box-shadow: 0 2px 8px rgba(0, 176, 178, 0.1) !important;
+            transition: all 0.3s ease !important;
+        }}
+        
+        .streamlit-expanderHeader:hover {{
+            background: linear-gradient(90deg, {COLOR_SECUNDARIO} 0%, {COLOR_SECUNDARIO}50 100%) !important;
+            box-shadow: 0 4px 12px rgba(0, 176, 178, 0.15) !important;
+        }}
+        
+        .streamlit-expanderContent {{
+            border: 1px solid {COLOR_SECUNDARIO} !important;
+            border-top: none !important;
+            border-radius: 0 0 10px 10px !important;
+            padding: 1.5rem !important;
+            box-shadow: 0 4px 12px rgba(0, 176, 178, 0.08) !important;
+        }}
+        
+        /* Estilo para el título del indicador */
+        .indicador-titulo {{
+            background: linear-gradient(135deg, {COLOR_PRIMARIO} 0%, {COLOR_ACENTO} 100%);
+            color: white;
+            padding: 1.2rem 2rem;
+            border-radius: 12px;
+            font-size: 1.6rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 6px 18px rgba(0, 176, 178, 0.2);
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }}
+        
+        .indicador-titulo::before {{
+            content: "";
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }}
+        
+        /* Estilo para las métricas */
+        .metrica-container {{
+            background: white;
+            border-radius: 10px;
+            padding: 1rem;
+            box-shadow: 0 4px 12px rgba(0, 176, 178, 0.1);
+            text-align: center;
+            border-top: 3px solid {COLOR_PRIMARIO};
+            height: 100%;
+        }}
+        
+        .metrica-titulo {{
+            color: {COLOR_TEXTO_OSCURO};
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }}
+        
+        .metrica-valor {{
+            color: {COLOR_PRIMARIO};
+            font-size: 1.4rem;
+            font-weight: 700;
+        }}
+        
+        /* Estilo para el contenedor del gráfico */
+        .grafico-container {{
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 6px 18px rgba(0, 176, 178, 0.12);
+            border: 1px solid {COLOR_SECUNDARIO};
+        }}
+    </style>
+    """, unsafe_allow_html=True)

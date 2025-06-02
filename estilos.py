@@ -12,7 +12,6 @@ def aplicar_estilos():
         <style>
             /* Estilos generales */
             div[role="button"] {{
-                background-color: #ffffff !important;
                 color: {COLOR_TEXTO_OSCURO} !important;
                 font-weight: 600;
                 font-size: 18px;
@@ -50,10 +49,6 @@ def aplicar_estilos():
             
             .main > div {{
                 padding-top: 1rem;
-            }}
-            
-            .stApp {{
-                background: linear-gradient(135deg, {COLOR_FONDO} 0%, {COLOR_SECUNDARIO} 100%);
             }}
             
             h1, h2, h3 {{
