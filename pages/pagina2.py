@@ -151,6 +151,8 @@ if 'usuario' in st.session_state:
         margen_acum = df_general["MARGEN NETO FINAL"].values[0] * 100
         proyectado_rentabilidad_acum = 16
 
+        
+
     
     
 
