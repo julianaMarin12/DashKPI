@@ -199,7 +199,7 @@ if 'usuario' in st.session_state:
             st.plotly_chart(fig, use_container_width=True)
 
         with col_presupuesto:
-            col1, col2, col3 = st.columns(3)
+            col1, col2, col3 = st.columns([2,2,2])
             with col1:
                 mostrar_metrica_corporativa("Ventas 2025", ventas_2025, "$", tipo="primario")
             with col2:
@@ -207,7 +207,7 @@ if 'usuario' in st.session_state:
             with col3:
                 mostrar_metrica_corporativa("Ejecutado", ejecutado_comer, sufijo="%", tipo="primario")
 
-            col4, col5, col6 = st.columns(3)
+            col4, col5, col6 = st.columns([2,2,2])
             with col4:
                 mostrar_metrica_corporativa("Proyectado", proyectado_comer, sufijo= "%", tipo="secundario")
             with col5:
@@ -236,14 +236,22 @@ if 'usuario' in st.session_state:
         )         
         mostrar_tabla_productos()
 
+        crear_seccion_corporativa(
+            "POR TIPOLOGÍA", 
+            "🪙"                
+        )  
         df2 = cargar_excel("kpi generales.xlsx", sheet="Comercial2")
-        df_general = df2[df2["sub categoria"] == "Total general"]
-        ventas_2025_tipo = df_general["Ventas 2025 rea"].values[0]
-        presupuesto_tipo = df_general["PRESUPUESTO CON LINEA"].values[0]
-        ejecutado_tipo = df_general["P% COMERCIAL 2024"].values[0] * 100
-        proyectado_tipo = df_general["prueba"].values[0] * 100
-        proyectado_porcent_tipo = df_general["prueba 2"].values[0] * 100
-        diferencia_tipo = df_general["prueba DIFERENCIA DINERO"].values[0] * 100
-        diferencia_porcent_tipo = df_general["prueba DIFERENCIA"].values[0] * 100
+        df_tipo = df2[df2["sub categoria"] != "Total general"].copy()
+        df_tipo.loc[:, 'Ejecutado (%)'] = df_tipo['P% COMERCIAL 2024'] * 100
+        df_tipo.loc[:, 'Meta (%)'] = df_tipo['prueba 2'] * 100
+        df_tipo.loc[:, 'Diferencia (%)'] = df_tipo['prueba DIFERENCIA'] * 100
+        df_tipo.loc[:, 'Presupuesto'] = df_tipo['PRESUPUESTO CON LINEA']
+        df_tipo.loc[:, 'Ventas 2025'] = df_tipo['Ventas 2025 rea']
+
+        df_tipo['Gauge'] = df_tipo.apply(lambda row: crear_gauge_base64(row['Ejecutado (%)'], row['Meta (%)']), axis=1)
+        df_mostrar = df_tipo[['sub categoria', 'Ventas 2025', 'Presupuesto', 'Ejecutado (%)', 'Meta (%)', 'Diferencia (%)', 'Gauge']]
+
+        
+        st.markdown(render_df_html(df_mostrar), unsafe_allow_html=True)
 
         
