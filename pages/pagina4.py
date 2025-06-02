@@ -43,7 +43,7 @@ if 'usuario' in st.session_state:
         "Análisis integral de rendimiento por canales de distribución y venta"
     )
     
-    col_gauge, col_estado = st.columns([2, 2])
+    col_gauge, col_estado = st.columns([2, 1])
     
     with col_gauge:
         valor = variacion_pct * 100
@@ -81,7 +81,7 @@ if 'usuario' in st.session_state:
         "Seguimiento estratégico de nuevos productos y lanzamientos comerciales"
     )
 
-    col_gauge2, col_estado2 = st.columns([2, 2])
+    col_gauge2, col_estado2 = st.columns([2, 1])
     
     with col_gauge2:
         fig2 = crear_gauge_corporativo(porcentaje, "% LANZAMIENTOS ACTIVOS", referencia=7)
