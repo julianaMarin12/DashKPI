@@ -185,13 +185,15 @@ if 'usuario' in st.session_state:
         diferencia = df_general["prueba DIFERENCIA DINERO"]
         diferencia_porcent = df_general["prueba DIFERENCIA"]
         imagenes = df_general["Ruta Imagen"]
-
         ejecutado_comer = ejecutado * 100
         proyectado_comer = proyectado_porcent * 100
         diferencia_comer = diferencia_porcent * 100
-
         col_grafico1, col_presupuesto = st.columns([1, 2])
 
+        crear_seccion_corporativa(
+            "PRESUPUESTO VS EJECUTADO", 
+            "🪙"                
+        )
         with col_grafico1:
             fig = crear_gauge_corporativo(ejecutado_comer, titulo="Presupuesto vs Ejecutado",referencia=proyectado_comer)
             st.plotly_chart(fig, use_container_width=True)
@@ -228,7 +230,10 @@ if 'usuario' in st.session_state:
                     "Ejecutado (%)", "Meta (%)", "Diferencia (%)", "Gauge"
                 ]]
                 st.markdown(render_df_html(df_mostrar), unsafe_allow_html=True)
-                
+        crear_seccion_corporativa(
+            "POR PRODUCTOS", 
+            "🪙"                
+        )         
         mostrar_tabla_productos()
 
         df2 = cargar_excel("kpi generales.xlsx", sheet="Comercial2")
