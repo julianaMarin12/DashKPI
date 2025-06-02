@@ -25,7 +25,7 @@ def mostrar_tipologia(dataframe, etiqueta_col,referencia):
     for _, row in dataframe.iterrows():
         ejecutado = row["MARGEN NETO FINAL"] * 100
         utilidad = row["UTILIDAD NETA FINAL"]
-        fig = crear_gauge_corporativo(ejecutado, "Proyección:16%",referencia)
+        fig = crear_gauge_corporativo(ejecutado, "Ejecutado por tipología",0)
         with st.expander(f"{row[etiqueta_col]}", expanded=False):
             col1, col2 = st.columns(2)
             with col1:
