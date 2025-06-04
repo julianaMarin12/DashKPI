@@ -140,6 +140,11 @@ if 'usuario' in st.session_state:
             margen_acum=margen_acum
         )
 
+        tipos = [
+            "GRANDES SUPERFICIES", "TIENDA ESPECIALIZADA", "CADENAS REGIONALES",
+            "FOOD SERVICE PREMIUM", "AUTOSERVICIOS", "DISTRIBUIDOR", "OTROS CLIENTES NACIONALES"
+        ]
+
         crear_seccion_corporativa(
             "RENTABILIDAD MENSUAL", 
             "💵"                
@@ -150,7 +155,10 @@ if 'usuario' in st.session_state:
             mostrar_metrica_corporativa("Utilidad Neta", utilidad, "$",tipo="primario")
         with col2:
             mostrar_metrica_corporativa("Margen Neto", margen, sufijo="%",tipo="secundario")
-
+        
+        df_tip = df_rent_mes[df_rent_mes["Etiquetas de fila"].isin(tipos)]
+        mostrar_tipologia(df_tip, "Etiquetas de fila", referencia=0)
+    
         crear_seccion_corporativa(
             "RENTABILIDAD ACUMULADA", 
             "💵"                
@@ -161,14 +169,10 @@ if 'usuario' in st.session_state:
             mostrar_metrica_corporativa("Utilidad Neta", utilidad_acum, "$",tipo="secundario")
         with col4:
             mostrar_metrica_corporativa("Margen Neto", margen_acum, sufijo= "%", tipo="primario")
-
-        crear_seccion_corporativa(
-            "POR TIPOLOGIA", 
-            "📍"                
-        )
-        df_tip = df_rent_mes[df_rent_mes["Etiquetas de fila"].isin(tipos)]
-        mostrar_tipologia(df_tip, "Etiquetas de fila", referencia=proyectado_rentabilidad_mes)
         
+        df_tip_acum = df_rentabilidad_acum[df_rentabilidad_acum["TIPOLOGIA"].isin(tipos)]
+        mostrar_tipologia(df_tip_acum, "TIPOLOGIA", referencia=0)
+            
 
     elif tipo_kpi == "Presupuesto de Ventas Vs Ejecutado":
         df1 = cargar_excel("kpi generales.xlsx", sheet="Comercial1")
@@ -235,6 +239,7 @@ if 'usuario' in st.session_state:
             "POR TIPOLOGÍA", 
             "🪙"                
         )  
+
         df2 = cargar_excel("kpi generales.xlsx", sheet="Comercial2")
         df_tipo = df2[df2["sub categoria"] != "Total general"].copy()
         df_tipo.loc[:, 'Ejecutado (%)'] = df_tipo['P% COMERCIAL 2024'] * 100

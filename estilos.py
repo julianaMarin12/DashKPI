@@ -241,5 +241,35 @@ def aplicar_estilos():
                 border-radius: 4px;
             }}
             
+            .tabla-corporativa, .tabla-tipologia {{
+                width: 100%;
+                border-collapse: separate;
+                border-spacing: 0;
+                background: #fff;
+                border-radius: 16px;
+                box-shadow: 0 4px 16px rgba(0,176,178,0.10);
+                overflow: hidden;
+                margin-bottom: 2rem;
+            }}
+            .tabla-corporativa th, .tabla-tipologia th {{
+                background: {COLOR_PRIMARIO};
+                color: #fff;
+                font-weight: 700;
+                font-size: 1.1rem;
+                padding: 0.8rem 0.5rem;
+                border-bottom: 2px solid {COLOR_SECUNDARIO};
+                text-align: center;
+            }}
+            .tabla-corporativa td, .tabla-tipologia td {{
+                padding: 0.7rem 0.5rem;
+                text-align: center;
+                font-size: 1rem;
+                color: {COLOR_TEXTO_OSCURO};
+                border-bottom: 1px solid {COLOR_SECUNDARIO};
+                background: {COLOR_FONDO};
+            }}
+            .tabla-corporativa tr:last-child td, .tabla-tipologia tr:last-child td {{
+                border-bottom: none;
+            }}
         </style>
     """, unsafe_allow_html=True)

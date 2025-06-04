@@ -22,23 +22,63 @@ def cargar_excel(path, sheet):
     df.columns = df.columns.str.strip()
     return df
 
-def mostrar_tipologia(dataframe, etiqueta_col,referencia):
-    for _, row in dataframe.iterrows():
-        ejecutado = row["MARGEN NETO FINAL"] * 100
-        utilidad = row["UTILIDAD NETA FINAL"]
-        fig = crear_gauge_corporativo(ejecutado, "Ejecutado por tipología",0)
-        with st.expander(f"{row[etiqueta_col]}", expanded=False):
-            col1, col2 = st.columns(2)
-            with col1:
-                st.plotly_chart(fig, use_container_width=True)
-            with col2:
-                st.markdown(f"""
-                    <div style="background-color:white; padding:15px; border-radius:15px;
-                                box-shadow:0 2px 5px rgba(0,0,0,0.1); color:#333">
-                        <p><b>Utilidad:</b> ${utilidad:,.0f}</p>
-                        <p><b>Margen:</b> {ejecutado:+.2f} %</p>
-                    </div>
-                """, unsafe_allow_html=True)
+def mostrar_tipologia(dataframe, etiqueta_col, referencia):
+    """
+    Muestra una tabla estilizada de tipologías con Utilidad y Margen,
+    siguiendo el diseño corporativo del dashboard. (Sin gauge)
+    """
+    # Preparamos los datos para la tabla
+    df_tabla = dataframe[[etiqueta_col, "UTILIDAD NETA FINAL", "MARGEN NETO FINAL"]].copy()
+    df_tabla["MARGEN NETO FINAL"] = df_tabla["MARGEN NETO FINAL"] * 100
+    df_tabla.rename(columns={
+        etiqueta_col: "Tipología",
+        "UTILIDAD NETA FINAL": "Utilidad Neta",
+        "MARGEN NETO FINAL": "Margen Neto (%)"
+    }, inplace=True)
+
+    # Formateo de valores
+    df_tabla["Utilidad Neta"] = df_tabla["Utilidad Neta"].apply(lambda x: f"${x:,.0f}")
+    df_tabla["Margen Neto (%)"] = df_tabla["Margen Neto (%)"].apply(lambda x: f"{x:.2f}%")
+
+    # Renderizado HTML estilizado
+    st.markdown("""
+    <style>
+    .tabla-tipologia {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 16px rgba(0,176,178,0.10);
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
+    .tabla-tipologia th {
+        background: #00B0B2;
+        color: #fff;
+        font-weight: 700;
+        font-size: 1.1rem;
+        padding: 0.8rem 0.5rem;
+        border-bottom: 2px solid #EDEBE9;
+        text-align: center;
+    }
+    .tabla-tipologia td {
+        padding: 0.7rem 0.5rem;
+        text-align: center;
+        font-size: 1rem;
+        color: #2C3E50;
+        border-bottom: 1px solid #EDEBE9;
+        background: #F8F9FA;
+    }
+    .tabla-tipologia tr:last-child td {
+        border-bottom: none;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+    # Convertimos el DataFrame a HTML
+    html = df_tabla.to_html(escape=False, index=False, classes="tabla-tipologia")
+    st.markdown(html, unsafe_allow_html=True)
 
 def crear_donut(indicador, color="#25ABB9", height=200, width=200, font_size=14):
     fig = go.Figure(data=[go.Pie(
