@@ -42,10 +42,8 @@ if 'usuario' in st.session_state:
     tipo_rentabilidad = st.selectbox( " Seleccione el KPI que desea visualizar:",
             [   
                 "Cumplimiento de Rentabilidad",
-                "Rentabilidad Neta Mensual",
-                "Rentabilidad Neta Acumulada",
-                "Rentabilidad Bruta Mensual",
-                "Rentabilidad Bruta Acumulada",
+                "Rentabilidad Mensual",
+                "Rentabilidad Acumulada",
             ],
         )
     
@@ -61,7 +59,7 @@ if 'usuario' in st.session_state:
         st.plotly_chart(fig_barras, use_container_width=True)
 
 
-    elif tipo_rentabilidad == "Rentabilidad Neta Mensual":
+    elif tipo_rentabilidad == "Rentabilidad Mensual":
         titulo_seccion = "Rentabilidad Neta del mes"
         valor = margen_neto_mes
         crear_seccion_corporativa(titulo_seccion, "💵", "")
@@ -73,7 +71,21 @@ if 'usuario' in st.session_state:
 
         with col_estado:
             crear_indicador_estado(valor, referencia_neto, "Estado VS Objetivo")
-    elif tipo_rentabilidad == "Rentabilidad Neta Acumulada":
+        
+        titulo_seccion = "Rentabilidad Bruta mensual"
+
+        crear_seccion_corporativa(titulo_seccion, "💵", "")
+        valor = margen_bruto_mes
+        col_gauge, col_estado = st.columns([2, 1])
+
+        with col_gauge:
+            fig = crear_gauge_corporativo(valor, "% EJECUTADO VS PROYECTADO", referencia=referencia_bruto)
+            st.plotly_chart(fig, use_container_width=True, key=f"gauge_{titulo_seccion.lower()}")
+
+        with col_estado:
+            crear_indicador_estado(valor, referencia_bruto, "Estado VS Objetivo")
+        
+    elif tipo_rentabilidad == "Rentabilidad Acumulada": 
         titulo_seccion = "Rentabilidad Neta acumulada"
         crear_seccion_corporativa(titulo_seccion, "💰", "")
         valor = margen_neto_acum
@@ -85,20 +97,6 @@ if 'usuario' in st.session_state:
 
         with col_estado:
             crear_indicador_estado(valor, referencia_neto, "Estado VS Objetivo")
-    elif tipo_rentabilidad == "Rentabilidad Bruta Mensual":
-        titulo_seccion = "Rentabilidad Bruta mensual"
-        crear_seccion_corporativa(titulo_seccion, "💵", "")
-        valor = margen_bruto_mes
-        col_gauge, col_estado = st.columns([2, 1])
-
-        with col_gauge:
-            fig = crear_gauge_corporativo(valor, "% EJECUTADO VS PROYECTADO", referencia=referencia_bruto)
-            st.plotly_chart(fig, use_container_width=True, key=f"gauge_{tipo_rentabilidad.lower()}")
-
-        with col_estado:
-            crear_indicador_estado(valor, referencia_bruto, "Estado VS Objetivo")
-        
-    elif tipo_rentabilidad == "Rentabilidad Bruta Acumulada": 
         titulo_seccion = "Rentabilidad Bruta Acumulada"
         valor = margen_bruto_acum
         crear_seccion_corporativa(titulo_seccion, "💰", "")
@@ -106,7 +104,7 @@ if 'usuario' in st.session_state:
 
         with col_gauge:
             fig = crear_gauge_corporativo(valor, "% EJECUTADO VS PROYECTADO", referencia=referencia_bruto)
-            st.plotly_chart(fig, use_container_width=True, key=f"gauge_{tipo_rentabilidad.lower()}")
+            st.plotly_chart(fig, use_container_width=True, key=f"gauge_{titulo_seccion.lower()}")
 
         with col_estado:
             crear_indicador_estado(valor, referencia_bruto, "Estado VS Objetivo")
