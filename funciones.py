@@ -15,6 +15,7 @@ COLOR_TEXTO_OSCURO = "#2C3E50"
 COLOR_TEXTO_CLARO = "#FFFFFF"
 COLOR_ACENTO = "#008B8D"  
 COLOR_FONDO = "#F8F9FA"
+COLOR_PROYECTADO = "#F4869C"
 
 def cargar_excel(path, sheet):
     df = pd.read_excel(path, sheet_name=sheet)
@@ -589,132 +590,118 @@ def crear_gauge_corporativo(valor, titulo, referencia=None):
     return fig
 
 
-def aplicar_estilos_expander():
-    """Aplica estilos corporativos a los expanders"""
-    st.markdown(f"""
-    <style>
-        /* Estilo para los expanders */
-        .streamlit-expanderHeader {{
-            background: linear-gradient(90deg, {COLOR_SECUNDARIO} 0%, white 100%) !important;
-            border-radius: 10px !important;
-            border-left: 5px solid {COLOR_PRIMARIO} !important;
-            padding: 0.75rem 1rem !important;
-            color: {COLOR_TEXTO_OSCURO} !important;
-            font-weight: 600 !important;
-            font-size: 1rem !important;
-            box-shadow: 0 2px 8px rgba(0, 176, 178, 0.1) !important;
-            transition: all 0.3s ease !important;
-        }}
-        
-        .streamlit-expanderHeader:hover {{
-            background: linear-gradient(90deg, {COLOR_SECUNDARIO} 0%, {COLOR_SECUNDARIO}50 100%) !important;
-            box-shadow: 0 4px 12px rgba(0, 176, 178, 0.15) !important;
-        }}
-        
-        .streamlit-expanderContent {{
-            border: 1px solid {COLOR_SECUNDARIO} !important;
-            border-top: none !important;
-            border-radius: 0 0 10px 10px !important;
-            padding: 1.5rem !important;
-            box-shadow: 0 4px 12px rgba(0, 176, 178, 0.08) !important;
-        }}
-        
-        /* Estilo para el título del indicador */
-        .indicador-titulo {{
-            background: linear-gradient(135deg, {COLOR_PRIMARIO} 0%, {COLOR_ACENTO} 100%);
-            color: white;
-            padding: 1.2rem 2rem;
-            border-radius: 12px;
-            font-size: 1.6rem;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 6px 18px rgba(0, 176, 178, 0.2);
-            letter-spacing: 0.5px;
-            position: relative;
-            overflow: hidden;
-        }}
-        
-        .indicador-titulo::before {{
-            content: "";
-            position: absolute;
-            top: -20px;
-            right: -20px;
-            width: 80px;
-            height: 80px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-        }}
-        
-        /* Estilo para las métricas */
-        .metrica-container {{
-            background: white;
-            border-radius: 10px;
-            padding: 1rem;
-            box-shadow: 0 4px 12px rgba(0, 176, 178, 0.1);
-            text-align: center;
-            border-top: 3px solid {COLOR_PRIMARIO};
-            height: 100%;
-        }}
-        
-        .metrica-titulo {{
-            color: {COLOR_TEXTO_OSCURO};
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }}
-        
-        .metrica-valor {{
-            color: {COLOR_PRIMARIO};
-            font-size: 1.4rem;
-            font-weight: 700;
-        }}
-        
-        /* Estilo para el contenedor del gráfico */
-        .grafico-container {{
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 6px 18px rgba(0, 176, 178, 0.12);
-            border: 1px solid {COLOR_SECUNDARIO};
-        }}
-    </style>
-    """, unsafe_allow_html=True)
-
-
 def graficar_rentabilidad(proyectado_mes, proyectado_acum, margen_mes, margen_acum):
     fig = go.Figure()
 
     fig.add_trace(go.Bar(
-        name="Proyectado",
+        name=" Proyectado",
         x=["Mensual", "Acumulado"],
         y=[proyectado_mes, proyectado_acum],
-        marker_color="#F4869C",
+        marker=dict(
+            color=COLOR_PROYECTADO,
+            line=dict(color="#E6758A", width=2),
+            opacity=0.8
+        ),
         text=[f"{proyectado_mes:.1f}%", f"{proyectado_acum:.1f}%"],
         textposition="inside",
-        hovertemplate="Proyectado: %{y:.1f}%<extra></extra>",
+        textfont=dict(
+            size=16,
+            color="white",
+            family="Arial Black"
+        ),
+        hovertemplate="<b>Proyectado</b><br>" +
+                      "Período: %{x}<br>" +
+                      "Valor: %{y:.1f}%<br>" +
+                      "<extra></extra>",
+        width=0.6
     ))
 
     fig.add_trace(go.Bar(
-        name="Margen Neto (Ejecutado)",
+        name=" Margen Neto (Ejecutado)",
         x=["Mensual", "Acumulado"],
         y=[margen_mes, margen_acum],
-        marker_color="#00B0B2",
+        marker=dict(
+            color=COLOR_PRIMARIO,
+            line=dict(color=COLOR_ACENTO, width=2),
+            opacity=0.9
+        ),
         text=[f"{margen_mes:.1f}%", f"{margen_acum:.1f}%"],
         textposition="inside",
-        hovertemplate="Ejecutado: %{y:.1f}%<extra></extra>",
+        textfont=dict(
+            size=16,
+            color="white",
+            family="Arial Black"
+        ),
+        hovertemplate="<b>Ejecutado</b><br>" +
+                      "Período: %{x}<br>" +
+                      "Valor: %{y:.1f}%<br>" +
+                      "<extra></extra>",
+        width=0.6
     ))
 
     fig.update_layout(
-        barmode='stack',
-        title="Rentabilidad Mensual y Acumulada",
-        yaxis_title="%",
-        xaxis_title="Tipo de Rentabilidad",
-        height=400,
-        legend_title_text="Leyenda",
-        plot_bgcolor="#F8F9FA",
-        bargap=0.35,
-        font=dict(size=16),
+        barmode='stack',  
+        title=dict(
+            text="<b>Rentabilidad: Proyectado vs Ejecutado</b>",
+            font=dict(
+                size=20,
+                color=COLOR_TEXTO_OSCURO,
+                family="Arial"
+            )
+        ),
+        yaxis=dict(
+            title=dict(
+                text="<b>Porcentaje (%)</b>",
+                font=dict(size=14, color=COLOR_TEXTO_OSCURO)
+            ),
+            tickfont=dict(size=14, color=COLOR_TEXTO_OSCURO),
+            gridcolor="rgba(0, 176, 178, 0.1)",
+            gridwidth=1,
+            zeroline=True,
+            zerolinecolor="rgba(0, 176, 178, 0.3)",
+            zerolinewidth=2
+        ),
+        xaxis=dict(
+            title=dict(
+                text="<b>Período de Análisis</b>",
+                font=dict(size=16, color=COLOR_TEXTO_OSCURO)
+            ),
+            tickfont=dict(size=14, color=COLOR_TEXTO_OSCURO),
+            gridcolor="rgba(0, 176, 178, 0.1)"
+        ),
+        height=500,
+        legend=dict(
+            title=dict(
+                text="<b>Indicadores</b>",
+                font=dict(size=12, color=COLOR_TEXTO_OSCURO)
+            ),
+            font=dict(size=10, color=COLOR_TEXTO_OSCURO),
+            bgcolor="rgba(255, 255, 255, 0.8)",
+            bordercolor=COLOR_PRIMARIO,
+            borderwidth=1,
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1
+        ),
+        plot_bgcolor="rgba(0,0,0,0)",
+        paper_bgcolor="rgba(0,0,0,0)",
+        bargap=0.4,
+        bargroupgap=0.1,
+        font=dict(
+            size=14,
+            color=COLOR_TEXTO_OSCURO,
+            family="Arial"
+        ),
+        margin=dict(l=30, r=30, t=60, b=30),
+        hoverlabel=dict(
+            bgcolor="white",
+            bordercolor=COLOR_PRIMARIO,
+            font_size=12,
+            font_family="Arial"
+        )
     )
 
     st.plotly_chart(fig, use_container_width=True)
+
