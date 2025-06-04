@@ -213,21 +213,20 @@ if 'usuario' in st.session_state:
             mostrar_metrica_corporativa("Diferencia (%)", diferencia_comer, sufijo="%", tipo="secundario")
 
         def mostrar_tabla_productos():
-                df_productosCategoria = df1[df1["Productos"] != "Total general"].copy()
-                df_productosCategoria["Ejecutado (%)"] = df_productosCategoria["P% COMERCIAL 2024"] * 100
-                df_productosCategoria["Meta (%)"] = df_productosCategoria["prueba 2"] * 100
-                df_productosCategoria["Diferencia (%)"] = df_productosCategoria["prueba DIFERENCIA"] * 100
-                df_productosCategoria["Presupuesto"] = df_productosCategoria["PRESUPUESTO CON LINEA"]
-                df_productosCategoria["Ventas 2025"] = df_productosCategoria["Ventas 2025 rea"]
-                df_productosCategoria["Gauge"] = df_productosCategoria.apply(lambda row: crear_gauge_base64(row["Ejecutado (%)"], row["Meta (%)"]), axis=1)
-                df_productosCategoria["Imagen Producto"] = df_productosCategoria["Ruta Imagen"].apply(imagen_base64)
-                df_mostrar = df_productosCategoria[[
-                    "Productos", "Imagen Producto", "Ventas 2025", "Presupuesto", 
-                    "Ejecutado (%)", "Meta (%)", "Diferencia (%)", "Gauge"
-                ]]
-                st.markdown(render_df_html(df_mostrar), unsafe_allow_html=True)
-
-                fig = go.Figure()
+            df_productosCategoria = df1[df1["Productos"] != "Total general"].copy()
+            df_productosCategoria["Ejecutado (%)"] = df_productosCategoria["P% COMERCIAL 2024"] * 100
+            df_productosCategoria["Meta (%)"] = df_productosCategoria["prueba 2"] * 100
+            df_productosCategoria["Diferencia (%)"] = df_productosCategoria["prueba DIFERENCIA"] * 100
+            df_productosCategoria["Presupuesto"] = df_productosCategoria["PRESUPUESTO CON LINEA"]
+            df_productosCategoria["Ventas 2025"] = df_productosCategoria["Ventas 2025 rea"]
+            df_productosCategoria["Gauge"] = df_productosCategoria.apply(lambda row: crear_gauge_base64(row["Ejecutado (%)"], row["Meta (%)"]), axis=1)
+            df_productosCategoria["Imagen Producto"] = df_productosCategoria["Ruta Imagen"].apply(imagen_base64)
+            df_mostrar = df_productosCategoria[
+                ["Productos", "Imagen Producto", "Ventas 2025", "Presupuesto", 
+                "Ejecutado (%)", "Meta (%)", "Diferencia (%)", "Gauge"]
+            ]
+            st.markdown('<style>.tabla-corporativa {width: 100%;border-collapse: separate;border-spacing: 0;background: #fff;border-radius: 16px;box-shadow: 0 4px 16px rgba(0,176,178,0.10);overflow: hidden;margin-bottom: 2rem;}.tabla-corporativa th {background: #00B0B2;color: #fff;font-weight: 700;font-size: 1.1rem;padding: 0.8rem 0.5rem;border-bottom: 2px solid #EDEBE9;text-align: center;}.tabla-corporativa td {padding: 0.7rem 0.5rem;text-align: center;font-size: 1rem;color: #2C3E50;border-bottom: 1px solid #EDEBE9;background: #F8F9FA;}.tabla-corporativa tr:last-child td {border-bottom: none;}</style>', unsafe_allow_html=True)
+            st.markdown(df_mostrar.to_html(escape=False, index=False, classes="tabla-corporativa"), unsafe_allow_html=True)
 
         crear_seccion_corporativa(
             "POR PRODUCTOS", 
@@ -247,9 +246,7 @@ if 'usuario' in st.session_state:
         df_tipo.loc[:, 'Diferencia (%)'] = df_tipo['prueba DIFERENCIA'] * 100
         df_tipo.loc[:, 'Presupuesto'] = df_tipo['PRESUPUESTO CON LINEA']
         df_tipo.loc[:, 'Ventas 2025'] = df_tipo['Ventas 2025 rea']
-
         df_tipo['Gauge'] = df_tipo.apply(lambda row: crear_gauge_base64(row['Ejecutado (%)'], row['Meta (%)']), axis=1)
         df_mostrar = df_tipo[['sub categoria', 'Ventas 2025', 'Presupuesto', 'Ejecutado (%)', 'Meta (%)', 'Diferencia (%)', 'Gauge']]
-
-        
-        st.markdown(render_df_html(df_mostrar), unsafe_allow_html=True)
+        st.markdown('<style>.tabla-corporativa {width: 100%;border-collapse: separate;border-spacing: 0;background: #fff;border-radius: 16px;box-shadow: 0 4px 16px rgba(0,176,178,0.10);overflow: hidden;margin-bottom: 2rem;}.tabla-corporativa th {background: #00B0B2;color: #fff;font-weight: 700;font-size: 1.1rem;padding: 0.8rem 0.5rem;border-bottom: 2px solid #EDEBE9;text-align: center;}.tabla-corporativa td {padding: 0.7rem 0.5rem;text-align: center;font-size: 1rem;color: #2C3E50;border-bottom: 1px solid #EDEBE9;background: #F8F9FA;}.tabla-corporativa tr:last-child td {border-bottom: none;}</style>', unsafe_allow_html=True)
+        st.markdown(df_mostrar.to_html(escape=False, index=False, classes="tabla-corporativa"), unsafe_allow_html=True)
