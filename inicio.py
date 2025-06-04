@@ -37,8 +37,7 @@ if 'usuario' in st.session_state:
         "Indicadores de la compañía",
     )
 
-    with open("video/bodegon_1.mov", "rb") as f:
-        st.video(f.read())
+    st.image("video/1.gif", use_container_width=True)
 
     crear_seccion_corporativa(
         "Bienvenido al Dashboard de KPIs",
