@@ -589,7 +589,6 @@ def crear_gauge_corporativo(valor, titulo, referencia=None):
     
     return fig
 
-
 def graficar_rentabilidad(proyectado_mes, proyectado_acum, margen_mes, margen_acum):
     fig = go.Figure()
     
@@ -663,7 +662,7 @@ def graficar_rentabilidad(proyectado_mes, proyectado_acum, margen_mes, margen_ac
         ),
         xaxis=dict(
             title=dict(
-                text="<b>Período de Análisis</b>",
+                text="<b></b>",
                 font=dict(size=16, color=COLOR_TEXTO_OSCURO)
             ),
             tickfont=dict(size=14, color=COLOR_TEXTO_OSCURO),
@@ -703,7 +702,93 @@ def graficar_rentabilidad(proyectado_mes, proyectado_acum, margen_mes, margen_ac
         )
         
     )
-
-
     st.plotly_chart(fig, use_container_width=True)
+
+def grafico_barras_rentabilidad(margen_neto_mes, margen_neto_acum, margen_bruto_mes, margen_bruto_acum, referencia_neto=18, referencia_bruta=51.4):
+    categorias = ["Neta Mensual", "Neta Acumulada", "Bruta Mensual", "Bruta Acumulada"]
+    ejecutado = [margen_neto_mes, margen_neto_acum, margen_bruto_mes, margen_bruto_acum]
+    referencia = [referencia_neto, referencia_neto, referencia_bruta, referencia_bruta]
+
+    fig = go.Figure()
+    fig.add_trace(go.Bar(
+        name="Referencia",
+        x=categorias,
+        y=referencia,
+        marker=dict(
+            color=COLOR_PROYECTADO,
+            line=dict(color="#E6758A", width=2),
+            opacity=0.8
+        ),
+        text=[f"{v:.1f}%" for v in referencia],
+        textposition="inside",
+        textfont=dict(size=16, color="white", family="Arial Black"),
+        hovertemplate="<b>Referencia</b><br>Tipo: %{x}<br>Valor: %{y:.1f}%<br><extra></extra>",
+        width=0.6
+    ))
+    fig.add_trace(go.Bar(
+        name="Ejecutado",
+        x=categorias,
+        y=ejecutado,
+        marker=dict(
+            color=COLOR_PRIMARIO,
+            line=dict(color=COLOR_ACENTO, width=2),
+            opacity=0.9
+        ),
+        text=[f"{v:.1f}%" for v in ejecutado],
+        textposition="inside",
+        textfont=dict(size=16, color="white", family="Arial Black"),
+        hovertemplate="<b>Ejecutado</b><br>Tipo: %{x}<br>Valor: %{y:.1f}%<br><extra></extra>",
+        width=0.6
+    ))
+    fig.update_layout(
+        barmode='stack',
+        title=dict(
+            text="<b>Rentabilidad: Ejecutado vs Referencia</b>",
+            font=dict(size=20, color=COLOR_TEXTO_OSCURO, family="Arial")
+        ),
+        yaxis=dict(
+            title=dict(text="<b>Porcentaje (%)</b>", font=dict(size=14, color=COLOR_TEXTO_OSCURO)),
+            tickfont=dict(size=14, color=COLOR_TEXTO_OSCURO),
+            gridcolor="rgba(0, 176, 178, 0.1)",
+            gridwidth=1,
+            zeroline=True,
+            zerolinecolor="rgba(0, 176, 178, 0.3)",
+            zerolinewidth=2
+        ),
+        xaxis=dict(
+            title=dict(text="<b>Tipo de Rentabilidad</b>", font=dict(size=16, color=COLOR_TEXTO_OSCURO)),
+            tickfont=dict(size=14, color=COLOR_TEXTO_OSCURO),
+            gridcolor="rgba(0, 176, 178, 0.1)"
+        ),
+        height=500,
+        legend=dict(
+            title=dict(text="<b>Indicadores</b>", font=dict(size=12, color=COLOR_TEXTO_OSCURO)),
+            font=dict(size=10, color=COLOR_TEXTO_OSCURO),
+            bgcolor="rgba(255, 255, 255, 0.8)",
+            bordercolor=COLOR_PRIMARIO,
+            borderwidth=1,
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1
+        ),
+        plot_bgcolor="rgba(0,0,0,0)",
+        paper_bgcolor="rgba(0,0,0,0)",
+        bargap=0.4,
+        bargroupgap=0.1,
+        font=dict(
+            size=14,
+            color=COLOR_TEXTO_OSCURO,
+            family="Arial"
+        ),
+        margin=dict(l=30, r=30, t=60, b=30),
+        hoverlabel=dict(
+            bgcolor="white",
+            bordercolor=COLOR_PRIMARIO,
+            font_size=12,
+            font_family="Arial"
+        )
+    )
+    return fig
 
