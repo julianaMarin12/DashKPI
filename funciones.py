@@ -592,7 +592,7 @@ def crear_gauge_corporativo(valor, titulo, referencia=None):
 
 def graficar_rentabilidad(proyectado_mes, proyectado_acum, margen_mes, margen_acum):
     fig = go.Figure()
-
+    
     fig.add_trace(go.Bar(
         name=" Proyectado",
         x=["Mensual", "Acumulado"],
@@ -703,6 +703,7 @@ def graficar_rentabilidad(proyectado_mes, proyectado_acum, margen_mes, margen_ac
         )
         
     )
+
 
     st.plotly_chart(fig, use_container_width=True)
 
