@@ -31,13 +31,12 @@ if 'usuario' in st.session_state:
             }
         </style>
     """, unsafe_allow_html=True)
+
     set_background("images/fondo3.png")
     crear_header_corporativo(
         "📊 Dashboard KPIs",
         "Indicadores de la compañía",
     )
-
-    st.image("video/1.gif", use_container_width=True)
 
     crear_seccion_corporativa(
         "Bienvenido al Dashboard de KPIs",

@@ -187,7 +187,6 @@ def crear_gauge_base64(valor, referencia):
     return f'<img src="data:image/png;base64,{img_base64}" width="150"/>'
 
 def normalizar_columna(col):
-    # Quita acentos y pasa a minúsculas
     return ''.join((c for c in unicodedata.normalize('NFD', col) if unicodedata.category(c) != 'Mn')).lower()
 
 def render_df_html(df):
@@ -198,7 +197,6 @@ def render_df_html(df):
     palabras_monetarias = ["venta", "presupuesto", "utilidad", "cartera", "total", "meta"]
     for col in df.columns:
         col_norm = normalizar_columna(col)
-        # Si termina en ' (%)' o contiene '%' es SIEMPRE porcentaje
         if col.strip().endswith(" (%)") or "%" in col:
             formatters[col] = lambda x: f"{x:.2f}%" if pd.notnull(x) else ""
         elif any(palabra in col_norm for palabra in palabras_monetarias):
@@ -591,7 +589,7 @@ def crear_gauge_corporativo(valor, titulo, referencia=None):
             'font': {
                 'size': 18, 
                 'color': COLOR_TEXTO_OSCURO, 
-                'family': 'Segoe UI, sans-serif',
+                'family': 'Segoe UI, Arial',
                 'weight': 600
             }
         },
@@ -844,4 +842,67 @@ def grafico_barras_rentabilidad(margen_neto_mes, margen_neto_acum, margen_bruto_
         )
     )
     return fig
+
+def grafico_linea_corporativo(df, x, y, color=None, titulo="", etiquetas=None, colores=None):
+    colores_corporativos = ["#00B0B2", "#F4869C"]
+    fig = px.line(
+        df,
+        x=x,
+        y=y,
+        color=color,
+        markers=True,
+        title=titulo,
+        labels=etiquetas if etiquetas else None,
+        color_discrete_sequence=colores if colores is not None else colores_corporativos
+    )
+    fig.update_layout(
+        xaxis_tickangle=35,
+        height=500,
+        plot_bgcolor="#fff",
+        paper_bgcolor="#fff",
+        font=dict(family="Segoe UI, Arial", size=16, color="#2C3E50"),
+        legend=dict(
+            bgcolor="#F8F9FA",
+            bordercolor="#00B0B2",
+            borderwidth=1,
+            font=dict(size=14)
+        ),
+        title=dict(
+            font=dict(size=22, color="#000000", family="Segoe UI, Arial"),
+            x=0
+        ),
+        xaxis=dict(
+            showgrid=True,
+            gridcolor="#EDEBE9",
+            zeroline=False
+        ),
+        yaxis=dict(
+            showgrid=True,
+            gridcolor="#EDEBE9",
+            zeroline=False
+        ),
+        margin=dict(l=30, r=30, t=60, b=60)
+    )
+    fig.update_traces(line=dict(width=3), marker=dict(size=10, symbol="circle"))
+
+    for trace in fig.data:
+        xs = trace.x
+        ys = trace.y
+        color_trace = trace.line.color if hasattr(trace.line, 'color') and trace.line.color else "#00B0B2"
+        for xi, yi in zip(xs, ys):
+            if yi is not None:
+                fig.add_annotation(
+                    x=xi,
+                    y=yi,
+                    text=f"{yi:.2f}%",
+                    showarrow=False,
+                    yshift=18,
+                    font=dict(size=15, color=color_trace, family="Segoe UI, Arial"),
+                    align="center",
+                    bgcolor="rgba(255,255,255,0.7)",
+                    bordercolor=color_trace,
+                    borderwidth=0
+                )
+
+    st.plotly_chart(fig, use_container_width=True)
 

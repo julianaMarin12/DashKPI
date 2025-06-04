@@ -12,6 +12,7 @@ from funciones import mostrar_metrica_corporativa_mercadeo
 from funciones import mostrar_tipologia
 from funciones import crear_donut
 from funciones import graficar_rentabilidad
+from funciones import grafico_linea_corporativo
 from login import set_background
 import streamlit as st
 import pandas as pd
@@ -120,6 +121,7 @@ if 'usuario' in st.session_state:
                             st.plotly_chart(fig_donut, use_container_width=True)
 
     elif tipo_kpi == "Rentabilidad Mensual y Acumulada":
+        #RENTABILIDAD MENSUAL
         df_rent_mes = cargar_excel("kpi generales.xlsx", "rentabilidad comercial mes")
         df_general = df_rent_mes[df_rent_mes["Etiquetas de fila"] == "Total general"]
         utilidad = df_general["UTILIDAD NETA FINAL"].values[0]
@@ -133,18 +135,42 @@ if 'usuario' in st.session_state:
         margen_acum = df_general["MARGEN NETO FINAL"].values[0] * 100
         proyectado_rentabilidad_acum = 16
 
-        graficar_rentabilidad(
-            proyectado_mes=proyectado_rentabilidad_mes,
-            proyectado_acum=proyectado_rentabilidad_acum,
-            margen_mes=margen,
-            margen_acum=margen_acum
-        )
-
+        #TIPOLOGIAS A VER 
         tipos = [
             "GRANDES SUPERFICIES", "TIENDA ESPECIALIZADA", "CADENAS REGIONALES",
             "FOOD SERVICE PREMIUM", "AUTOSERVICIOS", "DISTRIBUIDOR", "OTROS CLIENTES NACIONALES"
         ]
 
+    
+        graficar_rentabilidad(
+                proyectado_mes=proyectado_rentabilidad_mes,
+                proyectado_acum=proyectado_rentabilidad_acum,
+                margen_mes=margen,
+                margen_acum=margen_acum
+            )
+
+        df_rent_mes = df_rent_mes.rename(columns={"Etiquetas de fila": "TIPOLOGIA"})
+        df_tip_mes = df_rent_mes[df_rent_mes["TIPOLOGIA"].isin(tipos)][["TIPOLOGIA", "MARGEN NETO FINAL"]].copy()
+        df_tip_acum = df_rentabilidad_acum[df_rentabilidad_acum["TIPOLOGIA"].isin(tipos)][["TIPOLOGIA", "MARGEN NETO FINAL"]].copy()
+        df_tip_mes["MARGEN"] = df_tip_mes["MARGEN NETO FINAL"] * 100
+        df_tip_acum["MARGEN"] = df_tip_acum["MARGEN NETO FINAL"] * 100
+        df_tip_mes["TIPO"] = "Mensual"
+        df_tip_acum["TIPO"] = "Acumulado"
+        df_final = pd.concat([
+            df_tip_mes[["TIPOLOGIA", "TIPO", "MARGEN"]],
+            df_tip_acum[["TIPOLOGIA", "TIPO", "MARGEN"]]
+        ], ignore_index=True)
+            
+        grafico_linea_corporativo(
+            df_final,
+            x="TIPOLOGIA",
+            y="MARGEN",
+            color="TIPO",
+            titulo="Comparativo de Margen Neto por Tipología",
+            etiquetas={"TIPOLOGIA": "Tipología", "MARGEN": "Margen Neto (%)"},
+            colores=["#F4869C","#00B0B2"]
+        )
+        
         crear_seccion_corporativa(
             "RENTABILIDAD MENSUAL", 
             "💵"                
@@ -156,8 +182,8 @@ if 'usuario' in st.session_state:
         with col2:
             mostrar_metrica_corporativa("Margen Neto", margen, sufijo="%",tipo="secundario")
         
-        df_tip = df_rent_mes[df_rent_mes["Etiquetas de fila"].isin(tipos)]
-        mostrar_tipologia(df_tip, "Etiquetas de fila", referencia=0)
+        df_tip = df_rent_mes[df_rent_mes["TIPOLOGIA"].isin(tipos)]
+        mostrar_tipologia(df_tip, "TIPOLOGIA", referencia=0)
     
         crear_seccion_corporativa(
             "RENTABILIDAD ACUMULADA", 
@@ -172,6 +198,8 @@ if 'usuario' in st.session_state:
         
         df_tip_acum = df_rentabilidad_acum[df_rentabilidad_acum["TIPOLOGIA"].isin(tipos)]
         mostrar_tipologia(df_tip_acum, "TIPOLOGIA", referencia=0)
+
+        
             
 
     elif tipo_kpi == "Presupuesto de Ventas Vs Ejecutado":
