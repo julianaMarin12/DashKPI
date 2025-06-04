@@ -701,7 +701,6 @@ def graficar_rentabilidad(proyectado_mes, proyectado_acum, margen_mes, margen_ac
             font_size=12,
             font_family="Arial"
         )
-        
     )
 
     st.plotly_chart(fig, use_container_width=True)
