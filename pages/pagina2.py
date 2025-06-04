@@ -11,6 +11,7 @@ from funciones import mostrar_metrica_corporativa
 from funciones import mostrar_metrica_corporativa_mercadeo
 from funciones import mostrar_tipologia
 from funciones import crear_donut
+from funciones import graficar_rentabilidad
 from login import set_background
 import streamlit as st
 import pandas as pd
@@ -33,7 +34,7 @@ if 'usuario' in st.session_state:
 
     tipo_kpi = st.selectbox(
         "Selecciona KPI que desea:",
-        ["Indicador Cartera", "Rentabilidad Mensual", "Rentabilidad Acumulada","Presupuesto de Ventas Vs Ejecutado"],
+        ["Indicador Cartera", "Rentabilidad Mensual y Acumulada","Presupuesto de Ventas Vs Ejecutado"],
     )
 
     tipos = [
@@ -118,34 +119,13 @@ if 'usuario' in st.session_state:
                             )
                             st.plotly_chart(fig_donut, use_container_width=True)
 
-    elif tipo_kpi == "Rentabilidad Mensual":
+    elif tipo_kpi == "Rentabilidad Mensual y Acumulada":
         df_rent_mes = cargar_excel("kpi generales.xlsx", "rentabilidad comercial mes")
         df_general = df_rent_mes[df_rent_mes["Etiquetas de fila"] == "Total general"]
         utilidad = df_general["UTILIDAD NETA FINAL"].values[0]
         margen = df_general["MARGEN NETO FINAL"].values[0] * 100
         proyectado_rentabilidad_mes = 13
 
-        crear_seccion_corporativa(
-            "RENTABILIDAD MENSUAL", 
-            "🪙"                
-        )
-        col1, col2 = st.columns([2, 1])
-        with col1:
-            st.plotly_chart(crear_gauge_corporativo(margen, "Proyección: 13% ",referencia=proyectado_rentabilidad_mes), use_container_width=True)
-        with col2:
-            mostrar_metrica_corporativa("Utilidad Neta", utilidad, "$",tipo="primario")
-            mostrar_metrica_corporativa("Margen Neto", margen, sufijo="%",tipo="secundario")
-
-    
-        crear_seccion_corporativa(
-            "POR TIPOLOGIA", 
-            "🪙"                
-        )
-        df_tip = df_rent_mes[df_rent_mes["Etiquetas de fila"].isin(tipos)]
-        mostrar_tipologia(df_tip, "Etiquetas de fila", referencia=proyectado_rentabilidad_mes)
-
-
-    elif tipo_kpi == "Rentabilidad Acumulada":
         #RENTABILIDAD ACUMULADA
         df_rentabilidad_acum = cargar_excel("kpi generales.xlsx", sheet="rentabilidad comercial acum")
         df_general = df_rentabilidad_acum[df_rentabilidad_acum["TIPOLOGIA"] == "Total general"]
@@ -153,26 +133,42 @@ if 'usuario' in st.session_state:
         margen_acum = df_general["MARGEN NETO FINAL"].values[0] * 100
         proyectado_rentabilidad_acum = 16
 
+        graficar_rentabilidad(
+            proyectado_mes=proyectado_rentabilidad_mes,
+            proyectado_acum=proyectado_rentabilidad_acum,
+            margen_mes=margen,
+            margen_acum=margen_acum
+        )
+
+        crear_seccion_corporativa(
+            "RENTABILIDAD MENSUAL", 
+            "🪙"                
+        )
+        
+        col1, col2 = st.columns([2, 2])
+        with col1:
+            mostrar_metrica_corporativa("Utilidad Neta", utilidad, "$",tipo="primario")
+        with col2:
+            mostrar_metrica_corporativa("Margen Neto", margen, sufijo="%",tipo="secundario")
+
         crear_seccion_corporativa(
             "RENTABILIDAD ACUMULADA", 
             "🪙"                
         )
 
-        col_grafico02, col_utilidad_acum = st.columns([2, 1])
-        with col_grafico02:
-            fig = crear_gauge_corporativo(margen_acum, "Proyección:16%",referencia=proyectado_rentabilidad_acum)
-            st.plotly_chart(fig, use_container_width=True)
-
-        with col_utilidad_acum:
+        col3, col4 = st.columns([2, 2])
+        with col3:
             mostrar_metrica_corporativa("Utilidad Neta", utilidad_acum, "$",tipo="secundario")
+        with col4:
             mostrar_metrica_corporativa("Margen Neto", margen_acum, sufijo= "%", tipo="primario")
-        
+
         crear_seccion_corporativa(
             "POR TIPOLOGIA", 
             "🪙"                
         )
-        df_tipologia_acum = df_rentabilidad_acum[df_rentabilidad_acum["TIPOLOGIA"].isin(tipos)]
-        mostrar_tipologia(df_tipologia_acum, etiqueta_col="TIPOLOGIA",referencia=proyectado_rentabilidad_acum)
+        df_tip = df_rent_mes[df_rent_mes["Etiquetas de fila"].isin(tipos)]
+        mostrar_tipologia(df_tip, "Etiquetas de fila", referencia=proyectado_rentabilidad_mes)
+        
 
     elif tipo_kpi == "Presupuesto de Ventas Vs Ejecutado":
         df1 = cargar_excel("kpi generales.xlsx", sheet="Comercial1")
@@ -193,6 +189,7 @@ if 'usuario' in st.session_state:
         proyectado_comer = proyectado_porcent * 100
         diferencia_comer = diferencia_porcent * 100
 
+    
         col1, col2, col3 = st.columns(3)
         with col1:
             mostrar_metrica_corporativa_mercadeo("Ventas 2025", ventas_2025, "$", tipo="primario")
@@ -227,6 +224,9 @@ if 'usuario' in st.session_state:
                     "Ejecutado (%)", "Meta (%)", "Diferencia (%)", "Gauge"
                 ]]
                 st.markdown(render_df_html(df_mostrar), unsafe_allow_html=True)
+
+                fig = go.Figure()
+
         crear_seccion_corporativa(
             "POR PRODUCTOS", 
             "🪙"                
@@ -250,5 +250,3 @@ if 'usuario' in st.session_state:
 
         
         st.markdown(render_df_html(df_mostrar), unsafe_allow_html=True)
-
-        
