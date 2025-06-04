@@ -680,3 +680,41 @@ def aplicar_estilos_expander():
         }}
     </style>
     """, unsafe_allow_html=True)
+
+
+def graficar_rentabilidad(proyectado_mes, proyectado_acum, margen_mes, margen_acum):
+    fig = go.Figure()
+
+    fig.add_trace(go.Bar(
+        name="Proyectado",
+        x=["Mensual", "Acumulado"],
+        y=[proyectado_mes, proyectado_acum],
+        marker_color="#E7E200",
+        text=[f"{proyectado_mes:.1f}%", f"{proyectado_acum:.1f}%"],
+        textposition="inside",
+        hovertemplate="Proyectado: %{y:.1f}%<extra></extra>",
+    ))
+
+    fig.add_trace(go.Bar(
+        name="Margen Neto (Ejecutado)",
+        x=["Mensual", "Acumulado"],
+        y=[margen_mes, margen_acum],
+        marker_color="#00B0B2",
+        text=[f"{margen_mes:.1f}%", f"{margen_acum:.1f}%"],
+        textposition="inside",
+        hovertemplate="Ejecutado: %{y:.1f}%<extra></extra>",
+    ))
+
+    fig.update_layout(
+        barmode='stack',
+        title="Rentabilidad Mensual y Acumulada",
+        yaxis_title="%",
+        xaxis_title="Tipo de Rentabilidad",
+        height=400,
+        legend_title_text="Leyenda",
+        plot_bgcolor="#F8F9FA",
+        bargap=0.35,
+        font=dict(size=16),
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
