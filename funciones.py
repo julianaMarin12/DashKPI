@@ -689,7 +689,7 @@ def graficar_rentabilidad(proyectado_mes, proyectado_acum, margen_mes, margen_ac
         name="Proyectado",
         x=["Mensual", "Acumulado"],
         y=[proyectado_mes, proyectado_acum],
-        marker_color="#E7E200",
+        marker_color="#F4869C",
         text=[f"{proyectado_mes:.1f}%", f"{proyectado_acum:.1f}%"],
         textposition="inside",
         hovertemplate="Proyectado: %{y:.1f}%<extra></extra>",
