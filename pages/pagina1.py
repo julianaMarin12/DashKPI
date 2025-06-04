@@ -64,6 +64,7 @@ if 'usuario' in st.session_state:
     elif tipo_rentabilidad == "Rentabilidad Neta Mensual":
         titulo_seccion = "Rentabilidad Neta del mes"
         valor = margen_neto_mes
+        crear_seccion_corporativa(titulo_seccion, "💵", "")
         col_gauge, col_estado = st.columns([2, 1])
 
         with col_gauge:
@@ -74,6 +75,7 @@ if 'usuario' in st.session_state:
             crear_indicador_estado(valor, referencia_neto, "Estado VS Objetivo")
     elif tipo_rentabilidad == "Rentabilidad Neta Acumulada":
         titulo_seccion = "Rentabilidad Neta acumulada"
+        crear_seccion_corporativa(titulo_seccion, "💰", "")
         valor = margen_neto_acum
         col_gauge, col_estado = st.columns([2, 1])
 
