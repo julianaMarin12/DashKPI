@@ -37,7 +37,7 @@ def mostrar_tipologia(dataframe, etiqueta_col, referencia):
     }, inplace=True)
 
     # Formateo de valores
-    df_tabla["Utilidad Neta"] = df_tabla["Utilidad Neta"].apply(lambda x: f"${x:,.0f}")
+    df_tabla["Utilidad Neta"] = df_tabla["Utilidad Neta"].apply(lambda x: f"${formatear_valor_colombiano(x)}")
     df_tabla["Margen Neto (%)"] = df_tabla["Margen Neto (%)"].apply(lambda x: f"{x:.2f}%")
 
     # Renderizado HTML estilizado
@@ -186,13 +186,14 @@ def crear_gauge_base64(valor, referencia):
     return f'<img src="data:image/png;base64,{img_base64}" width="150"/>'
 
 def render_df_html(df):
-        return df.to_html(escape=False, index=False, formatters={
-            'Ventas 2025': lambda x: f"${x:,.0f}",
-            'Presupuesto': lambda x: f"${x:,.0f}",
-            'Ejecutado (%)': lambda x: f"{x:.2f}%",
-            'Meta (%)': lambda x: f"{x:.2f}%",
-            'Diferencia (%)': lambda x: f"{x:+.2f}%"
-        })
+    # Detectar columnas monetarias y de porcentaje
+    formatters = {}
+    for col in df.columns:
+        if any(palabra in col.lower() for palabra in ["venta", "presupuesto", "utilidad", "cartera", "total", "meta"]):
+            formatters[col] = lambda x: f"${formatear_valor_colombiano(x)}"
+        elif "%" in col or "porcentaje" in col.lower() or "ejecutado" in col.lower() or "margen" in col.lower() or "diferencia" in col.lower():
+            formatters[col] = lambda x: f"{x:.2f}%"
+    return df.to_html(escape=False, index=False, formatters=formatters)
 
 def imagen_base64(ruta):
         try:
@@ -255,7 +256,7 @@ def crear_indicador_estado(valor, referencia, titulo):
     """, unsafe_allow_html=True)
 
 def formatear_valor_colombiano(valor):
-    valor_str = f"{valor:,.1f}"
+    valor_str = f"{valor:,.0f}"
     valor_str = valor_str.replace(",", "X").replace(".", ",").replace("X", ".")
     return valor_str
 

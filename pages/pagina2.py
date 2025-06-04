@@ -225,8 +225,7 @@ if 'usuario' in st.session_state:
                 ["Productos", "Imagen Producto", "Ventas 2025", "Presupuesto", 
                 "Ejecutado (%)", "Meta (%)", "Diferencia (%)", "Gauge"]
             ]
-            st.markdown('<style>.tabla-corporativa {width: 100%;border-collapse: separate;border-spacing: 0;background: #fff;border-radius: 16px;box-shadow: 0 4px 16px rgba(0,176,178,0.10);overflow: hidden;margin-bottom: 2rem;}.tabla-corporativa th {background: #00B0B2;color: #fff;font-weight: 700;font-size: 1.1rem;padding: 0.8rem 0.5rem;border-bottom: 2px solid #EDEBE9;text-align: center;}.tabla-corporativa td {padding: 0.7rem 0.5rem;text-align: center;font-size: 1rem;color: #2C3E50;border-bottom: 1px solid #EDEBE9;background: #F8F9FA;}.tabla-corporativa tr:last-child td {border-bottom: none;}</style>', unsafe_allow_html=True)
-            st.markdown(df_mostrar.to_html(escape=False, index=False, classes="tabla-corporativa"), unsafe_allow_html=True)
+            st.markdown(render_df_html(df_mostrar).replace('<table', '<table class="tabla-corporativa"'), unsafe_allow_html=True)
 
         crear_seccion_corporativa(
             "POR PRODUCTOS", 
@@ -248,5 +247,4 @@ if 'usuario' in st.session_state:
         df_tipo.loc[:, 'Ventas 2025'] = df_tipo['Ventas 2025 rea']
         df_tipo['Gauge'] = df_tipo.apply(lambda row: crear_gauge_base64(row['Ejecutado (%)'], row['Meta (%)']), axis=1)
         df_mostrar = df_tipo[['sub categoria', 'Ventas 2025', 'Presupuesto', 'Ejecutado (%)', 'Meta (%)', 'Diferencia (%)', 'Gauge']]
-        st.markdown('<style>.tabla-corporativa {width: 100%;border-collapse: separate;border-spacing: 0;background: #fff;border-radius: 16px;box-shadow: 0 4px 16px rgba(0,176,178,0.10);overflow: hidden;margin-bottom: 2rem;}.tabla-corporativa th {background: #00B0B2;color: #fff;font-weight: 700;font-size: 1.1rem;padding: 0.8rem 0.5rem;border-bottom: 2px solid #EDEBE9;text-align: center;}.tabla-corporativa td {padding: 0.7rem 0.5rem;text-align: center;font-size: 1rem;color: #2C3E50;border-bottom: 1px solid #EDEBE9;background: #F8F9FA;}.tabla-corporativa tr:last-child td {border-bottom: none;}</style>', unsafe_allow_html=True)
-        st.markdown(df_mostrar.to_html(escape=False, index=False, classes="tabla-corporativa"), unsafe_allow_html=True)
+        st.markdown(render_df_html(df_mostrar).replace('<table', '<table class="tabla-corporativa"'), unsafe_allow_html=True)
