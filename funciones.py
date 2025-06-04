@@ -8,6 +8,7 @@ from io import BytesIO
 import plotly.express as px
 import io 
 import base64
+import unicodedata
 
 COLOR_PRIMARIO = "#00B0B2"
 COLOR_SECUNDARIO = "#EDEBE9"
@@ -185,14 +186,20 @@ def crear_gauge_base64(valor, referencia):
     img_base64 = base64.b64encode(buf.read()).decode('utf-8')
     return f'<img src="data:image/png;base64,{img_base64}" width="150"/>'
 
+def normalizar_columna(col):
+    # Quita acentos y pasa a minúsculas
+    return ''.join((c for c in unicodedata.normalize('NFD', col) if unicodedata.category(c) != 'Mn')).lower()
+
 def render_df_html(df):
-    # Detectar columnas monetarias y de porcentaje
+    # Detectar columnas monetarias y de porcentaje de forma robusta
     formatters = {}
+    palabras_monetarias = ["venta", "presupuesto", "utilidad", "cartera", "total", "meta"]
     for col in df.columns:
-        if any(palabra in col.lower() for palabra in ["venta", "presupuesto", "utilidad", "cartera", "total", "meta"]):
-            formatters[col] = lambda x: f"${formatear_valor_colombiano(x)}"
-        elif "%" in col or "porcentaje" in col.lower() or "ejecutado" in col.lower() or "margen" in col.lower() or "diferencia" in col.lower():
-            formatters[col] = lambda x: f"{x:.2f}%"
+        col_norm = normalizar_columna(col)
+        if any(palabra in col_norm for palabra in palabras_monetarias):
+            formatters[col] = lambda x: f"${formatear_valor_colombiano(x)}" if pd.notnull(x) else ""
+        elif "%" in col or col.strip().endswith("%") or "porcentaje" in col_norm or "ejecutado" in col_norm or "margen" in col_norm or "diferencia" in col_norm:
+            formatters[col] = lambda x: f"{x:.2f}%" if pd.notnull(x) else ""
     return df.to_html(escape=False, index=False, formatters=formatters)
 
 def imagen_base64(ruta):
