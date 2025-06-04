@@ -189,7 +189,9 @@ if 'usuario' in st.session_state:
         proyectado_comer = proyectado_porcent * 100
         diferencia_comer = diferencia_porcent * 100
 
-    
+        fig = crear_gauge_corporativo(ejecutado_comer, titulo="Presupuesto vs Ejecutado",referencia=proyectado_comer)
+        st.plotly_chart(fig, use_container_width=True)
+
         col1, col2, col3 = st.columns(3)
         with col1:
             mostrar_metrica_corporativa_mercadeo("Ventas 2025", ventas_2025, "$", tipo="primario")
@@ -205,10 +207,6 @@ if 'usuario' in st.session_state:
             mostrar_metrica_corporativa("Diferencia", diferencia,"$", tipo="primario")
         with col6:
             mostrar_metrica_corporativa("Diferencia (%)", diferencia_comer, sufijo="%", tipo="secundario")
-        
-      
-        fig = crear_gauge_corporativo(ejecutado_comer, titulo="Presupuesto vs Ejecutado",referencia=proyectado_comer)
-        st.plotly_chart(fig, use_container_width=True)
 
         def mostrar_tabla_productos():
                 df_productosCategoria = df1[df1["Productos"] != "Total general"].copy()

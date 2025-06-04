@@ -9,7 +9,6 @@ from load_excel import load_excel
 from login import set_background
 
 st.set_page_config(layout="wide")
-
 login.generarLogin()
 if 'usuario' in st.session_state:
     st.markdown("""
