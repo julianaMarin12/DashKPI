@@ -756,49 +756,69 @@ def graficar_rentabilidad(proyectado_mes, proyectado_acum, margen_mes, margen_ac
     st.plotly_chart(fig, use_container_width=True)
 
 def grafico_barras_rentabilidad(margen_neto_mes, margen_neto_acum, margen_bruto_mes, margen_bruto_acum, referencia_neto=18, referencia_bruta=51.4):
-    categorias = ["Neta Mensual", "Neta Acumulada", "Bruta Mensual", "Bruta Acumulada"]
-    ejecutado = [margen_neto_mes, margen_neto_acum, margen_bruto_mes, margen_bruto_acum]
-    referencia = [referencia_neto, referencia_neto, referencia_bruta, referencia_bruta]
-
     fig = go.Figure()
+    
     fig.add_trace(go.Bar(
-        name="Proyectado",
-        x=categorias,
-        y=referencia,
+        name=" Proyectado",
+        x=["Mensual", "Acumulado"],
+        y=[proyectado_mes, proyectado_acum],
         marker=dict(
             color=COLOR_PROYECTADO,
             line=dict(color="#E6758A", width=2),
             opacity=0.8
         ),
-        text=[f"{v:.1f}%" for v in referencia],
+        text=[f"{proyectado_mes:.1f}%", f"{proyectado_acum:.1f}%"],
         textposition="inside",
-        textfont=dict(size=16, color="white", family="Arial Black"),
-        hovertemplate="<b>Referencia</b><br>Tipo: %{x}<br>Valor: %{y:.1f}%<br><extra></extra>",
+        textfont=dict(
+            size=16,
+            color="white",
+            family="Arial Black"
+        ),
+        hovertemplate="<b>Proyectado</b><br>" +
+                      "Período: %{x}<br>" +
+                      "Valor: %{y:.1f}%<br>" +
+                      "<extra></extra>",
         width=0.6
     ))
+
     fig.add_trace(go.Bar(
-        name="Ejecutado",
-        x=categorias,
-        y=ejecutado,
+        name=" Margen Neto (Ejecutado)",
+        x=["Mensual", "Acumulado"],
+        y=[margen_mes, margen_acum],
         marker=dict(
             color=COLOR_PRIMARIO,
             line=dict(color=COLOR_ACENTO, width=2),
             opacity=0.9
         ),
-        text=[f"{v:.1f}%" for v in ejecutado],
+        text=[f"{margen_mes:.1f}%", f"{margen_acum:.1f}%"],
         textposition="inside",
-        textfont=dict(size=16, color="white", family="Arial Black"),
-        hovertemplate="<b>Ejecutado</b><br>Tipo: %{x}<br>Valor: %{y:.1f}%<br><extra></extra>",
+        textfont=dict(
+            size=16,
+            color="white",
+            family="Arial Black"
+        ),
+        hovertemplate="<b>Ejecutado</b><br>" +
+                      "Período: %{x}<br>" +
+                      "Valor: %{y:.1f}%<br>" +
+                      "<extra></extra>",
         width=0.6
     ))
+
     fig.update_layout(
-        barmode='stack',
+        barmode='stack',  
         title=dict(
-            text="<b>Rentabilidad: Ejecutado vs Referencia</b>",
-            font=dict(size=20, color=COLOR_TEXTO_OSCURO, family="Arial")
+            text="<b>Rentabilidad: Proyectado vs Ejecutado</b>",
+            font=dict(
+                size=20,
+                color=COLOR_TEXTO_OSCURO,
+                family="Arial"
+            )
         ),
         yaxis=dict(
-            title=dict(text="<b>Porcentaje (%)</b>", font=dict(size=14, color=COLOR_TEXTO_OSCURO)),
+            title=dict(
+                text="<b>Porcentaje (%)</b>",
+                font=dict(size=14, color=COLOR_TEXTO_OSCURO)
+            ),
             tickfont=dict(size=14, color=COLOR_TEXTO_OSCURO),
             gridcolor="rgba(0, 176, 178, 0.1)",
             gridwidth=1,
@@ -807,13 +827,19 @@ def grafico_barras_rentabilidad(margen_neto_mes, margen_neto_acum, margen_bruto_
             zerolinewidth=2
         ),
         xaxis=dict(
-            title=dict(text="<b>Tipo de Rentabilidad</b>", font=dict(size=16, color=COLOR_TEXTO_OSCURO)),
+            title=dict(
+                text="<b></b>",
+                font=dict(size=16, color=COLOR_TEXTO_OSCURO)
+            ),
             tickfont=dict(size=14, color=COLOR_TEXTO_OSCURO),
             gridcolor="rgba(0, 176, 178, 0.1)"
         ),
         height=500,
         legend=dict(
-            title=dict(text="<b>Indicadores</b>", font=dict(size=12, color=COLOR_TEXTO_OSCURO)),
+            title=dict(
+                text="<b>Indicadores</b>",
+                font=dict(size=12, color=COLOR_TEXTO_OSCURO)
+            ),
             font=dict(size=10, color=COLOR_TEXTO_OSCURO),
             bgcolor="rgba(255, 255, 255, 0.8)",
             bordercolor=COLOR_PRIMARIO,
@@ -843,7 +869,7 @@ def grafico_barras_rentabilidad(margen_neto_mes, margen_neto_acum, margen_bruto_
     )
     return fig
 
-def grafico_linea_corporativo(df, x, y, color=None, titulo="", etiquetas=None, colores=None):
+def grafico_linea_corporativo(df, x, y, color=None, titulo="", etiquetas=None, colores=None, formato_y="%", mostrar_valores=True):
     colores_corporativos = ["#00B0B2", "#F4869C"]
     fig = px.line(
         df,
@@ -868,7 +894,7 @@ def grafico_linea_corporativo(df, x, y, color=None, titulo="", etiquetas=None, c
             font=dict(size=14)
         ),
         title=dict(
-            font=dict(size=22, color="#000000", family="Segoe UI, Arial"),
+            font=dict(size=22, color="#2C3E50", family="Segoe UI, Arial"),
             x=0
         ),
         xaxis=dict(
@@ -885,24 +911,115 @@ def grafico_linea_corporativo(df, x, y, color=None, titulo="", etiquetas=None, c
     )
     fig.update_traces(line=dict(width=3), marker=dict(size=10, symbol="circle"))
 
-    for trace in fig.data:
-        xs = trace.x
-        ys = trace.y
-        color_trace = trace.line.color if hasattr(trace.line, 'color') and trace.line.color else "#00B0B2"
-        for xi, yi in zip(xs, ys):
-            if yi is not None:
-                fig.add_annotation(
-                    x=xi,
-                    y=yi,
-                    text=f"{yi:.2f}%",
-                    showarrow=False,
-                    yshift=18,
-                    font=dict(size=15, color=color_trace, family="Segoe UI, Arial"),
-                    align="center",
-                    bgcolor="rgba(255,255,255,0.7)",
-                    bordercolor=color_trace,
-                    borderwidth=0
-                )
-
+    if mostrar_valores:
+        for trace in fig.data:
+            xs = trace.x
+            ys = trace.y
+            color_trace = trace.line.color if hasattr(trace.line, 'color') and trace.line.color else "#00B0B2"
+            for xi, yi in zip(xs, ys):
+                if yi is not None:
+                    if formato_y == "%":
+                        texto = f"{yi:.2f}%"
+                    elif formato_y == "$":
+                        texto = f"${yi:,.0f}"
+                    else:
+                        texto = f"{yi:.2f}"
+                    fig.add_annotation(
+                        x=xi,
+                        y=yi,
+                        text=texto,
+                        showarrow=False,
+                        yshift=18,
+                        font=dict(size=15, color=color_trace, family="Segoe UI, Arial"),
+                        align="center",
+                        bgcolor="rgba(255,255,255,0.7)",
+                        bordercolor=color_trace,
+                        borderwidth=0
+                    )
     st.plotly_chart(fig, use_container_width=True)
+
+def grafico_barras_corporativo(df, x, y, color=None, titulo="", etiquetas=None, colores=None, formato_y="%", apilado=False, mostrar_valores=True):
+    color_proyectado = COLOR_PROYECTADO
+    color_ejecutado = COLOR_PRIMARIO
+    color_linea_proy = "#E6758A"
+    color_acento = COLOR_ACENTO
+    color_texto = COLOR_TEXTO_OSCURO
+    color_fondo = "rgba(0,0,0,0)"
+    categorias = df[x].unique().tolist()
+    indicadores = df[color].unique().tolist() if color else [y]
+    fig = go.Figure()
+    for i, indicador in enumerate(indicadores):
+        df_filtrado = df[df[color] == indicador] if color else df
+        valores = df_filtrado[y].tolist()
+        if indicador.lower().startswith("ref") or indicador.lower().startswith("proy"):
+            color_barra = color_proyectado
+            color_linea = color_linea_proy
+            nombre = "Proyectado" if "Proy" in indicador or "ref" in indicador.lower() else indicador
+        else:
+            color_barra = color_ejecutado
+            color_linea = color_acento
+            nombre = "Ejecutado" if "Ejec" in indicador or "ejec" in indicador.lower() else indicador
+        fig.add_trace(go.Bar(
+            name=nombre,
+            x=categorias,
+            y=valores,
+            marker=dict(
+                color=color_barra,
+                line=dict(color=color_linea, width=2),
+                opacity=0.9 if nombre=="Ejecutado" else 0.8
+            ),
+            text=[f"{v:.1f}%" if formato_y=="%" else f"${v:,.0f}" if formato_y=="$" else f"{v:.2f}" for v in valores],
+            textposition="inside",
+            textfont=dict(size=16, color="white", family="Arial Black"),
+            hovertemplate=f"<b>{nombre}</b><br>Tipo: %{{x}}<br>Valor: %{{y:.1f}}%<br><extra></extra>",
+            width=0.6
+        ))
+    fig.update_layout(
+        barmode='stack' if apilado else 'group',
+        title=dict(
+            text=f"<b>{titulo}</b>" if titulo else None,
+            font=dict(size=20, color=color_texto, family="Arial")
+        ),
+        yaxis=dict(
+            title=dict(text=f"<b>{etiquetas[y]}</b>" if etiquetas and y in etiquetas else "<b>Porcentaje (%)</b>", font=dict(size=14, color=color_texto)),
+            tickfont=dict(size=14, color=color_texto),
+            gridcolor="rgba(0, 176, 178, 0.1)",
+            gridwidth=1,
+            zeroline=True,
+            zerolinecolor="rgba(0, 176, 178, 0.3)",
+            zerolinewidth=2
+        ),
+        xaxis=dict(
+            title=dict(text=f"<b>{etiquetas[x]}</b>" if etiquetas and x in etiquetas else "<b>Tipo de Rentabilidad</b>", font=dict(size=16, color=color_texto)),
+            tickfont=dict(size=14, color=color_texto),
+            gridcolor="rgba(0, 176, 178, 0.1)"
+        ),
+        height=500,
+        legend=dict(
+            title=dict(text="<b>Indicadores</b>", font=dict(size=12, color=color_texto)),
+            font=dict(size=10, color=color_texto),
+            bgcolor="rgba(255, 255, 255, 0.8)",
+            bordercolor=COLOR_PRIMARIO,
+            borderwidth=1,
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1
+        ),
+        plot_bgcolor=color_fondo,
+        paper_bgcolor=color_fondo,
+        bargap=0.4,
+        bargroupgap=0.1,
+        font=dict(size=14, color=color_texto, family="Arial"),
+        margin=dict(l=30, r=30, t=60, b=30),
+        hoverlabel=dict(
+            bgcolor="white",
+            bordercolor=COLOR_PRIMARIO,
+            font_size=12,
+            font_family="Arial"
+        )
+    )
+    st.plotly_chart(fig, use_container_width=True)
+
 

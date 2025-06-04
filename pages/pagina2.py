@@ -11,8 +11,8 @@ from funciones import mostrar_metrica_corporativa
 from funciones import mostrar_metrica_corporativa_mercadeo
 from funciones import mostrar_tipologia
 from funciones import crear_donut
-from funciones import graficar_rentabilidad
 from funciones import grafico_linea_corporativo
+from funciones import grafico_barras_corporativo
 from login import set_background
 import streamlit as st
 import pandas as pd
@@ -142,12 +142,25 @@ if 'usuario' in st.session_state:
         ]
 
     
-        graficar_rentabilidad(
-                proyectado_mes=proyectado_rentabilidad_mes,
-                proyectado_acum=proyectado_rentabilidad_acum,
-                margen_mes=margen,
-                margen_acum=margen_acum
-            )
+
+        df_barras = pd.DataFrame({
+            "Tipo": ["Mensual", "Acumulado"],
+            "Proyectado": [proyectado_rentabilidad_mes, proyectado_rentabilidad_acum],
+            "Ejecutado": [margen, margen_acum]
+        })
+        df_barras = df_barras.melt(id_vars=["Tipo"], value_vars=["Proyectado", "Ejecutado"], var_name="Indicador", value_name="Valor")
+        grafico_barras_corporativo(
+            df_barras,
+            x="Tipo",
+            y="Valor",
+            color="Indicador",
+            titulo="Rentabilidad: Proyectado vs Ejecutado",
+            etiquetas={"Tipo": "Período", "Valor": "Porcentaje (%)"},
+            colores=["#F4869C", "#00B0B2"],
+            formato_y="%",
+            apilado=True,
+            mostrar_valores=True
+        )
 
         df_rent_mes = df_rent_mes.rename(columns={"Etiquetas de fila": "TIPOLOGIA"})
         df_tip_mes = df_rent_mes[df_rent_mes["TIPOLOGIA"].isin(tipos)][["TIPOLOGIA", "MARGEN NETO FINAL"]].copy()

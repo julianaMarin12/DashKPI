@@ -4,7 +4,7 @@ from funciones import crear_seccion_corporativa
 from funciones import crear_gauge_corporativo
 from funciones import mostrar_metrica_corporativa
 from funciones import crear_indicador_estado
-from funciones import grafico_barras_rentabilidad
+from funciones import grafico_barras_corporativo
 from plotly.colors import sample_colorscale
 from PIL import Image
 from login import set_background
@@ -53,10 +53,25 @@ if 'usuario' in st.session_state:
         titulo_seccion = "Cumplimiento de Rentabilidad"
         valor = margen_neto_mes
         crear_seccion_corporativa(titulo_seccion, "🎯", "")
-        fig_barras = grafico_barras_rentabilidad(
-            margen_neto_mes, margen_neto_acum, margen_bruto_mes, margen_bruto_acum, referencia_neto=18, referencia_bruta=51.4
+        # Preparar DataFrame para gráfico de barras reutilizable
+        df_barras = pd.DataFrame({
+            "Tipo": ["Neta Mensual", "Neta Acumulada", "Bruta Mensual", "Bruta Acumulada"],
+            "Ejecutado": [margen_neto_mes, margen_neto_acum, margen_bruto_mes, margen_bruto_acum],
+            "Referencia": [referencia_neto, referencia_neto, referencia_bruto, referencia_bruto]
+        })
+        df_barras = df_barras.melt(id_vars=["Tipo"], value_vars=["Ejecutado", "Referencia"], var_name="Indicador", value_name="Valor")
+        grafico_barras_corporativo(
+            df_barras,
+            x="Tipo",
+            y="Valor",
+            color="Indicador",
+            titulo="Rentabilidad: Ejecutado vs Referencia",
+            etiquetas={"Tipo": "Tipo de Rentabilidad", "Valor": "Porcentaje (%)"},
+            colores=["#00B0B2", "#F4869C"],
+            formato_y="%",
+            apilado=True,
+            mostrar_valores=True
         )
-        st.plotly_chart(fig_barras, use_container_width=True)
 
 
     elif tipo_rentabilidad == "Rentabilidad Mensual":
@@ -108,8 +123,8 @@ if 'usuario' in st.session_state:
 
         with col_estado:
             crear_indicador_estado(valor, referencia_bruto, "Estado VS Objetivo")
-    
-    
+
+
 
 
 
