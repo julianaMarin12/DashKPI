@@ -32,7 +32,7 @@ def aplicar_estilos():
             .metric-title {{
                 font-size: 16px;
                 font-weight: 600;
-                margin-bottom: 8px;
+                margin-bottom: 2px;
                 color: {COLOR_TEXTO_OSCURO};
                 letter-spacing: 0.3px;
             }}
@@ -66,7 +66,7 @@ def aplicar_estilos():
                 background: linear-gradient(90deg, {COLOR_PRIMARIO}, {COLOR_ACENTO});
                 border: none;
                 border-radius: 2px;
-                margin: 3rem 0;
+                margin: 2rem 0;
                 box-shadow: 0 2px 8px rgba(0, 176, 178, 0.3);
             }}
             
@@ -80,68 +80,23 @@ def aplicar_estilos():
             
             /* Estilos para el selectbox */
             div[data-testid="stSelectbox"] {{
-                background: white;
-                border-radius: 10px;
-                padding: 0.5rem;
-                box-shadow: 0 4px 12px rgba(0, 176, 178, 0.1);
+                background: {COLOR_PRIMARIO};
+                border-radius: 15px;
+                padding: 20px;
+                box-shadow: 0 4px 12px rgba(0, 176, 178, 0.2);
                 border: 2px solid {COLOR_PRIMARIO};
-                margin-bottom: 1.5rem;
+                margin-bottom: 0.1rem;
+                display: flex !important;
+                align-items: center !important;
+                gap: 20px !important;
             }}
             
             div[data-testid="stSelectbox"] > label {{
-                color: {COLOR_TEXTO_OSCURO} !important;
+                color: {COLOR_TEXTO_CLARO} !important;
                 font-weight: 600 !important;
-                font-size: 1rem !important;
-                letter-spacing: 0.5px;
-                background: {COLOR_SECUNDARIO};
-                padding: 0.5rem 1rem;
-                border-radius: 8px 8px 0 0;
-                border-bottom: 2px solid {COLOR_PRIMARIO};
-                margin-bottom: 0.5rem;
-                display: block;
-                width: 100%;
+                font-size: 2rem !important;
             }}
-            
-            div[data-testid="stSelectbox"] > div > div {{
-                background: white;
-                border: 1px solid {COLOR_PRIMARIO} !important;
-                border-radius: 6px !important;
-                color: {COLOR_TEXTO_OSCURO};
-                font-weight: 500;
-            }}
-            
-            div[data-testid="stSelectbox"] > div > div:focus {{
-                box-shadow: 0 0 0 2px {COLOR_PRIMARIO}40 !important;
-                border: 1px solid {COLOR_PRIMARIO} !important;
-            }}
-            
-            .stSelectbox div[role="listbox"] div[role="option"] {{
-                background-color: white;
-                color: {COLOR_TEXTO_OSCURO};
-            }}
-            
-            .stSelectbox div[role="listbox"] div[role="option"]:hover,
-            .stSelectbox div[role="listbox"] div[role="option"][aria-selected="true"] {{
-                background-color: {COLOR_PRIMARIO}20 !important;
-                color: {COLOR_PRIMARIO} !important;
-            }}
-            
-            div[data-testid="stSelectbox"] svg {{
-                color: {COLOR_PRIMARIO} !important;
-            }}
-            
-            /* Contenedor personalizado para elementos de formulario */
-            .form-container {{
-                background: linear-gradient(135deg, {COLOR_SECUNDARIO} 0%, white 100%);
-                padding: 1.5rem;
-                border-radius: 12px;
-                border-left: 5px solid {COLOR_PRIMARIO};
-                margin-bottom: 2rem;
-                box-shadow: 0 6px 18px rgba(0, 176, 178, 0.12);
-            }}
-            
-            /* Estilos para otros widgets de Streamlit */
-            
+
             /* Radio buttons */
             div[data-testid="stRadio"] > label {{
                 color: {COLOR_TEXTO_OSCURO} !important;
@@ -286,25 +241,5 @@ def aplicar_estilos():
                 border-radius: 4px;
             }}
             
-            /* Contenedor para selectbox */
-            .selectbox-container {{
-                background: linear-gradient(135deg, {COLOR_SECUNDARIO} 0%, white 100%);
-                padding: 1.5rem;
-                border-radius: 12px;
-                border-left: 5px solid {COLOR_PRIMARIO};
-                margin-bottom: 2rem;
-                box-shadow: 0 6px 18px rgba(0, 176, 178, 0.12);
-            }}
-            
-            /* Título para el selectbox */
-            .selectbox-title {{
-                color: {COLOR_TEXTO_OSCURO};
-                font-weight: 700;
-                font-size: 1.1rem;
-                margin-bottom: 1rem;
-                display: flex;
-                align-items: center;
-                gap: 0.5rem;
-            }}
         </style>
     """, unsafe_allow_html=True)

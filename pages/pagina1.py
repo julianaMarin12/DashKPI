@@ -17,7 +17,7 @@ import login
 
 st.set_page_config(layout="wide")
 login.generarLogin()
-set_background("images/fondo1.jpg")
+set_background("images/fondo4.jpg")
 if 'usuario' in st.session_state:
     crear_header_corporativo(
         "🛍️ KPIs ÁREA FINANCIERO",
@@ -25,6 +25,7 @@ if 'usuario' in st.session_state:
     )
 
     aplicar_estilos()
+    
     #MES
     df_mes = pd.read_excel("kpi generales.xlsx", sheet_name="financiera mes", header=None)
     df_mes[0] = df_mes[0].astype(str).str.strip().str.upper()
@@ -36,10 +37,15 @@ if 'usuario' in st.session_state:
     margen_bruto_acum = df_acum.loc[df_acum[0] == "MARGEN BRUTO FINAL", 1].values[0] * 100
     margen_neto_acum = df_acum.loc[df_acum[0] == "MARGEN NETO FINAL", 1].values[0] * 100
         
-    tipo_rentabilidad = st.selectbox(
-        "Selecciona KPI que desea:",
-        ["Rentabilidad Neta Mensual", "Rentabilidad Neta Acumulada", "Rentabilidad Bruta Mensual", "Rentabilidad Bruta Acumulada"],
-    )
+    
+    tipo_rentabilidad = st.selectbox( " Seleccione el KPI que desea visualizar:",
+            [
+                "Rentabilidad Neta Mensual",
+                "Rentabilidad Neta Acumulada",
+                "Rentabilidad Bruta Mensual",
+                "Rentabilidad Bruta Acumulada",
+            ],
+        )
 
     if tipo_rentabilidad == "Rentabilidad Neta Mensual":
         titulo_seccion = "Rentabilidad Neta del mes"
@@ -71,4 +77,4 @@ if 'usuario' in st.session_state:
 
 
 
-    
+
