@@ -191,14 +191,19 @@ def normalizar_columna(col):
     return ''.join((c for c in unicodedata.normalize('NFD', col) if unicodedata.category(c) != 'Mn')).lower()
 
 def render_df_html(df):
-    # Detectar columnas monetarias y de porcentaje de forma robusta
+    import unicodedata
+    def normalizar_columna(col):
+        return ''.join((c for c in unicodedata.normalize('NFD', col) if unicodedata.category(c) != 'Mn')).lower()
     formatters = {}
     palabras_monetarias = ["venta", "presupuesto", "utilidad", "cartera", "total", "meta"]
     for col in df.columns:
         col_norm = normalizar_columna(col)
-        if any(palabra in col_norm for palabra in palabras_monetarias):
+        # Si termina en ' (%)' o contiene '%' es SIEMPRE porcentaje
+        if col.strip().endswith(" (%)") or "%" in col:
+            formatters[col] = lambda x: f"{x:.2f}%" if pd.notnull(x) else ""
+        elif any(palabra in col_norm for palabra in palabras_monetarias):
             formatters[col] = lambda x: f"${formatear_valor_colombiano(x)}" if pd.notnull(x) else ""
-        elif "%" in col or col.strip().endswith("%") or "porcentaje" in col_norm or "ejecutado" in col_norm or "margen" in col_norm or "diferencia" in col_norm:
+        elif "porcentaje" in col_norm or "ejecutado" in col_norm or "margen" in col_norm or "diferencia" in col_norm:
             formatters[col] = lambda x: f"{x:.2f}%" if pd.notnull(x) else ""
     return df.to_html(escape=False, index=False, formatters=formatters)
 

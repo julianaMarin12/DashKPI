@@ -216,7 +216,6 @@ if 'usuario' in st.session_state:
             df_productosCategoria = df1[df1["Productos"] != "Total general"].copy()
             df_productosCategoria["Ejecutado (%)"] = df_productosCategoria["P% COMERCIAL 2024"] * 100
             df_productosCategoria["Meta (%)"] = df_productosCategoria["prueba 2"] * 100
-            df_productosCategoria["Meta (%)"] = df_productosCategoria["Meta (%)"].astype(float)  
             df_productosCategoria["Diferencia (%)"] = df_productosCategoria["prueba DIFERENCIA"] * 100
             df_productosCategoria["Presupuesto"] = df_productosCategoria["PRESUPUESTO CON LINEA"]
             df_productosCategoria["Ventas 2025"] = df_productosCategoria["Ventas 2025 rea"]
@@ -243,7 +242,6 @@ if 'usuario' in st.session_state:
         df_tipo = df2[df2["sub categoria"] != "Total general"].copy()
         df_tipo.loc[:, 'Ejecutado (%)'] = df_tipo['P% COMERCIAL 2024'] * 100
         df_tipo.loc[:, 'Meta (%)'] = df_tipo['prueba 2'] * 100
-        df_tipo.loc[:, 'Meta (%)'] = df_tipo['Meta (%)'].astype(float)  
         df_tipo.loc[:, 'Diferencia (%)'] = df_tipo['prueba DIFERENCIA'] * 100
         df_tipo.loc[:, 'Presupuesto'] = df_tipo['PRESUPUESTO CON LINEA']
         df_tipo.loc[:, 'Ventas 2025'] = df_tipo['Ventas 2025 rea']
