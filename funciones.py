@@ -711,7 +711,7 @@ def grafico_barras_rentabilidad(margen_neto_mes, margen_neto_acum, margen_bruto_
 
     fig = go.Figure()
     fig.add_trace(go.Bar(
-        name="Referencia",
+        name="Proyectado",
         x=categorias,
         y=referencia,
         marker=dict(

@@ -142,7 +142,7 @@ if 'usuario' in st.session_state:
 
         crear_seccion_corporativa(
             "RENTABILIDAD MENSUAL", 
-            "🪙"                
+            "💵"                
         )
         
         col1, col2 = st.columns([2, 2])
@@ -153,7 +153,7 @@ if 'usuario' in st.session_state:
 
         crear_seccion_corporativa(
             "RENTABILIDAD ACUMULADA", 
-            "🪙"                
+            "💵"                
         )
 
         col3, col4 = st.columns([2, 2])
@@ -164,7 +164,7 @@ if 'usuario' in st.session_state:
 
         crear_seccion_corporativa(
             "POR TIPOLOGIA", 
-            "🪙"                
+            "📍"                
         )
         df_tip = df_rent_mes[df_rent_mes["Etiquetas de fila"].isin(tipos)]
         mostrar_tipologia(df_tip, "Etiquetas de fila", referencia=proyectado_rentabilidad_mes)
@@ -175,7 +175,7 @@ if 'usuario' in st.session_state:
         df_general = df1[df1["Productos"] == "Total general"].iloc[0]
         crear_seccion_corporativa(
             "PRESUPUESTO VS EJECUTADO", 
-            "🪙"                
+            "🎯"                
         )
         ventas_2025 = df_general["Ventas 2025 rea"]
         presupesto = df_general["PRESUPUESTO CON LINEA"]

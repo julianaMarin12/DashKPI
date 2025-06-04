@@ -54,7 +54,7 @@ if 'usuario' in st.session_state:
     if tipo_rentabilidad =="Cumplimiento de Rentabilidad":
         titulo_seccion = "Cumplimiento de Rentabilidad"
         valor = margen_neto_mes
-        crear_seccion_corporativa(titulo_seccion, "💰", "Cumplimiento")
+        crear_seccion_corporativa(titulo_seccion, "🎯", "")
         fig_barras = grafico_barras_rentabilidad(
             margen_neto_mes, margen_neto_acum, margen_bruto_mes, margen_bruto_acum, referencia_neto=18, referencia_bruta=51.4
         )

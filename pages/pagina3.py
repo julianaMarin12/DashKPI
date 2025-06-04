@@ -1,10 +1,6 @@
 from funciones import mostrar_metrica_corporativa
-from funciones import mostrar_tipologia
 from funciones import crear_header_corporativo
 from funciones import crear_seccion_corporativa
-from funciones import cargar_excel
-from funciones import crear_donut
-from funciones import crear_mapa
 from estilos import aplicar_estilos
 import streamlit as st
 import pandas as pd
@@ -26,7 +22,7 @@ if 'usuario' in st.session_state:
 
     utilidad = df_ind.loc[df_ind[0] == "UTILIDAD NETA FINAL", 1].values[0]
     margen = df_ind.loc[df_ind[0] == "MARGEN NETO FINAL", 1].values[0]*100
-    crear_seccion_corporativa("Rentabilidad Exportaciones por mes", "💰", "Análisis de rendimiento")
+    crear_seccion_corporativa("Rentabilidad Exportaciones por mes", "💰", "")
 
     col1, col2 = st.columns([1, 1])
 
@@ -42,7 +38,7 @@ if 'usuario' in st.session_state:
     utilidad = df_ind.loc[df_ind[0] == "UTILIDAD NETA FINAL", 1].values[0]
     margen = df_ind.loc[df_ind[0] == "MARGEN NETO FINAL", 1].values[0]*100
 
-    crear_seccion_corporativa("Rentabilidad Exportaciones acumulado", "💰", "Análisis de rendimiento")
+    crear_seccion_corporativa("Rentabilidad Exportaciones acumulado", "💵", "")
     col1, col2 = st.columns([1, 1])
 
     with col1:
