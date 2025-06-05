@@ -28,7 +28,6 @@ def mostrar_tipologia(dataframe, etiqueta_col, referencia):
     Muestra una tabla estilizada de tipologías con Utilidad y Margen,
     siguiendo el diseño corporativo del dashboard. (Sin gauge)
     """
-    # Preparamos los datos para la tabla
     df_tabla = dataframe[[etiqueta_col, "UTILIDAD NETA FINAL", "MARGEN NETO FINAL"]].copy()
     df_tabla["MARGEN NETO FINAL"] = df_tabla["MARGEN NETO FINAL"] * 100
     df_tabla.rename(columns={
@@ -37,11 +36,9 @@ def mostrar_tipologia(dataframe, etiqueta_col, referencia):
         "MARGEN NETO FINAL": "Margen Neto (%)"
     }, inplace=True)
 
-    # Formateo de valores
     df_tabla["Utilidad Neta"] = df_tabla["Utilidad Neta"].apply(lambda x: f"${formatear_valor_colombiano(x)}")
     df_tabla["Margen Neto (%)"] = df_tabla["Margen Neto (%)"].apply(lambda x: f"{x:.2f}%")
 
-    # Renderizado HTML estilizado
     st.markdown("""
     <style>
     .tabla-tipologia {
