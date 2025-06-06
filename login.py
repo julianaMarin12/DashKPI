@@ -16,7 +16,6 @@ def generarMenu(usuario):
         dfusuarios = dfusuarios[(dfusuarios['usuario']==usuario)]
         nombre = dfusuarios['nombre'].values[0]
         st.markdown(f"<div class='sidebar-hola'>Hola {nombre}</div>", unsafe_allow_html=True)
- 
         st.page_link("inicio.py", label= " 📊Dash de KPI por área")
         st.subheader("Tableros")
         st.page_link("pages/pagina1.py", label="💰Financiera")
