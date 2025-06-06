@@ -61,7 +61,7 @@ if 'usuario' in st.session_state:
             x="Tipo",
             y="Valor",
             color="Indicador",
-            titulo="Rentabilidad: Ejecutado vs Referencia",
+            titulo="Rentabilidad: Ejecutado vs Proyectado",
             etiquetas={"Tipo": "Tipo de Rentabilidad", "Valor": "Porcentaje (%)"},
             colores=["#00B0B2", "#F4869C"],
             formato_y="%",
