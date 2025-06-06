@@ -4,8 +4,8 @@ from estilos import aplicar_estilos
 from funciones import crear_gauge_base64
 from funciones import render_df_html
 from funciones import imagen_base64
-from funciones import crear_header_corporativo
-from funciones import crear_seccion_corporativa
+from estilos import crear_header_corporativo
+from estilos import crear_seccion_corporativa
 from funciones import crear_gauge_corporativo
 from funciones import mostrar_metrica_corporativa
 from funciones import mostrar_metrica_corporativa_mercadeo

@@ -5,32 +5,14 @@ import os
 from sync_excel_from_onedrive import sync_excel_from_sharepoint_con_rclone
 from funciones import crear_header_corporativo
 from funciones import crear_seccion_corporativa
+from estilos import aplicar_estilos
 from load_excel import load_excel
 from login import set_background
 
 st.set_page_config(layout="wide")
 login.generarLogin()
 if 'usuario' in st.session_state:
-    st.markdown("""
-        <style>
-            
-            h1 {
-                color: black !important;
-            }
-    
-            div.stButton > button {
-                background-color: white;
-                color: black;
-               
-            }
-
-            .stAlert {
-                border-radius: 12px !important;
-                padding: 1rem;
-                font-size: 16px;
-            }
-        </style>
-    """, unsafe_allow_html=True)
+    aplicar_estilos()
 
     set_background("images/fondo3.png")
     crear_header_corporativo(

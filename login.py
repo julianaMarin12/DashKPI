@@ -11,38 +11,6 @@ def validarUsuario(usuario,clave):
         return False
     
 def generarMenu(usuario):
-    st.markdown(
-        """
-        <style>
-        [data-testid="stSidebar"] {
-            background-color: #00B0B2 !important;
-            color: #fff !important;
-            border-right: 2px solid #00B0B2;
-            box-shadow: 2px 0 16px rgba(0,176,178,0.08);
-        }
-        [data-testid="stSidebar"] .css-1d391kg {
-            color: #fff !important;
-        }
-        .sidebar-hola {
-            font-size: 1.6rem !important;
-            font-weight: 700;
-            color: #fff !important;
-            margin-bottom: 1.2rem;
-            margin-top: 0.5rem;
-            text-align: left;
-            letter-spacing: 0.5px;
-        }
-        /* For Streamlit 1.32+ page_link labels */
-        [data-testid="stSidebar"] a, [data-testid="stSidebar"] a span, [data-testid="stSidebar"] .stPageLink, [data-testid="stSidebar"] .stPageLink span {
-            color: #fff !important;
-        }
-        [data-testid="stSidebar"] .stSubheader {
-            color: #fff !important;
-        }
-        </style>
-        """, unsafe_allow_html=True
-    )
-
     with st.sidebar:
         dfusuarios = pd.read_csv('usuarios.csv')
         dfusuarios = dfusuarios[(dfusuarios['usuario']==usuario)]

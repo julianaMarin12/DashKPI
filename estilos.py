@@ -1,16 +1,15 @@
 import streamlit as st
 
-def aplicar_estilos():
-    COLOR_PRIMARIO = "#00B0B2"
-    COLOR_SECUNDARIO = "#EDEBE9"
-    COLOR_TEXTO_OSCURO = "#2C3E50"
-    COLOR_TEXTO_CLARO = "#FFFFFF"
-    COLOR_ACENTO = "#008B8D"  
-    COLOR_FONDO = "#F8F9FA"
+COLOR_PRIMARIO = "#00B0B2"
+COLOR_SECUNDARIO = "#EDEBE9"
+COLOR_TEXTO_OSCURO = "#2C3E50"
+COLOR_TEXTO_CLARO = "#FFFFFF"
+COLOR_ACENTO = "#008B8D"  
+COLOR_FONDO = "#F8F9FA"
 
+def aplicar_estilos():
     st.markdown(f"""
         <style>
-            /* Estilos generales */
             div[role="button"] {{
                 color: {COLOR_TEXTO_OSCURO} !important;
                 font-weight: 600;
@@ -271,5 +270,135 @@ def aplicar_estilos():
             .tabla-corporativa tr:last-child td, .tabla-tipologia tr:last-child td {{
                 border-bottom: none;
             }}
+
+            [data-testid="stSidebar"] {{
+            background-color: #00B0B2 !important;
+            color: #fff !important;
+            border-right: 2px solid #00B0B2;
+            box-shadow: 2px 0 16px rgba(0,176,178,0.08);
+            }}
+            [data-testid="stSidebar"] .css-1d391kg {{
+                color: #fff !important;
+            }}
+            .sidebar-hola {{
+                font-size: 1.6rem !important;
+                font-weight: 700;
+                color: #fff !important;
+                margin-bottom: 1.2rem;
+                margin-top: 0.5rem;
+                text-align: left;
+                letter-spacing: 0.5px;
+            }}
+            [data-testid="stSidebar"] a, [data-testid="stSidebar"] a span, [data-testid="stSidebar"] .stPageLink, [data-testid="stSidebar"] .stPageLink span {{
+                color: #fff !important;
+            }}
+            [data-testid="stSidebar"] .stSubheader {{
+                color: #fff !important;
+            }}
+
+            .tabla-tipologia {{
+                width: 100%;
+                border-collapse: separate;
+                border-spacing: 0;
+                background: #fff;
+                border-radius: 16px;
+                box-shadow: 0 4px 16px rgba(0,176,178,0.10);
+                overflow: hidden;
+                margin-bottom: 2rem;
+            }}
+            .tabla-tipologia th {{
+                background: #00B0B2;
+                color: #fff;
+                font-weight: 700;
+                font-size: 1.1rem;
+                padding: 0.8rem 0.5rem;
+                border-bottom: 2px solid #EDEBE9;
+                text-align: center;
+            }}
+            .tabla-tipologia td {{
+                padding: 0.7rem 0.5rem;
+                text-align: center;
+                font-size: 1rem;
+                color: #2C3E50;
+                border-bottom: 1px solid #EDEBE9;
+                background: #F8F9FA;
+            }}
+            .tabla-tipologia tr:last-child td {{
+                border-bottom: none;
+            }}
+
+            
         </style>
+    """, unsafe_allow_html=True)
+
+def crear_header_corporativo(titulo, subtitulo=""):
+    st.markdown(f"""
+    <div style="
+        background: linear-gradient(135deg, {COLOR_PRIMARIO} 0%, {COLOR_ACENTO} 100%);
+        padding: 2.5rem 2rem;
+        border-radius: 16px;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 32px rgba(0, 176, 178, 0.25);
+        position: relative;
+        overflow: hidden;
+    ">
+        <div style="
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        "></div>
+        <div style="
+            position: absolute;
+            bottom: -30%;
+            left: -5%;
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+        "></div>
+        <div style="position: relative; z-index: 2;">
+            <h1 style="
+                color: {COLOR_TEXTO_CLARO};
+                margin: 0;
+                font-size: 2.8rem;
+                font-weight: 700;
+                text-align: center;
+                letter-spacing: -0.5px;
+            ">{titulo}</h1>
+            {f'<p style="color: rgba(255, 255, 255, 0.9); margin: 0.8rem 0 0 0; font-size: 1.2rem; text-align: center; font-weight: 300;">{subtitulo}</p>' if subtitulo else ''}
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+
+def crear_seccion_corporativa(titulo, icono="", descripcion=""):
+    """Crea un header de sección corporativo"""
+    st.markdown(f"""
+    <div style="
+        background: {COLOR_SECUNDARIO};
+        border-left: 6px solid {COLOR_PRIMARIO};
+        padding: 1.5rem 2rem;
+        border-radius: 0 12px 12px 0;
+        margin: 2.5rem 0 1.5rem 0;
+        box-shadow: 0 4px 16px rgba(0, 176, 178, 0.1);
+    ">
+        <h3 style="
+            color: {COLOR_TEXTO_OSCURO};
+            margin: 0;
+            font-size: 1.4rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            letter-spacing: 0.3px;
+        ">
+            {f'<span style="font-size: 1.6rem;">{icono}</span>' if icono else ''}
+            {titulo}
+        </h3>
+        {f'<p style="color: {COLOR_TEXTO_OSCURO}; margin: 0.8rem 0 0 0; font-size: 0.95rem; opacity: 0.8; line-height: 1.4;">{descripcion}</p>' if descripcion else ''}
+    </div>
     """, unsafe_allow_html=True)

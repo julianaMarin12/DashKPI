@@ -9,12 +9,8 @@ import plotly.express as px
 import io 
 import base64
 import unicodedata
+from estilos import COLOR_ACENTO, COLOR_PRIMARIO, COLOR_SECUNDARIO, COLOR_TEXTO_OSCURO, COLOR_TEXTO_CLARO
 
-COLOR_PRIMARIO = "#00B0B2"
-COLOR_SECUNDARIO = "#EDEBE9"
-COLOR_TEXTO_OSCURO = "#2C3E50"
-COLOR_TEXTO_CLARO = "#FFFFFF"
-COLOR_ACENTO = "#008B8D"  
 COLOR_FONDO = "#F8F9FA"
 COLOR_PROYECTADO = "#F4869C"
 
@@ -23,8 +19,7 @@ def cargar_excel(path, sheet):
     df.columns = df.columns.str.strip()
     return df
 
-def mostrar_tipologia(dataframe, etiqueta_col, referencia):
-    
+def mostrar_tipologia(dataframe, etiqueta_col, referencia):    
     df_tabla = dataframe[[etiqueta_col, "UTILIDAD NETA FINAL", "MARGEN NETO FINAL"]].copy()
     df_tabla["MARGEN NETO FINAL"] = df_tabla["MARGEN NETO FINAL"] * 100
     df_tabla.rename(columns={
@@ -35,47 +30,10 @@ def mostrar_tipologia(dataframe, etiqueta_col, referencia):
 
     df_tabla["Utilidad Neta"] = df_tabla["Utilidad Neta"].apply(lambda x: f"${formatear_valor_colombiano(x)}")
 
-    COLOR_PRIMARIO = "#00B0B2"
     def barra_progreso_primaria(margen):
         return f'<div style="position:relative; width:100%; height:28px; background:#eee; border-radius:7px; overflow:hidden;"><div style="position:absolute; left:0; top:0; height:100%; width:{max(0,min(margen,100))}%; background:{COLOR_PRIMARIO}; opacity:0.25;"></div><div style="position:relative; z-index:2; color:#222; font-weight:700; line-height:28px; text-align:center; font-size:1rem;">{margen:.2f}%</div></div>'
     df_tabla["Margen Neto (%)"] = df_tabla["Margen Neto (%)"].astype(float).apply(barra_progreso_primaria)
 
-    st.markdown("""
-    <style>
-    .tabla-tipologia {
-        width: 100%;
-        border-collapse: separate;
-        border-spacing: 0;
-        background: #fff;
-        border-radius: 16px;
-        box-shadow: 0 4px 16px rgba(0,176,178,0.10);
-        overflow: hidden;
-        margin-bottom: 2rem;
-    }
-    .tabla-tipologia th {
-        background: #00B0B2;
-        color: #fff;
-        font-weight: 700;
-        font-size: 1.1rem;
-        padding: 0.8rem 0.5rem;
-        border-bottom: 2px solid #EDEBE9;
-        text-align: center;
-    }
-    .tabla-tipologia td {
-        padding: 0.7rem 0.5rem;
-        text-align: center;
-        font-size: 1rem;
-        color: #2C3E50;
-        border-bottom: 1px solid #EDEBE9;
-        background: #F8F9FA;
-    }
-    .tabla-tipologia tr:last-child td {
-        border-bottom: none;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
-    # Convertimos el DataFrame a HTML
     html = df_tabla.to_html(escape=False, index=False, classes="tabla-tipologia")
     st.markdown(html, unsafe_allow_html=True)
 
@@ -331,48 +289,6 @@ def mostrar_metrica_corporativa_mercadeo(titulo, valor, prefijo="", sufijo="", t
     </div>
     """, unsafe_allow_html=True)
 
-def crear_header_corporativo(titulo, subtitulo=""):
-    st.markdown(f"""
-    <div style="
-        background: linear-gradient(135deg, {COLOR_PRIMARIO} 0%, {COLOR_ACENTO} 100%);
-        padding: 2.5rem 2rem;
-        border-radius: 16px;
-        margin-bottom: 2rem;
-        box-shadow: 0 8px 32px rgba(0, 176, 178, 0.25);
-        position: relative;
-        overflow: hidden;
-    ">
-        <div style="
-            position: absolute;
-            top: -50%;
-            right: -10%;
-            width: 200px;
-            height: 200px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-        "></div>
-        <div style="
-            position: absolute;
-            bottom: -30%;
-            left: -5%;
-            width: 150px;
-            height: 150px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 50%;
-        "></div>
-        <div style="position: relative; z-index: 2;">
-            <h1 style="
-                color: {COLOR_TEXTO_CLARO};
-                margin: 0;
-                font-size: 2.8rem;
-                font-weight: 700;
-                text-align: center;
-                letter-spacing: -0.5px;
-            ">{titulo}</h1>
-            {f'<p style="color: rgba(255, 255, 255, 0.9); margin: 0.8rem 0 0 0; font-size: 1.2rem; text-align: center; font-weight: 300;">{subtitulo}</p>' if subtitulo else ''}
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
 
 def mostrar_metrica_corporativa_mercadeo(titulo, valor, prefijo="", sufijo="", tipo="default"):
     if isinstance(valor, (int, float)):
@@ -491,77 +407,6 @@ def mostrar_metrica_corporativa(titulo, valor, prefijo="", sufijo="", tipo="defa
     </div>
     """, unsafe_allow_html=True)
 
-def crear_header_corporativo(titulo, subtitulo=""):
-    st.markdown(f"""
-    <div style="
-        background: linear-gradient(135deg, {COLOR_PRIMARIO} 0%, {COLOR_ACENTO} 100%);
-        padding: 2.5rem 2rem;
-        border-radius: 16px;
-        margin-bottom: 2rem;
-        box-shadow: 0 8px 32px rgba(0, 176, 178, 0.25);
-        position: relative;
-        overflow: hidden;
-    ">
-        <div style="
-            position: absolute;
-            top: -50%;
-            right: -10%;
-            width: 200px;
-            height: 200px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-        "></div>
-        <div style="
-            position: absolute;
-            bottom: -30%;
-            left: -5%;
-            width: 150px;
-            height: 150px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 50%;
-        "></div>
-        <div style="position: relative; z-index: 2;">
-            <h1 style="
-                color: {COLOR_TEXTO_CLARO};
-                margin: 0;
-                font-size: 2.8rem;
-                font-weight: 700;
-                text-align: center;
-                letter-spacing: -0.5px;
-            ">{titulo}</h1>
-            {f'<p style="color: rgba(255, 255, 255, 0.9); margin: 0.8rem 0 0 0; font-size: 1.2rem; text-align: center; font-weight: 300;">{subtitulo}</p>' if subtitulo else ''}
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-def crear_seccion_corporativa(titulo, icono="", descripcion=""):
-    """Crea un header de sección corporativo"""
-    st.markdown(f"""
-    <div style="
-        background: {COLOR_SECUNDARIO};
-        border-left: 6px solid {COLOR_PRIMARIO};
-        padding: 1.5rem 2rem;
-        border-radius: 0 12px 12px 0;
-        margin: 2.5rem 0 1.5rem 0;
-        box-shadow: 0 4px 16px rgba(0, 176, 178, 0.1);
-    ">
-        <h3 style="
-            color: {COLOR_TEXTO_OSCURO};
-            margin: 0;
-            font-size: 1.4rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            letter-spacing: 0.3px;
-        ">
-            {f'<span style="font-size: 1.6rem;">{icono}</span>' if icono else ''}
-            {titulo}
-        </h3>
-        {f'<p style="color: {COLOR_TEXTO_OSCURO}; margin: 0.8rem 0 0 0; font-size: 0.95rem; opacity: 0.8; line-height: 1.4;">{descripcion}</p>' if descripcion else ''}
-    </div>
-    """, unsafe_allow_html=True)
-
 def crear_gauge_corporativo(valor, titulo, referencia=None):
     """Crea un gauge con diseño corporativo"""
     if referencia:
@@ -636,235 +481,6 @@ def crear_gauge_corporativo(valor, titulo, referencia=None):
         font={'color': COLOR_TEXTO_OSCURO, 'family': "Segoe UI, sans-serif"}
     )
     
-    return fig
-
-def graficar_rentabilidad(proyectado_mes, proyectado_acum, margen_mes, margen_acum):
-    fig = go.Figure()
-    
-    fig.add_trace(go.Bar(
-        name=" Proyectado",
-        x=["Mensual", "Acumulado"],
-        y=[proyectado_mes, proyectado_acum],
-        marker=dict(
-            color=COLOR_PROYECTADO,
-            line=dict(color="#E6758A", width=2),
-            opacity=0.8
-        ),
-        text=[f"{proyectado_mes:.1f}%", f"{proyectado_acum:.1f}%"],
-        textposition="inside",
-        textfont=dict(
-            size=16,
-            color="white",
-            family="Arial Black"
-        ),
-        hovertemplate="<b>Proyectado</b><br>" +
-                      "Período: %{x}<br>" +
-                      "Valor: %{y:.1f}%<br>" +
-                      "<extra></extra>",
-        width=0.6
-    ))
-
-    fig.add_trace(go.Bar(
-        name=" Margen Neto (Ejecutado)",
-        x=["Mensual", "Acumulado"],
-        y=[margen_mes, margen_acum],
-        marker=dict(
-            color=COLOR_PRIMARIO,
-            line=dict(color=COLOR_ACENTO, width=2),
-            opacity=0.9
-        ),
-        text=[f"{margen_mes:.1f}%", f"{margen_acum:.1f}%"],
-        textposition="inside",
-        textfont=dict(
-            size=16,
-            color="white",
-            family="Arial Black"
-        ),
-        hovertemplate="<b>Ejecutado</b><br>" +
-                      "Período: %{x}<br>" +
-                      "Valor: %{y:.1f}%<br>" +
-                      "<extra></extra>",
-        width=0.6
-    ))
-
-    fig.update_layout(
-        barmode='stack',  
-        title=dict(
-            text="<b>Rentabilidad: Proyectado vs Ejecutado</b>",
-            font=dict(
-                size=20,
-                color=COLOR_TEXTO_OSCURO,
-                family="Arial"
-            )
-        ),
-        yaxis=dict(
-            title=dict(
-                text="<b>Porcentaje (%)</b>",
-                font=dict(size=14, color=COLOR_TEXTO_OSCURO)
-            ),
-            tickfont=dict(size=14, color=COLOR_TEXTO_OSCURO),
-            gridcolor="rgba(0, 176, 178, 0.1)",
-            gridwidth=1,
-            zeroline=True,
-            zerolinecolor="rgba(0, 176, 178, 0.3)",
-            zerolinewidth=2
-        ),
-        xaxis=dict(
-            title=dict(
-                text="<b></b>",
-                font=dict(size=16, color=COLOR_TEXTO_OSCURO)
-            ),
-            tickfont=dict(size=14, color=COLOR_TEXTO_OSCURO),
-            gridcolor="rgba(0, 176, 178, 0.1)"
-        ),
-        height=500,
-        legend=dict(
-            title=dict(
-                text="<b>Indicadores</b>",
-                font=dict(size=12, color=COLOR_TEXTO_OSCURO)
-            ),
-            font=dict(size=10, color=COLOR_TEXTO_OSCURO),
-            bgcolor="rgba(255, 255, 255, 0.8)",
-            bordercolor=COLOR_PRIMARIO,
-            borderwidth=1,
-            orientation="h",
-            yanchor="bottom",
-            y=1.02,
-            xanchor="right",
-            x=1
-        ),
-        plot_bgcolor="rgba(0,0,0,0)",
-        paper_bgcolor="rgba(0,0,0,0)",
-        bargap=0.4,
-        bargroupgap=0.1,
-        font=dict(
-            size=14,
-            color=COLOR_TEXTO_OSCURO,
-            family="Arial"
-        ),
-        margin=dict(l=30, r=30, t=60, b=30),
-        hoverlabel=dict(
-            bgcolor="white",
-            bordercolor=COLOR_PRIMARIO,
-            font_size=12,
-            font_family="Arial"
-        )
-        
-    )
-    st.plotly_chart(fig, use_container_width=True)
-
-def grafico_barras_rentabilidad(margen_neto_mes, margen_neto_acum, margen_bruto_mes, margen_bruto_acum, referencia_neto=18, referencia_bruta=51.4):
-    fig = go.Figure()
-    
-    fig.add_trace(go.Bar(
-        name=" Proyectado",
-        x=["Mensual", "Acumulado"],
-        y=[proyectado_mes, proyectado_acum],
-        marker=dict(
-            color=COLOR_PROYECTADO,
-            line=dict(color="#E6758A", width=2),
-            opacity=0.8
-        ),
-        text=[f"{proyectado_mes:.1f}%", f"{proyectado_acum:.1f}%"],
-        textposition="inside",
-        textfont=dict(
-            size=16,
-            color="white",
-            family="Arial Black"
-        ),
-        hovertemplate="<b>Proyectado</b><br>" +
-                      "Período: %{x}<br>" +
-                      "Valor: %{y:.1f}%<br>" +
-                      "<extra></extra>",
-        width=0.6
-    ))
-
-    fig.add_trace(go.Bar(
-        name=" Margen Neto (Ejecutado)",
-        x=["Mensual", "Acumulado"],
-        y=[margen_mes, margen_acum],
-        marker=dict(
-            color=COLOR_PRIMARIO,
-            line=dict(color=COLOR_ACENTO, width=2),
-            opacity=0.9
-        ),
-        text=[f"{margen_mes:.1f}%", f"{margen_acum:.1f}%"],
-        textposition="inside",
-        textfont=dict(
-            size=16,
-            color="white",
-            family="Arial Black"
-        ),
-        hovertemplate="<b>Ejecutado</b><br>" +
-                      "Período: %{x}<br>" +
-                      "Valor: %{y:.1f}%<br>" +
-                      "<extra></extra>",
-        width=0.6
-    ))
-
-    fig.update_layout(
-        barmode='stack',  
-        title=dict(
-            text="<b>Rentabilidad: Proyectado vs Ejecutado</b>",
-            font=dict(
-                size=20,
-                color=COLOR_TEXTO_OSCURO,
-                family="Arial"
-            )
-        ),
-        yaxis=dict(
-            title=dict(
-                text="<b>Porcentaje (%)</b>",
-                font=dict(size=14, color=COLOR_TEXTO_OSCURO)
-            ),
-            tickfont=dict(size=14, color=COLOR_TEXTO_OSCURO),
-            gridcolor="rgba(0, 176, 178, 0.1)",
-            gridwidth=1,
-            zeroline=True,
-            zerolinecolor="rgba(0, 176, 178, 0.3)",
-            zerolinewidth=2
-        ),
-        xaxis=dict(
-            title=dict(
-                text="<b></b>",
-                font=dict(size=16, color=COLOR_TEXTO_OSCURO)
-            ),
-            tickfont=dict(size=14, color=COLOR_TEXTO_OSCURO),
-            gridcolor="rgba(0, 176, 178, 0.1)"
-        ),
-        height=500,
-        legend=dict(
-            title=dict(
-                text="<b>Indicadores</b>",
-                font=dict(size=12, color=COLOR_TEXTO_OSCURO)
-            ),
-            font=dict(size=10, color=COLOR_TEXTO_OSCURO),
-            bgcolor="rgba(255, 255, 255, 0.8)",
-            bordercolor=COLOR_PRIMARIO,
-            borderwidth=1,
-            orientation="h",
-            yanchor="bottom",
-            y=1.02,
-            xanchor="right",
-            x=1
-        ),
-        plot_bgcolor="rgba(0,0,0,0)",
-        paper_bgcolor="rgba(0,0,0,0)",
-        bargap=0.4,
-        bargroupgap=0.1,
-        font=dict(
-            size=14,
-            color=COLOR_TEXTO_OSCURO,
-            family="Arial"
-        ),
-        margin=dict(l=30, r=30, t=60, b=30),
-        hoverlabel=dict(
-            bgcolor="white",
-            bordercolor=COLOR_PRIMARIO,
-            font_size=12,
-            font_family="Arial"
-        )
-    )
     return fig
 
 def grafico_linea_corporativo(df, x, y, color=None, titulo="", etiquetas=None, colores=None, formato_y="%", mostrar_valores=True):
