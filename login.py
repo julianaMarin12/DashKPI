@@ -15,14 +15,30 @@ def generarMenu(usuario):
         """
         <style>
         [data-testid="stSidebar"] {
-            background-color: white;
-            color: black;
+            background-color: #00B0B2 !important;
+            color: #fff !important;
+            border-right: 2px solid #00B0B2;
+            box-shadow: 2px 0 16px rgba(0,176,178,0.08);
         }
-
         [data-testid="stSidebar"] .css-1d391kg {
-            color: #333333;
+            color: #fff !important;
         }
-
+        .sidebar-hola {
+            font-size: 1.6rem !important;
+            font-weight: 700;
+            color: #fff !important;
+            margin-bottom: 1.2rem;
+            margin-top: 0.5rem;
+            text-align: left;
+            letter-spacing: 0.5px;
+        }
+        /* For Streamlit 1.32+ page_link labels */
+        [data-testid="stSidebar"] a, [data-testid="stSidebar"] a span, [data-testid="stSidebar"] .stPageLink, [data-testid="stSidebar"] .stPageLink span {
+            color: #fff !important;
+        }
+        [data-testid="stSidebar"] .stSubheader {
+            color: #fff !important;
+        }
         </style>
         """, unsafe_allow_html=True
     )
@@ -31,17 +47,19 @@ def generarMenu(usuario):
         dfusuarios = pd.read_csv('usuarios.csv')
         dfusuarios = dfusuarios[(dfusuarios['usuario']==usuario)]
         nombre = dfusuarios['nombre'].values[0]
-        st.write(f"Hola :red-background[{nombre}]") 
+        st.markdown(f"<div class='sidebar-hola'>Hola {nombre}</div>", unsafe_allow_html=True)
+ 
         st.page_link("inicio.py", label= " 📊Dash de KPI por área")
         st.subheader("Tableros")
         st.page_link("pages/pagina1.py", label="💰Financiera")
         st.page_link("pages/pagina2.py", label="🛒Comercial")
         st.page_link("pages/pagina3.py", label="⛴ Exportaciones")
         st.page_link("pages/pagina4.py", label="🛍️ Mercadeo")
+        st.markdown("</div>", unsafe_allow_html=True)
         btnSalir = st.button("Salir")
         if btnSalir:
             st.session_state.clear()
-            st.rerun
+            st.rerun()
         
 def set_background(image_file):
     with open(image_file, "rb") as image:
