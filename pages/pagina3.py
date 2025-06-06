@@ -2,6 +2,7 @@ from funciones import mostrar_metrica_corporativa
 from estilos import crear_header_corporativo
 from estilos import crear_seccion_corporativa
 from estilos import aplicar_estilos
+from login import set_background
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
@@ -13,6 +14,7 @@ st.set_page_config(layout="wide")
 aplicar_estilos()
 login.generarLogin()
 if 'usuario' in st.session_state:
+    set_background("images/fondo7.jpg")
     crear_header_corporativo(
         "⛴ KPIs ÁREA DE EXPORTACIONES",
         "Indicadores para el área de exportaciones"

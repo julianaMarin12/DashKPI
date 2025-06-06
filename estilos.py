@@ -134,7 +134,6 @@ def aplicar_estilos():
                 background-color: {COLOR_PRIMARIO} !important;
             }}
             
-            /* Botones */
             .stButton > button {{
                 background-color: {COLOR_SECUNDARIO} !important;
                 color: black !important;
