@@ -53,7 +53,6 @@ if 'usuario' in st.session_state:
         titulo_seccion = "Cumplimiento de Rentabilidad"
         valor = margen_neto_mes
         crear_seccion_corporativa(titulo_seccion, "🎯", "")
-        # Preparar DataFrame para gráfico de barras reutilizable
         df_barras = pd.DataFrame({
             "Tipo": ["Neta Mensual", "Neta Acumulada", "Bruta Mensual", "Bruta Acumulada"],
             "Ejecutado": [margen_neto_mes, margen_neto_acum, margen_bruto_mes, margen_bruto_acum],

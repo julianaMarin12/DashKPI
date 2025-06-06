@@ -24,10 +24,7 @@ def cargar_excel(path, sheet):
     return df
 
 def mostrar_tipologia(dataframe, etiqueta_col, referencia):
-    """
-    Muestra una tabla estilizada de tipologías con Utilidad y Margen,
-    siguiendo el diseño corporativo del dashboard. (Sin gauge)
-    """
+    
     df_tabla = dataframe[[etiqueta_col, "UTILIDAD NETA FINAL", "MARGEN NETO FINAL"]].copy()
     df_tabla["MARGEN NETO FINAL"] = df_tabla["MARGEN NETO FINAL"] * 100
     df_tabla.rename(columns={
@@ -37,7 +34,11 @@ def mostrar_tipologia(dataframe, etiqueta_col, referencia):
     }, inplace=True)
 
     df_tabla["Utilidad Neta"] = df_tabla["Utilidad Neta"].apply(lambda x: f"${formatear_valor_colombiano(x)}")
-    df_tabla["Margen Neto (%)"] = df_tabla["Margen Neto (%)"].apply(lambda x: f"{x:.2f}%")
+
+    COLOR_PRIMARIO = "#00B0B2"
+    def barra_progreso_primaria(margen):
+        return f'<div style="position:relative; width:100%; height:28px; background:#eee; border-radius:7px; overflow:hidden;"><div style="position:absolute; left:0; top:0; height:100%; width:{max(0,min(margen,100))}%; background:{COLOR_PRIMARIO}; opacity:0.25;"></div><div style="position:relative; z-index:2; color:#222; font-weight:700; line-height:28px; text-align:center; font-size:1rem;">{margen:.2f}%</div></div>'
+    df_tabla["Margen Neto (%)"] = df_tabla["Margen Neto (%)"].astype(float).apply(barra_progreso_primaria)
 
     st.markdown("""
     <style>
