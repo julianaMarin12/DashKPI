@@ -3,8 +3,8 @@ import streamlit as st
 import login as login
 import os
 from sync_excel_from_onedrive import sync_excel_from_sharepoint_con_rclone
-from funciones import crear_header_corporativo
-from funciones import crear_seccion_corporativa
+from estilos import crear_header_corporativo
+from estilos import crear_seccion_corporativa
 from estilos import aplicar_estilos
 from load_excel import load_excel
 from login import set_background
