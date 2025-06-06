@@ -53,7 +53,6 @@ if 'usuario' in st.session_state:
     with col_estado:
         crear_indicador_estado(valor, 36.5, "Estado vs Objetivo")
 
-    st.markdown(" 💰 INDICADORES FINANCIEROS CLAVE")
     col1, col2, col3 = st.columns(3)
 
     with col1:
@@ -90,7 +89,6 @@ if 'usuario' in st.session_state:
     with col_estado2:
         crear_indicador_estado(porcentaje, 7, "Estado Innovación")
 
-    st.markdown("#### 🎯 INDICADORES DE INNOVACIÓN")
     col1, col2, col3 = st.columns(3)
     
     with col1:
