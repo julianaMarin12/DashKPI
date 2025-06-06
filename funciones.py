@@ -37,7 +37,7 @@ def mostrar_tipologia(dataframe, etiqueta_col, referencia):
     html = df_tabla.to_html(escape=False, index=False, classes="tabla-tipologia")
     st.markdown(html, unsafe_allow_html=True)
 
-def crear_donut(indicador, color="#25ABB9", height=200, width=200, font_size=14):
+def crear_donut(indicador, color=COLOR_PRIMARIO, height=200, width=200, font_size=14):
     fig = go.Figure(data=[go.Pie(
         values=[indicador, 100 - indicador],
         labels=["Avance", "Restante"],
@@ -173,7 +173,7 @@ def imagen_base64(ruta):
             return f"<img src='data:image/png;base64,{img_str}' width='100'/>"
         except Exception as e:
             return f"<div style='color:red;'>X</div>"
-        
+            
 def crear_indicador_estado(valor, referencia, titulo):
     diferencia = valor - referencia
     
@@ -225,7 +225,6 @@ def formatear_valor_colombiano(valor):
     valor_str = f"{valor:,.0f}"
     valor_str = valor_str.replace(",", "X").replace(".", ",").replace("X", ".")
     return valor_str
-
 
 def mostrar_metrica_corporativa_mercadeo(titulo, valor, prefijo="", sufijo="", tipo="default"):
     if isinstance(valor, (int, float)):
@@ -288,7 +287,6 @@ def mostrar_metrica_corporativa_mercadeo(titulo, valor, prefijo="", sufijo="", t
         ">{prefijo}{valor_formateado}{sufijo}</h2>
     </div>
     """, unsafe_allow_html=True)
-
 
 def mostrar_metrica_corporativa_mercadeo(titulo, valor, prefijo="", sufijo="", tipo="default"):
     if isinstance(valor, (int, float)):

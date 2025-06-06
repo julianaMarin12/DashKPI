@@ -71,7 +71,10 @@ if 'usuario' in st.session_state:
             "INDICADOR CARTERA", 
             "🪙"                
         )
-        
+
+        fig = crear_donut(indicador, color=color, height=320, font_size=28)
+        st.plotly_chart(fig, use_container_width=True)
+
         col1, col2, col3 = st.columns(3)
         with col1:
             mostrar_metrica_corporativa("TOTAL VENCIDO", total_vencido, "$", tipo="secundario")
@@ -82,42 +85,37 @@ if 'usuario' in st.session_state:
         with col3:
             mostrar_metrica_corporativa("TOTAL CARTERA", total_cartera, "$", tipo="secundario")
 
-
-        col_grafico, col_expander = st.columns([1, 2])
-        
-        with col_grafico:
-            fig = crear_donut(indicador, color=color, height=320, font_size=28)
-            st.plotly_chart(fig, use_container_width=True)
-        with col_expander:                
-
-            with st.expander("MAPA"):
-                fig_mapa, df_mapa = crear_mapa(df)
-                st.plotly_chart(fig_mapa, use_container_width=True)
-
-            with st.expander("INDICADORES POR SUPERVISOR"):
-                crear_seccion_corporativa(
-                    "INDICADOR CARTERA POR SUPERVISOR", 
-                    "🪙"                
-                )
-                df_supervisores = df_mapa[df_mapa["Supervisor"] != "Total general"]
-                cols_per_row = 3
-                for i in range(0, len(df_supervisores), cols_per_row):
-                    cols = st.columns(cols_per_row)
-                    for j, (_, row) in enumerate(df_supervisores.iloc[i:i + cols_per_row].iterrows()):
-                        indicador_sup = row["INDICADOR"] * 100
-                        color_sup = (
-                            "#DC3545" if 0 < indicador_sup <= 60 else
+        crear_seccion_corporativa(
+            "INDICADOR CARTERA POR SUPERVISOR", 
+            "🪙"                
+        )
+        fig_mapa, df_mapa = crear_mapa(df)
+        df_supervisores = df_mapa[df_mapa["Supervisor"] != "Total general"]
+        cols_per_row = 4
+        for i in range(0, len(df_supervisores), cols_per_row):
+            cols = st.columns(cols_per_row)
+            for j, (_, row) in enumerate(df_supervisores.iloc[i:i + cols_per_row].iterrows()):
+                indicador_sup = row["INDICADOR"] * 100
+                color_sup = (
+                        "#DC3545" if 0 < indicador_sup <= 60 else
                             "#FFC107" if indicador_sup <= 80 else
                             "#00B0B2" if indicador_sup <= 100 else
                             "gray"
                         )
-                        fig_donut = crear_donut(indicador_sup, color=color_sup)
-                        with cols[j]:
-                            st.markdown(
+                fig_donut = crear_donut(indicador_sup, color=color_sup)
+                with cols[j]:
+                    st.markdown(
                                 f"<div style='text-align:center; font-size:14px; font-weight:600; color:black; margin-bottom:5px'>{row['Supervisor']}</div>",
                                 unsafe_allow_html=True
                             )
-                            st.plotly_chart(fig_donut, use_container_width=True)
+                    st.plotly_chart(fig_donut, use_container_width=True)
+        
+        crear_seccion_corporativa(
+            "INDICADOR CARTERA POR ZONA", 
+            "🗺️"                
+        )               
+        
+        st.plotly_chart(fig_mapa, use_container_width=True)
 
     elif tipo_kpi == "Rentabilidad Mensual y Acumulada":
         #RENTABILIDAD MENSUAL

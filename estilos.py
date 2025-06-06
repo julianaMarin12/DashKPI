@@ -136,20 +136,14 @@ def aplicar_estilos():
             
             /* Botones */
             .stButton > button {{
-                background-color: {COLOR_PRIMARIO} !important;
-                color: white !important;
+                background-color: {COLOR_SECUNDARIO} !important;
+                color: black !important;
                 font-weight: 600 !important;
                 border: none !important;
                 border-radius: 8px !important;
                 padding: 0.5rem 1.5rem !important;
                 transition: all 0.3s ease !important;
                 box-shadow: 0 4px 12px rgba(0, 176, 178, 0.2) !important;
-            }}
-            
-            .stButton > button:hover {{
-                background-color: {COLOR_ACENTO} !important;
-                box-shadow: 0 6px 16px rgba(0, 176, 178, 0.3) !important;
-                transform: translateY(-2px) !important;
             }}
             
             /* Tabs */
