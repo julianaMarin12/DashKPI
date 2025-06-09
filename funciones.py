@@ -210,7 +210,7 @@ def crear_indicador_estado(valor, referencia, titulo):
         <div style="font-size: 3.5rem; margin-bottom: 1rem;">{estado_icon}</div>
         <h3 style="margin: 0; color: white; font-size: 1rem; font-weight: 600; letter-spacing: 1px;">{estado_text}</h3>
         <h1 style="margin: 1rem 0; color: white; font-size: 2.5rem; font-weight: 700;">{diferencia:+.1f}%</h1>
-        <p style="margin: 0; opacity: 0.9; font-size: 0.9rem;">vs Objetivo: {referencia}%</p>
+        <p style="margin: 0; opacity: 1; font-size: 1.4rem;"> Objetivo: {referencia}%</p>
         <div style="
             width: 60px;
             height: 3px;
