@@ -46,14 +46,16 @@ if 'usuario' in st.session_state:
         )
     referencia_neto_acum= 18.13
     referencia_neto_mes = 15.62
-    referencia_bruto=51.4
+    referencia_bruto_mes=52.34
+    referencia_bruto_acum= 53.29
+
     if tipo_rentabilidad =="Cumplimiento de Rentabilidad":
         titulo_seccion = "Cumplimiento de Rentabilidad"
         valor = margen_neto_mes
         crear_seccion_corporativa(titulo_seccion, "🎯", "")
         df_barras = pd.DataFrame({
             "Tipo": ["Neta Mensual", "Neta Acumulada", "Bruta Mensual", "Bruta Acumulada"],
-            "Referencia": [referencia_neto_mes, referencia_neto_acum, referencia_bruto, referencia_bruto],
+            "Referencia": [referencia_neto_mes, referencia_neto_acum, referencia_bruto_mes, referencia_bruto_acum],
             "Ejecutado": [margen_neto_mes, margen_neto_acum, margen_bruto_mes, margen_bruto_acum],
         })
 
@@ -100,11 +102,11 @@ if 'usuario' in st.session_state:
         col_gauge, col_estado = st.columns([2, 1])
  
         with col_gauge:
-            fig = crear_gauge_corporativo(valor, "% EJECUTADO VS PROYECTADO", referencia=referencia_bruto)
+            fig = crear_gauge_corporativo(valor, "% EJECUTADO VS PROYECTADO", referencia=referencia_bruto_mes)
             st.plotly_chart(fig, use_container_width=True, key=f"gauge_{titulo_seccion.lower()}")
  
         with col_estado:
-            crear_indicador_estado(valor, referencia_bruto, "Estado VS Objetivo")
+            crear_indicador_estado(valor, referencia_bruto_mes, "Estado VS Objetivo")
     elif tipo_rentabilidad == "Rentabilidad Acumulada": 
         titulo_seccion = "Rentabilidad Neta acumulada"
         crear_seccion_corporativa(titulo_seccion, "💰", "")
@@ -123,8 +125,8 @@ if 'usuario' in st.session_state:
         col_gauge, col_estado = st.columns([2, 1])
  
         with col_gauge:
-            fig = crear_gauge_corporativo(valor, "% EJECUTADO VS PROYECTADO", referencia=referencia_bruto)
+            fig = crear_gauge_corporativo(valor, "% EJECUTADO VS PROYECTADO", referencia=referencia_bruto_acum)
             st.plotly_chart(fig, use_container_width=True, key=f"gauge_{titulo_seccion.lower()}")
  
         with col_estado:
-            crear_indicador_estado(valor, referencia_bruto, "Estado VS Objetivo")
+            crear_indicador_estado(valor, referencia_bruto_acum, "Estado VS Objetivo")
