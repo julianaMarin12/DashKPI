@@ -64,7 +64,7 @@ if 'usuario' in st.session_state:
             value_name="Valor"
         )
 
-        orden_indicador = pd.CategoricalDtype(categories=["Referencia", "Ejecutado"], ordered=True)
+        orden_indicador = pd.CategoricalDtype(categories=["Ejecutado", "Referencia"], ordered=True)
         df_barras["Indicador"] = df_barras["Indicador"].astype(orden_indicador)
 
         grafico_barras_corporativo(
