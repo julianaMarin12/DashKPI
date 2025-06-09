@@ -53,11 +53,20 @@ if 'usuario' in st.session_state:
         crear_seccion_corporativa(titulo_seccion, "🎯", "")
         df_barras = pd.DataFrame({
             "Tipo": ["Neta Mensual", "Neta Acumulada", "Bruta Mensual", "Bruta Acumulada"],
-            "Proyectado": [referencia_neto_mes, referencia_neto_acum, referencia_bruto, referencia_bruto],
-            "Ejecutado": [margen_neto_mes, margen_neto_acum, margen_bruto_mes, margen_bruto_acum]
+            "Ejecutado": [margen_neto_mes, margen_neto_acum, margen_bruto_mes, margen_bruto_acum],
+            "Referencia": [referencia_neto_mes, referencia_neto_acum, referencia_bruto, referencia_bruto]
         })
 
-        df_barras = df_barras.melt(id_vars=["Tipo"], value_vars=["Ejecutado", "Referencia"], var_name="Indicador", value_name="Valor")
+        df_barras = df_barras.melt(
+            id_vars=["Tipo"],
+            value_vars=["Ejecutado", "Referencia"],
+            var_name="Indicador",
+            value_name="Valor"
+        )
+
+        orden_indicador = pd.CategoricalDtype(categories=["Referencia", "Ejecutado"], ordered=True)
+        df_barras["Indicador"] = df_barras["Indicador"].astype(orden_indicador)
+
         grafico_barras_corporativo(
             df_barras,
             x="Tipo",
@@ -65,7 +74,7 @@ if 'usuario' in st.session_state:
             color="Indicador",
             titulo="Rentabilidad: Ejecutado vs Proyectado",
             etiquetas={"Tipo": "Tipo de Rentabilidad", "Valor": "Porcentaje (%)"},
-            colores=["#00B0B2", "#F4869C"],
+            colores=["#F4869C", "#00B0B2"],  # Asegúrate que el color coincide con el orden
             formato_y="%",
             apilado=True,
             mostrar_valores=True
