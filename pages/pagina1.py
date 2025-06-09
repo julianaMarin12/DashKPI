@@ -64,7 +64,7 @@ if 'usuario' in st.session_state:
             value_name="Valor"
         )
 
-        orden_indicador = pd.CategoricalDtype(categories=["Ejecutado", "Referencia"], ordered=True)
+        orden_indicador = pd.CategoricalDtype(categories=["Referencia", "Ejecutado"], ordered=True)
         df_barras["Indicador"] = df_barras["Indicador"].astype(orden_indicador)
 
         grafico_barras_corporativo(
@@ -74,7 +74,7 @@ if 'usuario' in st.session_state:
             color="Indicador",
             titulo="Rentabilidad: Ejecutado vs Proyectado",
             etiquetas={"Tipo": "Tipo de Rentabilidad", "Valor": "Porcentaje (%)"},
-            colores=["#F4869C", "#00B0B2"],  # Asegúrate que el color coincide con el orden
+            colores=["#F4869C", "#00B0B2"],  
             formato_y="%",
             apilado=True,
             mostrar_valores=True
