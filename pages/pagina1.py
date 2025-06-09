@@ -53,9 +53,10 @@ if 'usuario' in st.session_state:
         crear_seccion_corporativa(titulo_seccion, "🎯", "")
         df_barras = pd.DataFrame({
             "Tipo": ["Neta Mensual", "Neta Acumulada", "Bruta Mensual", "Bruta Acumulada"],
-            "Ejecutado": [margen_neto_mes, margen_neto_acum, margen_bruto_mes, margen_bruto_acum],
-            "Referencia": [referencia_neto_mes, referencia_neto_acum, referencia_bruto, referencia_bruto]
+            "Proyectado": [referencia_neto_mes, referencia_neto_acum, referencia_bruto, referencia_bruto],
+            "Ejecutado": [margen_neto_mes, margen_neto_acum, margen_bruto_mes, margen_bruto_acum]
         })
+
         df_barras = df_barras.melt(id_vars=["Tipo"], value_vars=["Ejecutado", "Referencia"], var_name="Indicador", value_name="Valor")
         grafico_barras_corporativo(
             df_barras,
