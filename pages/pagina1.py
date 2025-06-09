@@ -44,7 +44,8 @@ if 'usuario' in st.session_state:
                 "Rentabilidad Acumulada",
             ],
         )
-    referencia_neto = 18
+    referencia_neto_acum= 18.13
+    referencia_neto_mes = 15.62
     referencia_bruto=51.4
     if tipo_rentabilidad =="Cumplimiento de Rentabilidad":
         titulo_seccion = "Cumplimiento de Rentabilidad"
@@ -53,7 +54,7 @@ if 'usuario' in st.session_state:
         df_barras = pd.DataFrame({
             "Tipo": ["Neta Mensual", "Neta Acumulada", "Bruta Mensual", "Bruta Acumulada"],
             "Ejecutado": [margen_neto_mes, margen_neto_acum, margen_bruto_mes, margen_bruto_acum],
-            "Referencia": [referencia_neto, referencia_neto, referencia_bruto, referencia_bruto]
+            "Referencia": [referencia_neto_mes, referencia_neto_acum, referencia_bruto, referencia_bruto]
         })
         df_barras = df_barras.melt(id_vars=["Tipo"], value_vars=["Ejecutado", "Referencia"], var_name="Indicador", value_name="Valor")
         grafico_barras_corporativo(
@@ -77,11 +78,11 @@ if 'usuario' in st.session_state:
         col_gauge, col_estado = st.columns([2, 1])
  
         with col_gauge:
-            fig = crear_gauge_corporativo(valor, "% EJECUTADO VS PROYECTADO", referencia=referencia_neto)
+            fig = crear_gauge_corporativo(valor, "% EJECUTADO VS PROYECTADO", referencia=referencia_neto_mes)
             st.plotly_chart(fig, use_container_width=True, key=f"gauge_{tipo_rentabilidad.lower()}")
  
         with col_estado:
-            crear_indicador_estado(valor, referencia_neto, "Estado VS Objetivo")
+            crear_indicador_estado(valor, referencia_neto_mes, "Estado VS Objetivo")
         titulo_seccion = "Rentabilidad Bruta mensual"
  
         crear_seccion_corporativa(titulo_seccion, "💵", "")
@@ -101,11 +102,11 @@ if 'usuario' in st.session_state:
         col_gauge, col_estado = st.columns([2, 1])
  
         with col_gauge:
-            fig = crear_gauge_corporativo(valor, "% EJECUTADO VS PROYECTADO", referencia=referencia_neto)
+            fig = crear_gauge_corporativo(valor, "% EJECUTADO VS PROYECTADO", referencia=referencia_neto_acum)
             st.plotly_chart(fig, use_container_width=True, key=f"gauge_{tipo_rentabilidad.lower()}")
  
         with col_estado:
-            crear_indicador_estado(valor, referencia_neto, "Estado VS Objetivo")
+            crear_indicador_estado(valor, referencia_neto_acum, "Estado VS Objetivo")
         titulo_seccion = "Rentabilidad Bruta Acumulada"
         valor = margen_bruto_acum
         crear_seccion_corporativa(titulo_seccion, "💰", "")
