@@ -550,7 +550,7 @@ def grafico_linea_corporativo(df, x, y, color=None, titulo="", etiquetas=None, c
                     )
     st.plotly_chart(fig, use_container_width=True)
 
-def grafico_barras_corporativo(df, x, y, color=None, titulo="", etiquetas=None, colores=None, formato_y="%", apilado=False, mostrar_valores=True):
+def grafico_barras_corporativo(df, x, y, color=None, titulo="", etiquetas=None, colores=None, formato_y="%", apilado=False, mostrar_valores=True, key=None):
     color_proyectado = COLOR_PROYECTADO
     color_ejecutado = COLOR_PRIMARIO
     color_linea_proy = "#E6758A"
@@ -633,7 +633,7 @@ def grafico_barras_corporativo(df, x, y, color=None, titulo="", etiquetas=None, 
             font_family="Arial"
         )
     )
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, use_container_width=True, key=key)
 
 def grafico_barras_dinero(df, x, y, titulo="", etiquetas=None, color_barra="#00B0B2"):
     categorias = df[x].tolist()
@@ -692,12 +692,19 @@ def grafico_barras_dinero(df, x, y, titulo="", etiquetas=None, color_barra="#00B
     )
     st.plotly_chart(fig, use_container_width=True)
 
-def grafico_barras_dinero_horizontal(df, x, y, titulo="", etiquetas=None, color_barra="#00B0B2"):
+def grafico_barras_dinero_horizontal(df, x, y, titulo="", etiquetas=None, color_barra=None, key=None,orden_descendente=True):
+    df = df.sort_values(by=y, ascending=not orden_descendente)
+
     categorias = df[x].tolist()
     valores = df[y].tolist()
     textos = [f"${v:,.0f}".replace(",", ".") if pd.notnull(v) else "" for v in valores]
 
     fig = go.Figure()
+    categorias = df[x]
+    valores = df[y]
+    bar_kwargs = {}
+    if color_barra is not None:
+        bar_kwargs["marker_color"] = color_barra if isinstance(color_barra, list) else [color_barra]*len(valores)
     fig.add_trace(go.Bar(
         y=categorias,
         x=valores,
@@ -748,6 +755,6 @@ def grafico_barras_dinero_horizontal(df, x, y, titulo="", etiquetas=None, color_
             font_family="Arial"
         )
     )
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, use_container_width=True, key=key)
 
 

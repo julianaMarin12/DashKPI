@@ -16,7 +16,7 @@ login.generarLogin()
 if 'usuario' in st.session_state:
     set_background("images/fondo7.jpg")
     crear_header_corporativo(
-        "KPIs ÁREA DE TIENDAS",
+        " 🏪 KPIs ÁREA DE TIENDAS",
         "Indicadores para el área de tiendas"
     )
 
@@ -53,13 +53,16 @@ if 'usuario' in st.session_state:
         df_top5["Dinero"] = pd.to_numeric(df_top5["Dinero"], errors="coerce")
         df_top5["Tiendas"] = df_top5["Tiendas"].str.replace("CAFE QUINDIO EXPRESS ", "", regex=False)
         df_top5["Tiendas"] = df_top5["Tiendas"].str.replace("CAFE QUINDIO EXPRES ", "", regex=False)
+        colores=["#00B0B2"] * len(df_top5)
         
         grafico_barras_dinero_horizontal(
             df_top5,
             x="Tiendas",
             y="Dinero",
             titulo="Top 5 Tiendas con Mejor Utilidad ",
-            etiquetas={"Tiendas": "Tiendas", "Dinero": "Dinero"}
+            etiquetas={"Tiendas": "Tiendas", "Dinero": "Dinero"},
+            color_barra= colores,
+            orden_descendente=False
         )
 
         df_top5_margen = pd.read_excel("kpi generales.xlsx", sheet_name="Top5")
@@ -79,10 +82,55 @@ if 'usuario' in st.session_state:
             color=None,
             titulo="Top 5 Mejores Tiendas por Margen Neto",
             etiquetas={"Tiendas": "Tiendas", "Margen Neto": "Margen Neto (%)"},
-            colores=[ "#00B0B2"],
+            colores=["#00B0B2"], 
             formato_y="%",
             apilado=False,
-            mostrar_valores=True
+            mostrar_valores=True,
+            key="grafico_top5_margen"
+        )
+
+        df_inf5 = pd.read_excel("kpi generales.xlsx", sheet_name="Inf5_dinero_acum")
+        df_inf5 = df_inf5[df_inf5["Etiquetas de fila"] != "Total general"]
+        df_inf5 = df_inf5.rename(columns={"Etiquetas de fila": "Tiendas", "UTILIDAD NETA FINAL": "Dinero"})
+        df_inf5["Dinero"] = pd.to_numeric(df_inf5["Dinero"], errors="coerce")
+        df_inf5["Tiendas"] = df_inf5["Tiendas"].str.replace("CAFE QUINDIO EXPRESS ", "", regex=False)
+        df_inf5["Tiendas"] = df_inf5["Tiendas"].str.replace("CAFE QUINDIO EXPRES ", "", regex=False)
+        df_inf5["Tiendas"] = df_inf5["Tiendas"].str.replace("CAFE QUINDIO EXPR. ", "", regex=False)
+        colores = ["#F4869C"] * len(df_inf5) 
+
+        grafico_barras_dinero_horizontal(
+            df_inf5,
+            x="Tiendas",
+            y="Dinero",
+            titulo="Tiendas con Menor Utilidad ",
+            etiquetas={"Tiendas": "Tiendas", "Dinero": "Dinero"},
+            color_barra=colores,
+            orden_descendente=True
+        )
+
+        df_inf_acum = pd.read_excel("kpi generales.xlsx", sheet_name="Inf5")
+        df_inf_acum = df_inf_acum[df_inf_acum["Etiquetas de fila"] != "Total general"]
+        df_inf_acum = df_inf_acum.rename(columns={"Etiquetas de fila": "Tiendas", "MARGEN NETO FINAL": "Margen Neto"})
+        df_inf_acum["Margen Neto"] = pd.to_numeric(df_inf_acum["Margen Neto"], errors="coerce")*100
+        df_inf_acum["Tiendas"] = df_inf_acum["Tiendas"].str.replace("CAFE QUINDIO EXPRESS ", "", regex=False)
+        df_inf_acum["Tiendas"] = df_inf_acum["Tiendas"].str.replace("CAFE QUINDIO EXPRES ", "", regex=False)
+        df_inf_acum["Tiendas"] = df_inf_acum["Tiendas"].str.replace("CAFE QUINDIO EXPR. ", "", regex=False)
+
+        df_inf_acum = df_inf_acum[df_inf_acum["Tiendas"].str.upper() != "CARIBE"]
+
+
+        grafico_barras_corporativo(
+            df_inf_acum,
+            x="Tiendas",
+            y="Margen Neto",
+            color=None,
+            titulo="Tiendas con Menor Margen Neto",
+            etiquetas={"Tiendas": "Tiendas", "Margen Neto": "Margen Neto (%)"},
+            colores=["#F4869C"], 
+            formato_y="%",
+            apilado=False,
+            mostrar_valores=True,
+            key="grafico_inf5_margen"
         )
 
         titulo_seccion = "Rentabilidad Bruta Acumulada"
