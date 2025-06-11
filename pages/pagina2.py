@@ -35,7 +35,7 @@ if 'usuario' in st.session_state:
 
     tipo_kpi = st.selectbox(
         "Selecciona KPI que desea:",
-        ["Indicador Cartera", "Rentabilidad Mensual y Acumulada","Presupuesto de Ventas Vs Ejecutado"],
+        ["Indicador Cartera", "Rentabilidad Mensual y Acumulada","Presupuesto de Ventas Vs Ejecutado Mensual", "Presupuesto de Ventas Vs Ejecutado Acumulado"],
     )
 
     tipos = [
