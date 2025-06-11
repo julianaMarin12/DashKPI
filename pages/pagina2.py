@@ -1,5 +1,4 @@
-import os
-os.environ["STREAMLIT_WATCH_FOR_CHANGES"] = "false"
+
 from funciones import cargar_excel
 from funciones import crear_mapa
 from estilos import aplicar_estilos
