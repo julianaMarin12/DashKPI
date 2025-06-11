@@ -692,4 +692,62 @@ def grafico_barras_dinero(df, x, y, titulo="", etiquetas=None, color_barra="#00B
     )
     st.plotly_chart(fig, use_container_width=True)
 
+def grafico_barras_dinero_horizontal(df, x, y, titulo="", etiquetas=None, color_barra="#00B0B2"):
+    categorias = df[x].tolist()
+    valores = df[y].tolist()
+    textos = [f"${v:,.0f}".replace(",", ".") if pd.notnull(v) else "" for v in valores]
+
+    fig = go.Figure()
+    fig.add_trace(go.Bar(
+        y=categorias,
+        x=valores,
+        orientation='h',
+        marker=dict(
+            color=color_barra,
+            line=dict(color="#008080", width=2),
+            opacity=0.9
+        ),
+        text=textos,
+        textposition="inside",  
+        textfont=dict(size=16, color="white", family="Arial Black"),
+        hovertemplate="<b>%{y}</b><br>Valor: %{text}<extra></extra>",
+        width=0.6
+    ))
+    fig.update_layout(
+        barmode='group',
+        title=dict(
+            text=f"<b>{titulo}</b>" if titulo else None,
+            font=dict(size=20, color="#2C3E50", family="Arial"),
+            x=0.5
+        ),
+        xaxis=dict(
+            title=dict(text=f"<b>{etiquetas[y]}</b>" if etiquetas and y in etiquetas else "<b>Dinero</b>", font=dict(size=14, color="#2C3E50")),
+            tickfont=dict(size=14, color="#2C3E50"),
+            gridcolor="rgba(0, 176, 178, 0.1)",
+            gridwidth=1,
+            zeroline=True,
+            zerolinecolor="rgba(0, 176, 178, 0.3)",
+            zerolinewidth=2
+        ),
+        yaxis=dict(
+            title=dict(text=f"<b>{etiquetas[x]}</b>" if etiquetas and x in etiquetas else "<b>Categoría</b>", font=dict(size=16, color="#2C3E50")),
+            tickfont=dict(size=14, color="#2C3E50"),
+            gridcolor="rgba(0, 176, 178, 0.1)"
+        ),
+        height=500,
+        plot_bgcolor="rgba(0,0,0,0)",
+        paper_bgcolor="rgba(0,0,0,0)",
+        bargap=0.4,
+        bargroupgap=0.1,
+        font=dict(size=14, color="#2C3E50", family="Arial"),
+        margin=dict(l=30, r=30, t=60, b=30),
+        hoverlabel=dict(
+            bgcolor="white",
+            bordercolor="#00B0B2",
+            font_size=12,
+            font_family="Arial"
+        )
+    )
+    st.plotly_chart(fig, use_container_width=True)
+
 

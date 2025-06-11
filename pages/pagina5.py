@@ -3,7 +3,8 @@ from estilos import crear_header_corporativo
 from estilos import crear_seccion_corporativa
 from funciones import crear_gauge_corporativo
 from funciones import crear_indicador_estado
-from funciones import grafico_barras_dinero
+from funciones import grafico_barras_dinero_horizontal
+from funciones import grafico_barras_corporativo
 from login import set_background
 import streamlit as st
 import pandas as pd
@@ -52,14 +53,33 @@ if 'usuario' in st.session_state:
         df_top5["Dinero"] = pd.to_numeric(df_top5["Dinero"], errors="coerce")
         df_top5["Tiendas"] = df_top5["Tiendas"].str.replace("CAFE QUINDIO EXPRESS ", "", regex=False)
         df_top5["Tiendas"] = df_top5["Tiendas"].str.replace("CAFE QUINDIO EXPRES ", "", regex=False)
-
-        grafico_barras_dinero(
+        
+        grafico_barras_dinero_horizontal(
             df_top5,
             x="Tiendas",
             y="Dinero",
             titulo="Top 5 Dinero Acumulado",
             etiquetas={"Tiendas": "Tiendas", "Dinero": "Dinero"}
         )
+
+        df_top5_margen = pd.read_excel("kpi generales.xlsx", sheet_name="Top5_porcent_acum")
+        df_top5_margen = df_top5_margen[df_top5_margen["Etiquetas de fila"] != "Total general"]
+        df_top5_margen = df_top5_margen.rename(columns={"Etiquetas de fila": "Tiendas", "MARGEN NETO FINAL": "Margen Neto"})
+        df_top5_margen["Margen Neto"] = pd.to_numeric(df_top5_margen["Margen Neto"], errors="coerce")
+        df_top5_margen["Tiendas"] = df_top5_margen["Tiendas"].str.replace("CAFE QUINDIO EXPRESS ", "", regex=False)
+        df_top5_margen["Tiendas"] = df_top5_margen["Tiendas"].str.replace("CAFE QUINDIO EXPRES ", "", regex=False)
+
+        grafico_barras_corporativo(
+            df_top5_margen,
+            x="Tiendas",
+            y="Margen Neto",
+            titulo="Top 5 Margen Neto Acumulado",
+            etiquetas={"Tiendas": "Tiendas", "Margen Neto": "Margen Neto (%)"},
+            color="Margen Neto",
+            tipo_grafico="bar"
+        )
+
+        
 
         titulo_seccion = "Rentabilidad Bruta Acumulada"
  
