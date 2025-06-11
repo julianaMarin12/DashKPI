@@ -1,4 +1,3 @@
-
 from funciones import cargar_excel
 from funciones import crear_mapa
 from estilos import aplicar_estilos
@@ -17,12 +16,6 @@ from funciones import grafico_barras_corporativo
 from login import set_background
 import streamlit as st
 import pandas as pd
-import plotly.graph_objects as go
-import plotly.express as px
-import numpy as np
-import io
-from io import BytesIO
-import base64
 import login
 
 

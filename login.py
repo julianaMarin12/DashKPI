@@ -22,6 +22,7 @@ def generarMenu(usuario):
         st.page_link("pages/pagina2.py", label="🛒Comercial")
         st.page_link("pages/pagina3.py", label="⛴ Exportaciones")
         st.page_link("pages/pagina4.py", label="🛍️ Mercadeo")
+        st.page_link("pages/pagina5.py", label="Tiendas")
         st.markdown("</div>", unsafe_allow_html=True)
         btnSalir = st.button("Salir")
         if btnSalir:
