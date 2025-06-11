@@ -303,7 +303,7 @@ if 'usuario' in st.session_state:
         imagenes = df_general["Ruta Imagen"]
         diferencia_comer = diferencia_porcent * 100
 
-        fig = crear_gauge_corporativo(100, titulo="Presupuesto vs Ejecutado",referencia=ejecutado)
+        fig = crear_gauge_corporativo(ejecutado, titulo="Presupuesto vs Ejecutado",referencia=100)
         st.plotly_chart(fig, use_container_width=True)
 
         col1, col2, col3 = st.columns(3)
@@ -322,7 +322,7 @@ if 'usuario' in st.session_state:
 
         def mostrar_tabla_productos():
             df_productosCategoria = df1[df1["Productos"] != "Total general"].copy()
-            df_productosCategoria["Ejecutado (%)"] = df_productosCategoria["P% COMERCIAL 2024"] * 100
+            df_productosCategoria["Ejecutado (%)"] = df_productosCategoria["P% COMERCIAL"] * 100
             df_productosCategoria["Meta (%)"] = 100
             df_productosCategoria["Diferencia ($)"] = df_productosCategoria["diferencia $"]
             df_productosCategoria["Diferencia (%)"] = df_productosCategoria["diferencia %"] * 100
