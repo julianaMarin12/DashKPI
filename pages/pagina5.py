@@ -58,28 +58,32 @@ if 'usuario' in st.session_state:
             df_top5,
             x="Tiendas",
             y="Dinero",
-            titulo="Top 5 Dinero Acumulado",
+            titulo="Top 5 Tiendas con Mejor Utilidad ",
             etiquetas={"Tiendas": "Tiendas", "Dinero": "Dinero"}
         )
 
-        df_top5_margen = pd.read_excel("kpi generales.xlsx", sheet_name="Top5_porcent_acum")
+        df_top5_margen = pd.read_excel("kpi generales.xlsx", sheet_name="Top5")
         df_top5_margen = df_top5_margen[df_top5_margen["Etiquetas de fila"] != "Total general"]
         df_top5_margen = df_top5_margen.rename(columns={"Etiquetas de fila": "Tiendas", "MARGEN NETO FINAL": "Margen Neto"})
-        df_top5_margen["Margen Neto"] = pd.to_numeric(df_top5_margen["Margen Neto"], errors="coerce")
+        df_top5_margen["Margen Neto"] = pd.to_numeric(df_top5_margen["Margen Neto"], errors="coerce")*100
         df_top5_margen["Tiendas"] = df_top5_margen["Tiendas"].str.replace("CAFE QUINDIO EXPRESS ", "", regex=False)
         df_top5_margen["Tiendas"] = df_top5_margen["Tiendas"].str.replace("CAFE QUINDIO EXPRES ", "", regex=False)
+        df_top5_margen["Tiendas"] = df_top5_margen["Tiendas"].str.replace("CAFE QUINDIO EXPR. ", "", regex=False)
+
+        df_top5_margen = df_top5_margen[df_top5_margen["Tiendas"].str.upper() != "EVENTOS"]
 
         grafico_barras_corporativo(
             df_top5_margen,
             x="Tiendas",
             y="Margen Neto",
-            titulo="Top 5 Margen Neto Acumulado",
+            color=None,
+            titulo="Top 5 Mejores Tiendas por Margen Neto",
             etiquetas={"Tiendas": "Tiendas", "Margen Neto": "Margen Neto (%)"},
-            color="Margen Neto",
-            tipo_grafico="bar"
+            colores=[ "#00B0B2"],
+            formato_y="%",
+            apilado=False,
+            mostrar_valores=True
         )
-
-        
 
         titulo_seccion = "Rentabilidad Bruta Acumulada"
  

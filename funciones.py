@@ -660,7 +660,7 @@ def grafico_barras_dinero(df, x, y, titulo="", etiquetas=None, color_barra="#00B
         title=dict(
             text=f"<b>{titulo}</b>" if titulo else None,
             font=dict(size=20, color="#2C3E50", family="Arial"),
-            x=0.3
+            x=0.2
         ),
         yaxis=dict(
             title=dict(text=f"<b>{etiquetas[y]}</b>" if etiquetas and y in etiquetas else "<b>Dinero</b>", font=dict(size=14, color="#2C3E50")),
@@ -718,7 +718,7 @@ def grafico_barras_dinero_horizontal(df, x, y, titulo="", etiquetas=None, color_
         title=dict(
             text=f"<b>{titulo}</b>" if titulo else None,
             font=dict(size=20, color="#2C3E50", family="Arial"),
-            x=0.5
+            x=0.3
         ),
         xaxis=dict(
             title=dict(text=f"<b>{etiquetas[y]}</b>" if etiquetas and y in etiquetas else "<b>Dinero</b>", font=dict(size=14, color="#2C3E50")),
