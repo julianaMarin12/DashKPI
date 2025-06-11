@@ -26,7 +26,7 @@ if 'usuario' in st.session_state:
     )
     
     if tipo_kpi == "Rentabilidad Acumulada":
-        df_acum = pd.read_excel("kpi generales.xlsx", sheet_name="financiera acum", header=None)
+        df_acum = pd.read_excel("kpi generales.xlsx", sheet_name="Rentabilidad1_acum", header=None)
         df_acum[0] = df_acum[0].astype(str).str.strip().str.upper()
         margen_bruto_acum = df_acum.loc[df_acum[0] == "MARGEN BRUTO FINAL", 1].values[0] * 100
         utilidad_neto_acum = df_acum.loc[df_acum[0] == "UTILIDAD NETA FINAL", 1].values[0]
@@ -145,3 +145,6 @@ if 'usuario' in st.session_state:
  
         with col_estado:
             crear_indicador_estado(valor, referencia_bruto_acum, "Estado VS Objetivo")
+
+    elif tipo_kpi == "Rentabilidad Mensual":
+        df_mes = pd.read_excel("kpi generales.xlsx", sheet_name="Rentabilidad1_mes", header=None)
