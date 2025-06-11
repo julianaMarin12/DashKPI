@@ -213,11 +213,11 @@ if 'usuario' in st.session_state:
         
             
 
-    elif tipo_kpi == "Presupuesto de Ventas Vs Ejecutado":
-        df1 = cargar_excel("kpi generales.xlsx", sheet="Comercial1")
+    elif tipo_kpi == "Presupuesto de Ventas Vs Ejecutado Mensual":
+        df1 = cargar_excel("kpi generales.xlsx", sheet="Comercial1_mes")
         df_general = df1[df1["Productos"] == "Total general"].iloc[0]
         crear_seccion_corporativa(
-            "PRESUPUESTO VS EJECUTADO", 
+            "PRESUPUESTO VS EJECUTADO MENSUAL", 
             "🎯"                
         )
         ventas_2025 = df_general["Ventas 2025 rea"]
@@ -267,17 +267,17 @@ if 'usuario' in st.session_state:
             st.markdown(render_df_html(df_mostrar).replace('<table', '<table class="tabla-corporativa"'), unsafe_allow_html=True)
 
         crear_seccion_corporativa(
-            "POR PRODUCTOS", 
+            "POR PRODUCTOS MENSUAL", 
             "🪙"                
         )         
         mostrar_tabla_productos()
 
         crear_seccion_corporativa(
-            "POR TIPOLOGÍA", 
+            "POR TIPOLOGÍA MENSUAL", 
             "🪙"                
         )  
 
-        df2 = cargar_excel("kpi generales.xlsx", sheet="Comercial2")
+        df2 = cargar_excel("kpi generales.xlsx", sheet="Comercial2_mes")
         df_tipo = df2[df2["sub categoria"] != "Total general"].copy()
         df_tipo.loc[:, 'Ejecutado (%)'] = df_tipo['P% COMERCIAL 2024'] * 100
         df_tipo.loc[:, 'Meta (%)'] = df_tipo['prueba 2'] * 100
