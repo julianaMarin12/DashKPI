@@ -1,4 +1,3 @@
-
 from funciones import cargar_excel
 from funciones import crear_mapa
 from estilos import aplicar_estilos
@@ -9,12 +8,14 @@ from estilos import crear_header_corporativo
 from estilos import crear_seccion_corporativa
 from funciones import crear_gauge_corporativo
 from funciones import crear_indicador_estado
+from funciones import formatear_valor_colombiano
 from funciones import mostrar_metrica_corporativa
 from funciones import mostrar_metrica_corporativa_mercadeo
 from funciones import mostrar_tipologia
 from funciones import crear_donut
 from funciones import grafico_linea_corporativo
 from funciones import grafico_barras_corporativo
+from funciones import grafico_barras_dinero
 from login import set_background
 import streamlit as st
 import pandas as pd
@@ -56,6 +57,22 @@ if 'usuario' in st.session_state:
  
         with col_estado:
             crear_indicador_estado(valor, referencia_neto_acum, "Estado VS Objetivo")
+
+        df_top5 = pd.read_excel("kpi generales.xlsx", sheet_name="Top5_dinero_acum")
+        df_top5 = df_top5[df_top5["Etiquetas de fila"] != "Total general"]
+        df_top5 = df_top5.rename(columns={"Etiquetas de fila": "Tiendas", "UTILIDAD NETA FINAL": "Dinero"})
+        df_top5["Dinero"] = pd.to_numeric(df_top5["Dinero"], errors="coerce")
+        df_top5["Tiendas"] = df_top5["Tiendas"].str.replace("CAFE QUINDIO EXPRESS ", "", regex=False)
+        df_top5["Tiendas"] = df_top5["Tiendas"].str.replace("CAFE QUINDIO EXPRES ", "", regex=False)
+
+        grafico_barras_dinero(
+            df_top5,
+            x="Tiendas",
+            y="Dinero",
+            titulo="Top 5 Dinero Acumulado",
+            etiquetas={"Tiendas": "Tiendas", "Dinero": "Dinero"}
+        )
+
         titulo_seccion = "Rentabilidad Bruta Acumulada"
  
         crear_seccion_corporativa(titulo_seccion, "💵", "")
