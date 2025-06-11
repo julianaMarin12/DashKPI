@@ -287,3 +287,72 @@ if 'usuario' in st.session_state:
         df_tipo['Gauge'] = df_tipo.apply(lambda row: crear_gauge_base64(row['Ejecutado (%)'], row['Meta (%)']), axis=1)
         df_mostrar = df_tipo[['sub categoria', 'Ventas 2025', 'Presupuesto', 'Ejecutado (%)', 'Meta (%)', 'Diferencia (%)', 'Gauge']]
         st.markdown(render_df_html(df_mostrar).replace('<table', '<table class="tabla-corporativa"'), unsafe_allow_html=True)
+
+    elif tipo_kpi == "Presupuesto de Ventas Vs Ejecutado Acumulado":
+        df1 = cargar_excel("kpi generales.xlsx", sheet="Comercial1_acum")
+        df_general = df1[df1["Productos"] == "Total general"].iloc[0]
+        crear_seccion_corporativa(
+            "PRESUPUESTO VS EJECUTADO MENSUAL", 
+            "🎯"                
+        )
+        ventas_2025 = df_general["Ventas 2025 rea"]
+        presupesto = df_general["PRESUPUESTO CON LINEA"]
+        ejecutado = df_general["P% COMERCIAL"]*100
+        diferencia = df_general["diferencia $"]
+        diferencia_porcent = df_general["diferencia %"]
+        imagenes = df_general["Ruta Imagen"]
+        diferencia_comer = diferencia_porcent * 100
+
+        fig = crear_gauge_corporativo(100, titulo="Presupuesto vs Ejecutado",referencia=ejecutado)
+        st.plotly_chart(fig, use_container_width=True)
+
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            mostrar_metrica_corporativa_mercadeo("Ventas 2025", ventas_2025, "$", tipo="primario")
+        with col2:
+            mostrar_metrica_corporativa("Presupuesto 2025", presupesto, "$", tipo="secundario")
+        with col3:
+            mostrar_metrica_corporativa("Diferencia", diferencia,"$", tipo="primario")
+
+        col4, col5 = st.columns(2)
+        with col4:
+            mostrar_metrica_corporativa("Ejecutado", ejecutado, sufijo="%", tipo="primario")
+        with col5:
+            mostrar_metrica_corporativa("Diferencia (%)", diferencia_comer, sufijo="%", tipo="secundario")
+
+        def mostrar_tabla_productos():
+            df_productosCategoria = df1[df1["Productos"] != "Total general"].copy()
+            df_productosCategoria["Ejecutado (%)"] = df_productosCategoria["P% COMERCIAL 2024"] * 100
+            df_productosCategoria["Meta (%)"] = 100
+            df_productosCategoria["Diferencia ($)"] = df_productosCategoria["diferencia $"]
+            df_productosCategoria["Diferencia (%)"] = df_productosCategoria["diferencia %"] * 100
+            df_productosCategoria["Ventas 2025"] = df_productosCategoria["Ventas 2025 rea"]
+            df_productosCategoria["Gauge"] = df_productosCategoria.apply(lambda row: crear_gauge_base64(row["Ejecutado (%)"], row["Meta (%)"]), axis=1)
+            df_productosCategoria["Imagen Producto"] = df_productosCategoria["Ruta Imagen"].apply(imagen_base64)
+            df_mostrar = df_productosCategoria[
+                ["Productos", "Imagen Producto", "Ventas 2025", 
+                "Ejecutado (%)", "Meta (%)","Diferencia ($)", "Diferencia (%)", "Gauge"]
+            ]
+            st.markdown(render_df_html(df_mostrar).replace('<table', '<table class="tabla-corporativa"'), unsafe_allow_html=True)
+
+        crear_seccion_corporativa(
+            "POR PRODUCTOS ACUMULADO", 
+            "🪙"                
+        )         
+        mostrar_tabla_productos()
+
+        crear_seccion_corporativa(
+            "POR TIPOLOGÍA ACUMULADO", 
+            "🪙"                
+        )  
+
+        df2 = cargar_excel("kpi generales.xlsx", sheet="Comercial2_acum")
+        df_tipo = df2[df2["sub categoria"] != "Total general"].copy()
+        df_tipo.loc[:, 'Ejecutado (%)'] = df_tipo['P% COMERCIAL'] * 100
+        df_tipo.loc[:, 'Meta (%)'] = 100
+        df_tipo.loc[:, 'Diferencia ($)'] = df_tipo['diferencia $']
+        df_tipo.loc[:, 'Diferencia (%)'] = df_tipo['diferencia %'] * 100
+        df_tipo.loc[:, 'Ventas 2025'] = df_tipo['Ventas 2025 rea']
+        df_tipo['Gauge'] = df_tipo.apply(lambda row: crear_gauge_base64(row['Ejecutado (%)'], row['Meta (%)']), axis=1)
+        df_mostrar = df_tipo[['sub categoria', 'Ventas 2025', 'Diferencia ($)', 'Ejecutado (%)', 'Meta (%)', 'Diferencia (%)', 'Gauge']]
+        st.markdown(render_df_html(df_mostrar).replace('<table', '<table class="tabla-corporativa"'), unsafe_allow_html=True)
