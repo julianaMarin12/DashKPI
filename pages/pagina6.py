@@ -9,7 +9,7 @@ login.generarLogin()
 set_background("images/fondo4.jpg")
 if 'usuario' in st.session_state:
     crear_header_corporativo(
-        "🛍️ KPIs ÁREA ADMINISTRATIVA",
+        "KPIs ÁREA ADMINISTRATIVA",
         "Indicadores para el área"
     )
 
