@@ -12,10 +12,26 @@ def validarUsuario(usuario,clave):
     
 def generarMenu(usuario):
     with st.sidebar:
+        st.image("images/Logo.png", width=300)  
         dfusuarios = pd.read_csv('usuarios.csv')
         dfusuarios = dfusuarios[(dfusuarios['usuario']==usuario)]
         nombre = dfusuarios['nombre'].values[0]
-        st.markdown(f"<div class='sidebar-hola'>Hola {nombre}</div>", unsafe_allow_html=True)
+        st.markdown(
+            f"<div class='sidebar-hola'>Hola {nombre}</div>",
+            unsafe_allow_html=True
+        )
+        st.markdown("""
+            <style>
+            .sidebar-hola {
+                text-align: center;
+                font-size: 1rem;
+                margin-bottom: 1.5rem;
+            }
+            section[data-testid="stSidebar"] a {
+                font-size: 1.3rem !important;
+            }
+            </style>
+        """, unsafe_allow_html=True)
         st.page_link("inicio.py", label= " 📊Dash de KPI por área")
         st.subheader("Tableros")
         st.page_link("pages/pagina1.py", label="💰 Financiera")
@@ -27,8 +43,6 @@ def generarMenu(usuario):
         st.page_link("pages/pagina7.py", label=" Operaciones")
         st.page_link("pages/pagina8.py", label=" Calidad Café")
         st.page_link("pages/pagina9.py", label=" Arquitectura")
-
-
         st.markdown("</div>", unsafe_allow_html=True)
         btnSalir = st.button("Salir")
         if btnSalir:
