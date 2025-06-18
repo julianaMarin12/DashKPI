@@ -35,9 +35,8 @@ if 'usuario' in st.session_state:
         referencia_neto_acum = 22.40
         referencia_bruto_acum = 71.96
 
-        titulo_seccion = "Rentabilidad Neta Acumulada"
         valor = margen_neto_acum
-        crear_seccion_corporativa(titulo_seccion, "💵", "")
+        crear_seccion_corporativa("Rentabilidad Neta Acumulada", "💵", "")
         col_gauge, col_estado = st.columns([2, 1])
  
         with col_gauge:
@@ -132,10 +131,8 @@ if 'usuario' in st.session_state:
             mostrar_valores=True,
             key="grafico_inf5_margen"
         )
-
-        titulo_seccion = "Rentabilidad Bruta Acumulada"
  
-        crear_seccion_corporativa(titulo_seccion, "💵", "")
+        crear_seccion_corporativa("Rentabilidad Bruta Acumulada", "💵", "")
         valor = margen_bruto_acum
         col_gauge, col_estado = st.columns([2, 1])
  
@@ -156,9 +153,8 @@ if 'usuario' in st.session_state:
         referencia_neto_acum = 22.40
         referencia_bruto_acum = 71.96
 
-        titulo_seccion = "Rentabilidad Neta Mensual"
         valor = margen_neto_acum
-        crear_seccion_corporativa(titulo_seccion, "💵", "")
+        crear_seccion_corporativa("Rentabilidad Neta Mensual", "💵", "")
         col_gauge, col_estado = st.columns([2, 1])
  
         with col_gauge:
@@ -260,10 +256,8 @@ if 'usuario' in st.session_state:
             mostrar_valores=True,
             key="grafico_inf5_margen"
         )
-
-        titulo_seccion = "Rentabilidad Bruta Mensual"
  
-        crear_seccion_corporativa(titulo_seccion, "💵", "")
+        crear_seccion_corporativa("Rentabilidad Bruta Mensual", "💵", "")
         valor = margen_bruto_acum
         col_gauge, col_estado = st.columns([2, 1])
         with col_gauge:
