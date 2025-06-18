@@ -156,7 +156,7 @@ if 'usuario' in st.session_state:
         referencia_neto_acum = 22.40
         referencia_bruto_acum = 71.96
 
-        titulo_seccion = "Rentabilidad Neta Acumulada"
+        titulo_seccion = "Rentabilidad Neta Mensual"
         valor = margen_neto_acum
         crear_seccion_corporativa(titulo_seccion, "💵", "")
         col_gauge, col_estado = st.columns([2, 1])
@@ -261,7 +261,7 @@ if 'usuario' in st.session_state:
             key="grafico_inf5_margen"
         )
 
-        titulo_seccion = "Rentabilidad Bruta Acumulada"
+        titulo_seccion = "Rentabilidad Bruta Mensual"
  
         crear_seccion_corporativa(titulo_seccion, "💵", "")
         valor = margen_bruto_acum
